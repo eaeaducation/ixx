@@ -1,0 +1,272 @@
+{extend name="admin@public/content"}
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+    <table id="basic" class="layui-table" lay-skin="line">
+        <thead>
+        <tr style="background-color: honeydew">
+            <th class="text-center" colspan="6">基本信息
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>班级名称</th>
+            <td>{$detail['title']}</td>
+            <th>开课校区</th>
+            <td>{$detail['branch']|convert_branch|raw}</td>
+        </tr>
+        <tr>
+            <th>开班时间</th>
+            <td>{$detail['begin_time']|format_date}</td>
+            <th>班主任</th>
+            <td>{$detail['teacher_id']|convert_category=25|raw}</td>
+        </tr>
+        <tr>
+            <th>预招人数</th>
+            <td>{$detail['student_count']}</td>
+            <th>状态</th>
+            <td>{$detail['status']|convert_category=31|raw}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="layui-tab layui-tab-card layui-box">
+        <ul class="layui-tab-title">
+            <li class="layui-this">学员列表</li>
+            <li>班级课程</li>
+            <li>课程表</li>
+            <li>上课打卡记录</li>
+            <li>作业</li>
+            <li>成绩</li>
+            <li>停课学生</li>
+        </ul>
+        <div class="layui-tab-content">
+
+            <div class="layui-tab-item layui-show">
+                <a class="layui-btn layui-btn-normal layui-btn-sm"
+                  data-iframe='/admin/index/fragment.html#{:url("$classuri/add_student")}?id={$detail["id"]}' data-title="添加学员">添加学员</a>
+                <!--{empty name='student'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th class="text-center">学员ID</th>
+                        <th class="text-center">学生姓名</th>
+                        <th class="text-center">性别</th>
+                        <th class="text-center">生日</th>
+                        <th class="text-center">家长联系电话</th>
+                        <th class="text-center">家长姓名</th>
+                        <th class="text-center">爱学学关注</th>
+                        <th class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $student as $item}
+                    <tr>
+                        <td class="text-center nowrap">{$item.id}</td>
+                        <td class="text-center nowrap"><a  data-open="{:url('marketing/premarketing/customerview')}?id={$item.id}">{$item.name}</a></td>
+                        <td class="text-center nowrap">{$item.gender|convert_category=3|raw}</td>
+                        <td class="text-center nowrap">{$item.birthday|format_date}</td>
+                        <td class="text-center nowrap">{$item.parent_tel}</td>
+                        <td class="text-center nowrap">{$item.parent_name}</td>
+                        <th class="text-center nowrap">
+                            <a class="layui-btn layui-btn-primary layui-btn-xs
+                            {notempty name='$item.wxopenid'}layui-bg-green border-none" data-tips-text="已关注" {else /}" data-tips-text="未关注"{/notempty}
+                            data-area="['50%','50%']" data-title="爱学学二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
+                                <i class="fa fa-qrcode"></i>
+                            </a>
+                        </th>
+                        <td class="text-center nowrap">
+                            {if auth("$classuri/vacate_truancy")}
+                            <span class="text-explode">|</span>
+                            <a data-title="请假/旷课"
+                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>请假/旷课</a>
+                            {/if}
+
+                            {if auth("$classuri/replace_class")}
+                            <span class="text-explode">|</span>
+                            <a data-title="学员转班"
+                               data-modal='{:url("$classuri/replace_class")}?id={$item.id}&class_id={$detail.id}' data-area="['40%','50%']">转班</a>
+                            {/if}
+
+                            {if auth("$classuri/student_score")}
+                            <span class="text-explode">|</span>
+                            <a data-title="成绩录入"
+                               data-area="['60%','50%']"
+                               data-modal='{:url("$classuri/student_score")}?sid={$item.id}&class_id={$detail.id}'>成绩</a>
+                            {/if}
+
+                            {if auth("$classuri/del_student")}
+                            <span class="text-explode">|</span>
+                            <a  data-update="{$item.csid}" data-field='delete'
+                               data-action='{:url("$classuri/del_student")}?id={$item.csid}&class_id={$detail.id}&cid={$item.id}'>删除</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+
+            <div class="layui-tab-item">
+
+                <!--{empty name='courses_info'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th class="text-center nowrap">课程名称</th>
+                        <th class="text-center nowrap">添加时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach courses_info as $items}
+                    <tr>
+                        <td class="text-center nowrap">{$items.course_id|get_courses_title}</td>
+                        <td class="text-center nowrap">{$items.created_at|format_date}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+
+            <div class="layui-tab-item">
+                <blockquote class="layui-elem-quote">课程表</blockquote>
+                <iframe style="width: 100%; height: 800px"
+                        src="admin/index/fragment.html#/educational/courses/classapi.html?class_id={$detail['id']}">
+                </iframe>
+            </div>
+            <div class="layui-tab-item">
+                <blockquote class="layui-elem-quote">打卡记录</blockquote>
+                <iframe style="width: 100%; height: 900px"
+                        src="admin/index/fragment.html#/educational/cardrecord/class_record.html?class_id={$detail['id']}">
+                </iframe>
+            </div>
+            <div class="layui-tab-item">
+                <a class="layui-btn layui-btn-normal layui-btn-sm"
+                   data-open='/admin/index/fragment.html#{:url("homework/index")}?class_id={$detail["id"]}' data-title="布置作业">布置作业</a>
+                <!--{empty name='work'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th class="text-center nowrap">作业标题</th>
+                        <th class="text-center nowrap">作业内容</th>
+                        <th class="text-center nowrap">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $work as $item}
+                    <tr>
+                        <td class="text-center nowrap">{$item.title}</td>
+                        <td class="text-center nowrap">{$item.content}</td>
+                        <td class="text-center nowrap">
+                            <span class="text-explode">|</span>
+                            <a data-title="作业布置"
+                               data-open='/admin/index/fragment.html#{:url("homework/index")}?class_id={$detail["id"]}&id={$item.id}'>作业布置</a>
+                            <span class="text-explode">|</span>
+                            <a data-update="{$item.id}" data-field=''
+                               data-action='{:url("$classuri/work_delete")}?id={$item.id}'>删除</a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+            <div class="layui-tab-item">
+                <iframe style="width: 100%; height: 500px"
+                        src="admin/index/fragment.html#/educational/classed/score_list.html?class_id={$detail['id']}">
+                </iframe>
+            </div>
+            <div class="layui-tab-item">
+                <!--{empty name='stop_student'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th class="text-center">学员ID</th>
+                        <th class="text-center">学生姓名</th>
+                        <th class="text-center">性别</th>
+                        <th class="text-center">生日</th>
+                        <th class="text-center">家长联系电话</th>
+                        <th class="text-center">家长姓名</th>
+                        <th class="text-center">爱学学关注</th>
+                        <th class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach stop_student as $item}
+                    <tr>
+                        <td class="text-center nowrap">{$item.id}</td>
+                        <td class="text-center nowrap"><a  data-open="{:url('marketing/premarketing/customerview')}?id={$item.id}">{$item.name}</a></td>
+                        <td class="text-center nowrap">{$item.gender|convert_category=3|raw}</td>
+                        <td class="text-center nowrap">{$item.birthday|format_date}</td>
+                        <td class="text-center nowrap">{$item.parent_tel}</td>
+                        <td class="text-center nowrap">{$item.parent_name}</td>
+                        <th class="text-center nowrap">
+                            <a class="layui-btn layui-btn-primary layui-btn-xs
+                            {notempty name='$item.wxopenid'}layui-bg-green border-none" data-tips-text="已关注" {else /}" data-tips-text="未关注"{/notempty}
+                            data-area="['50%','50%']" data-title="爱学学二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
+                            <i class="fa fa-qrcode"></i>
+                            </a>
+                        </th>
+                        <td class="text-center nowrap">
+                            {if auth("$classuri/vacate_truancy")}
+                            <span class="text-explode">|</span>
+                            <a data-title="请假/旷课"
+                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>请假/旷课</a>
+                            {/if}
+
+                            {if auth("$classuri/replace_class")}
+                            <span class="text-explode">|</span>
+                            <a data-title="学员转班"
+                               data-modal='{:url("$classuri/replace_class")}?id={$item.id}&class_id={$detail.id}' data-area="['40%','50%']">转班</a>
+                            {/if}
+
+                            {if auth("$classuri/student_score")}
+                            <span class="text-explode">|</span>
+                            <a data-title="成绩录入"
+                               data-area="['60%','50%']"
+                               data-modal='{:url("$classuri/student_score")}?sid={$item.id}&class_id={$detail.id}'>成绩</a>
+                            {/if}
+
+                            {if auth("$classuri/student_score")}
+                            <span class="text-explode">|</span>
+                            <a data-title="上课状态"
+                               data-modal='{:url("$classuri/course_status")}?sid={$item.id}&class_id={$detail.id}'>恢复上课</a>
+                            {/if}
+
+                            {if auth("$classuri/del_student")}
+                            <span class="text-explode">|</span>
+                            <a  data-update="{$item.csid}" data-field='delete'
+                                data-action='{:url("$classuri/del_student")}?id={$item.csid}&class_id={$detail.id}'>删除</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+        </div>
+    </div>
+</form>
+{/block}

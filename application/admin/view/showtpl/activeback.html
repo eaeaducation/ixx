@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css"/>
+	<script src="/static/layui/layui.all.js"></script>
+	<style>
+	body{
+		background-image: url(/static/temp/tpl002/images/bg4_fx.jpg);
+		background-size: 100%;
+		height: 100%;
+	}
+		.img-responsive{
+			width:60%;
+			height:45%;
+			margin: auto;  position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			text-align: center;
+		}
+		.htitle{
+			text-align: center;
+			padding-top: 5%;
+		}
+		.footer{
+			position:absolute;
+			left:0;
+			bottom:0;
+		}
+		.footerimg{
+			width: 100%;
+			height: 20%;
+		}
+		.headerimg{
+			height: 125px
+		}
+		.main-title{
+			text-shadow: 5px 5px 5px black, 0px 0px 2px black;
+			color: white;
+			padding-bottom: 15px;
+		}
+	</style>
+</head>
+<body>
+<div class="header">
+	<img class="headerimg"  src="/static/temp/tpl002/images/z4_title.png">
+</div>
+<div class="contentbox">
+	<div class="img-responsive">
+		<h3 class="main-title" style="text-align: center">感谢您的分享</h3>
+		<img  src="data:image/png;base64,{$qrcode}" title="分享二维码" />
+		<h4 class="htitle" >长按 【扫描二维码】 参与</h4>
+	</div>
+</div>
+
+<div class="footer">
+	<img class="footerimg"  src="/static/temp/tpl002/images/z4_foot.png">
+</div>
+
+</body>
+
+</html>

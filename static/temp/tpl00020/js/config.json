@@ -1,0 +1,25 @@
+{
+    "tplname": "test1",
+    "pages": 3,
+    "logo":"http",
+    "data":[
+        {
+            "background":{"name":"背景图","value":"/static/temp/tpl00020/images/slider.jpg","type":"pic"},
+            "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+            "content":{"name":"内容","value":"黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵","type":"text"},
+            "pci":{"name":"背景图","value":"/static/temp/tpl00020/images/timg.gif","type":"pic"}
+        },
+        {
+            "background":{"name":"背景图","value":"/static/temp/tpl00020/images/slider2.jpg","type":"pic"},
+            "title":{"name":"主标题","value":"我们不一样，我们就是不一样","type":"text"},
+            "content":{"name":"主标题","value":"大数据时代，我们是新晋的新星，注定要闪耀全场","type":"text"},
+            "pci":{"name":"背景图","value":"/static/temp/tpl00020/images/logo.png","type":"pic"}
+        },
+        {
+            "background":{"name":"背景图","value":"/static/temp/tpl00020/images/timg.jpg","type":"pic"},
+            "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+            "content":{"name":"主标题","value":"黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵黑哥伯爵","type":"text"},
+            "pci":{"name":"背景图","value":"","type":"pic"}
+        }
+    ]
+}

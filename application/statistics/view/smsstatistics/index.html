@@ -1,0 +1,128 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">短信类型</label>
+        <div class="layui-input-inline">
+            <select name="type" id="type" class="text-center">
+                <option value="">-- 请选择 --</option>
+                <option value="1">验证码</option>
+                <option value="3">营销</option>
+            </select>
+            <script>
+                $(function () {
+                    var type = '{$Think.get.type}';
+                    $("select#type option[value='" + type + '\']').attr('selected', true)
+                })
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">是否成功</label>
+        <div class="layui-input-inline">
+            <select name="res" id="res" class="text-center">
+                <option value="">-- 请选择 --</option>
+                <option value="1">成功</option>
+                <option value="3">失败</option>
+            </select>
+            <script>
+                $(function () {
+                    var res = '{$Think.get.res}';
+                    $("select#res option[value='" + res + '\']').attr('selected', true)
+                })
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">选择时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="选择时间" class="input-sm form-control">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">电话号码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="mobile" value="{$Think.get.mobile|default=''}" placeholder="请输入电话号码"
+                   class="input-sm form-control">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">号码</th>
+            <th class="text-center">系统用户</th>
+            <th class="text-center">短信类型</th>
+            <th class="text-center">短信内容</th>
+            <th class="text-center">时间</th>
+            <th class="text-center">是否成功</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.id}</td>
+            <td class="text-center">{$vo.mobiles}</td>
+            {if isset($vo.userid) && !empty($vo.userid)}
+            <td class="text-center">{:get_user_realname($vo.userid)}</td>
+            {else}
+            <td class="text-center">not set</td>
+            {/if}
+            {if $vo['type'] == 1}
+            <td class="text-center">验证码</td>
+            {else $vo['type'] == 3}
+            <td class="text-center">营销</td>
+            {/if}
+            <td class="text-center nowrap" title="{$vo.content}">{$vo.content}</td>
+            <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+            {if $vo['res'] == 1}
+            <td class="text-center nowrap color-green">成功</td>
+            {else}
+            <td class="text-center nowrap color-red">失败</td>
+            {/if}
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                if ((endDate - date) / 1000 / 86400 > 31) {
+                    $.msg.alert('最大时间范围为31天', function () {
+                        $('#time_range').val('')
+                    })
+                }
+            }
+        })
+    })
+</script>
+{/block}

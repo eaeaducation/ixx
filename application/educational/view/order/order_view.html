@@ -1,0 +1,192 @@
+{extend name="admin@public/content"}
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+    .layui-elem-quote {font-size: 12px; padding: 4px; margin-bottom: 8px;}
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+
+    <table id="basic" class="layui-table" lay-skin="line">
+        <thead>
+        <tr style="background-color: honeydew">
+            <th class="text-center" colspan="6">基本信息
+                <!--<a data-modal='{:url("$classuri/basicedit")}?id=' data-title="基本信息"-->
+                   <!--class="pull-right">编辑</a>-->
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>订单编号</th>
+            <td><a data-modal="{:url('order/detail/detail')}?id={$order.id}">{$order.orderno}</a></td>
+            <th>班级</th>
+            <td>{$order.class_id|convert_class|raw}</td>
+        </tr>
+        <tr>
+            <th>学生姓名</th>
+            <td>{$order.name}</td>
+            <th>性别</th>
+            <td>{$order.gender|convert_category=3|raw}</td>
+
+        </tr>
+        <tr>
+            <th>监护人姓名</th>
+            <td>{$order.parent_name}</td>
+            <th>监护人电话</th>
+            <td>{$order.parent_tel}</td>
+        </tr>
+        <tr>
+            <th>订单价格</th>
+            <td>￥{$order.price}元</td>
+            <th>支付状态</th>
+            <td>{$order.status|convert_category=35|raw}</td>
+        </tr>
+        <tr>
+            <th>支付方式</th>
+            <td>{$order.pay_type|convert_category=36|raw}</td>
+            <th>下单时间</th>
+            <td>{$order.created_at|format_date}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="layui-tab layui-tab-card layui-box">
+
+        <div class="layui-tab-content">
+
+            <div class="layui-item">
+                <blockquote class="layui-elem-quote">订单商品详情</blockquote>
+                <!--{empty name='order_info'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>费用类型</th>
+                        <th>金额</th>
+                        <th>实收</th>
+                        <th>备注</th>
+                        <th>数量(课时/套/项)</th>
+                        <th>已用课时</th>
+                        <th>剩余课时</th>
+                        <!--<th>添加时间</th>-->
+                        <th class="text-nowrap text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="order_info" id="vo"}
+                    <tr>
+                        <td >{$vo.id}</td>
+                        {eq name="$vo.goods_type" value="1"}<td>{$vo.goods_id|get_courses_title|raw}</td>{/eq}
+                        {eq name="$vo.goods_type" value="2"}<td>教材</td>{/eq}
+                        {eq name="$vo.goods_type" value="3"}<td>杂费</td>{/eq}
+                        <td>{$vo.goods_type|convert_category=34|raw}</td>
+                        <td>￥{$vo.old_price}元</td>
+                        <td>￥{$vo.price}元</td>
+                        <th width="15%">{$vo.remark}</th>
+                        <td >{$vo.goods_num}</td>
+                        <td>{$vo.consume_num}</td>
+                        <th>{$vo.goods_num-$vo.consume_num}</th>
+                        <td  class="text-nowrap text-center">
+                            {if auth("$classuri/editOrderInfo")}
+                            {neq name="order.status" value="5"}
+                            <span class="text-explode">|</span>
+                            <a data-title="编辑"
+                               data-modal='{:url("$classuri/editOrderInfo")}?id={$vo.id}'>编辑</a>
+                            {/neq}
+                            {/if}
+                            {if auth("$classuri/editOrderInfo")}
+                            {eq name="order.status" value="5"}
+                            <span class="text-explode">|</span>
+                            <a data-title="退费"
+                               data-modal='{:url("$classuri/editOrderInfo")}?id={$vo.id}'>退费</a>
+                            {/eq}
+                            {/if}
+                            {if auth('$classuri/renew')}
+                            {if $vo.goods_type == 1}
+                                <span class="text-explode">|</span>
+                                <a data-title="续费" data-modal='{:url("$classuri/renew")}?id={$vo.id}'>续费</a>
+                            {/if}
+                            {/if}
+                        </td>
+                    </tr>
+
+                    {/volist}
+                    <!--<tr><td></td>-->
+                        <!--<td class="text-nowrap text-right">合计:￥{$order.price}元</td></tr>-->
+                    </tbody>
+                </table>
+                <div class="text-nowrap text-right" style="color: #000;font-size: 14px; font-weight: bold ;padding-right: 2%"><p>合计:￥<span style="color: #FF5722;font-size: 18px;"> {$order.price}</span>元</p></div>
+                <!--{/empty}-->
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="layui-tab layui-tab-card layui-box">
+
+        <div class="layui-tab-content">
+
+            <div class="layui-item">
+                <blockquote class="layui-elem-quote">订单交易记录</blockquote>
+                <!--{empty name='cash_flow'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th>序号</th>
+                        <th>订单编号</th>
+                        <th>客户姓名</th>
+                        <th>商品信息</th>
+                        <th>类型</th>
+                        <th>金额</th>
+                        <th>描述</th>
+                        <th>添加时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="cash_flow" id="vo"}
+                    <tr>
+                        <td >{$vo.id}</td>
+                        <td>{$vo.orderno}</td>
+                        <td>{$vo.cid|get_customer_name}</td>
+                        {if $vo.type == 1}
+                        <td>{$vo.goods_id|convert_class}</td>
+                        {/if}
+
+                        {if $vo.type == 2}
+                        <td>{$vo.goods_id|get_courses_title}</td>
+                        {/if}
+
+                        <td>{$vo.type|convert_category=39|raw}</td>
+                        <td>￥{$vo.price}元</td>
+                        <th>{$vo.desc}</th>
+                        <td >{$vo.created_at|date='Y-m-d H:m:s'}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}

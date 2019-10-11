@@ -1,0 +1,169 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+    <div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝url
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="yibao_url" required="required"
+                       value="{:sysconf('yibao_url')}"
+                       title="易宝url" placeholder="易宝url" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝父商编号
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="parent_merchant_no" required="required"
+                       value="{:sysconf('parent_merchant_no')}"
+                       title="父商编号" placeholder="父商编号" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝子商编
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="merchant_no"
+                       value="{:sysconf('merchant_no')}"
+                       title="请输入子商编" placeholder="请输入子商编" class="layui-input" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝签名HMAC
+            </label>
+            <div class='col-sm-8'>
+                {if sysconf('hmac_key')}
+                <input type="text" name="hmac_key" required="required"
+                       value="{:sysconf('hmac_key')}"
+                       title="请输入签名" placeholder="请输入请输入签名" class="layui-input">
+                {else/}
+                <a href="" onclick="return false;" id="gethmac">获取HMAC</a>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                saas_id
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="saas_id" required="required" value="{:sysconf('saas_id')}"
+                       title="请输入saas_id" placeholder="请输入请输入saas_id" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝商户私钥
+            </label>
+            <div class='col-sm-8'>
+                <textarea type="text" name="yop_private_key" title="请输入易宝商户私钥" placeholder="请输入易宝商户私钥"
+                          class="layui-textarea">{:sysconf('yop_private_key')}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                易宝公钥
+            </label>
+            <div class='col-sm-8'>
+                <textarea type="text" name="yop_public_key" title="请输入易宝公钥" placeholder="请输入易宝公钥"
+                          class="layui-textarea">{:sysconf('yop_public_key')}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                微信APPID
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="wx_appid" value="{:sysconf('wx_appid')}"
+                       title="请输入微信APPID" placeholder="请输入微信APPID" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                微信SECRET
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="wx_secret" value="{:sysconf('wx_secret')}"
+                       title="请输入微信密钥" placeholder="请输入微信密钥" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                支付宝PID
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="zfb_pid" value="{:sysconf('zfb_pid')}"
+                       title="请输入支付宝PID" placeholder="请输入支付宝PID" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                支付宝APPID
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="zfb_appid" value="{:sysconf('zfb_appid')}"
+                       title="请输入支付宝APPID" placeholder="请输入支付宝APPID" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                支付宝公钥
+            </label>
+            <div class='col-sm-8'>
+                <textarea type="text" name="zfb_public_key" title="请输入支付宝公钥" placeholder="请输入支付宝公钥"
+                          class="layui-textarea">{:sysconf('zfb_public_key')}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                支付宝应用私钥
+            </label>
+            <div class='col-sm-8'>
+                <textarea type="text" name="zfb_private_key" title="请输入支付宝应用私钥" placeholder="请输入支付宝应用私钥"
+                          class="layui-textarea">{:sysconf('zfb_private_key')}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="col-sm-4 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">保存配置</button>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script src="/static/plugs/layui/layui.all.js" charset="utf-8"></script>
+<script>
+    $("#gethmac").on('click', function () {
+        var mechantNo = $("input[name='merchant_no']").val();
+        if (!mechantNo) {
+            return layer.msg('请先输入子商编');
+        }
+        $.post({
+            url: 'http://jy.chengxf.com/ybserver/index/queryhmackey',
+            data: {'merchantNo': mechantNo},
+            success: function (e) {
+                var res = JSON.parse(e);
+                if (res.result.returnCode == 'REG00000') {
+                    $("#gethmac").hide();
+                    $("#gethmac").parent().html('<input type="text" name="hmac_key" class="layui-input" value="' + res.result.merHmacKey + '">')
+                } else {
+                    return layer.msg(res.result.returnMsg);
+                }
+            }
+        })
+    });
+</script>
+{/block}

@@ -1,0 +1,104 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'
+        data-title="添加"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除
+</button>
+<!--{/if}-->
+{/block}
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">课程类型</label>
+        <div class="layui-input-inline">
+            {:get_category_select(10, 'type', $Think.get.type,'',[],false)}
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">费用类型</label>
+        <div class="layui-input-inline">
+            {:get_category_select(33, 'cost_type', $Think.get.cost_type,'',[],false)}
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>名称</th>
+            <th class="text-center">课程类型</th>
+            <th class="text-center">费用类型</th>
+            <th class="text-center">进价</th>
+            <th class="text-center">售价</th>
+            <th class="text-center">积分</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">详细描述</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">{$vo.title}</td>
+            <td class="text-center">{$vo.type|convert_category=10|raw }</td>
+            <td class="text-center">{$vo.cost_type|convert_category=33|raw}</td>
+            <td class="text-center">{$vo.cast|format_money}</td>
+            <td class="text-center">{$vo.price|format_money}</td>
+            <td class="text-center">{$vo.integral}</td>
+            <td class="text-center">{$vo.status|convert_category=8|raw}</td>
+            <td class="text-center">{$vo.content}</td>
+            <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="编辑"
+                   data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del")}?id={$Think.get.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+
+
+{/block}

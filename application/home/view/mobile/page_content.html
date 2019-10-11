@@ -1,0 +1,37 @@
+{extend name='home@public/mobile_content'}
+{block name="content"}
+<section class="content">
+    <!--关于我们begin-->
+    <div class="news_index">
+        <div class="jsnav" style="margin-top:-1px;">
+            <div id="wrapper">
+                <div id="scroller">
+                    <ul>
+                        <li class="on">
+                            <a class="navlink" href="javascript:;">{$title}</a>
+                            <span class="arrow"></span>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="about_div">
+        {:htmlspecialchars_decode($content)}
+        </div>
+        <a href="http://m.eaeducation.net/lianxiwomen/" title="点击免费领取598元大礼包" class="i_tel_a"><img
+                src="/static/home/mobile/images/i_pic5.png"><span>点击免费领取598元大礼包</span></a>
+        <div style="height:6px;">
+
+        </div>
+
+    </div>
+
+
+    <!--关于我们end-->
+
+</section>
+<!--正文end-->
+
+<!-- Footer Start -->
+{/block}

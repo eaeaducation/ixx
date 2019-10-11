@@ -1,0 +1,710 @@
+{extend name='admin@public/content'}
+{block name="content"}
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <a href="admin.html#{:url('marketing/premarketing/consultation')}">
+                <span class="info-box-icon" style="color: #ffffff;background-color: #0090d9!important;">
+                    <i class="fa fa-user"></i>
+                </span>
+            </a>
+
+            <div class="info-box-content">
+
+                <span class="info-box-text" id="count_trigger">客户数量</span>
+                <span class="info-box-number">{$count.customer}<small>人</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <a href="admin.html#{:url('educational/student/index')}"><span class="info-box-icon "
+                                                                           style="color: #ffffff;background-color: #37a8af!important;"><i
+                    class="fa fa-vcard"></i></span></a>
+
+            <div class="info-box-content">
+                <span class="info-box-text">学生人数</span>
+                <span class="info-box-number">{$count.students}<small>人</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        {if !in_array(session('user.authorize'),[5,11])}
+        <div class="info-box">
+            <a href="admin.html#{:url('educational/classed/index')}"> <span class="info-box-icon"
+                                                                            style="background-color: #3e739d!important; color: #ffffff"><i
+                    class="fa fa-university"></i></span></a>
+
+            <div class="info-box-content">
+                <span class="info-box-text">开设班级</span>
+                <span class="info-box-number">{$count.class}<small>个</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        {else}
+        <div class="info-box">
+            <a data-title="今日待跟进客户" data-modal="{:url('getTodayFollow')}" data-area="['50%','70%']"> <span class="info-box-icon"
+                                                                                 style="background-color: #3e739d!important; color: #ffffff"><i
+                    class="fa fa-bell"></i></span></a>
+            <div class="info-box-content">
+                <span class="info-box-text">今日待跟进</span>
+                <span class="info-box-number">{$fallow|default=0}<small>人</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        {/if}
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <a href="admin.html#{:url('courses/courses/index')}"> <span class="info-box-icon"
+                                                                        style="color: #ffffff;background-color: #f56954!important;"><i
+                    class="fa fa-book"></i></span></a>
+
+            <div class="info-box-content">
+                <span class="info-box-text">开设课程</span>
+                <span class="info-box-number">{$count.courses}<small>门</small></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+</div>
+<div style="padding: 10px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header"><span  class="fa fa-bell   font-icon">&nbsp;&nbsp;公告栏</span></div>
+                <div class="layui-card-body">
+                    <div class="box-body" style="min-height: 30rem">
+                        <ul class="products-list product-list-in-box">
+                            {volist name='notices' id='item'}
+                            <li class="item">
+                                <div class="product-info" style="margin-left: 0;font-size: 13px;">
+                                    {$item.category|convert_category=16|raw}
+                                    <span class="pull-right">
+                                {$item.level|convert_category=14|raw}
+                            </span>
+                                    <a class="product-title" data-modal='{:url("$classuri/showNotice")}?id={$item.id}'
+                                       data-title='{$item.category|convert_category=16|raw}' data-area="['50%','70%']">
+                                <span class="product-description">
+                                {$item.title}
+                                     <small class="pull-right">{$item.created_at|format_time}</small>
+                                </span>
+                                    </a>
+                                </div>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6" style="min-height: 5rem">
+            <div class="layui-card">
+                <div class="layui-card-header"><span  class="fa fa-calendar   font-icon">&nbsp;&nbsp;待办事项</span></div>
+                <div class="layui-card-body">
+                    <div class="layui-tab layui-tab-card layui-box" style="min-height: 30rem">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">续费预警 <span class="layui-badge">{$comingSoon_num|default=0}</span>
+                            </li>
+                            <li>待跟进<span class="layui-badge">{$fallow|default=0}</span></li>
+                            <li>待收款<span class="layui-badge">{$nopay_num|default=0}</span></li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                {if empty($comingSoon)}
+                                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                                {else/}
+                                <table class="layui-table" lay-even="" lay-skin="nob">
+                                    <thead>
+                                    <tr>
+                                        <th class='text-center'>姓名</th>
+                                        <th class='text-center'>监护人电话</th>
+                                        <th class='text-center'>校区</th>
+                                        <th class='text-center'>课程</th>
+                                        <th class='text-center'>剩余课时</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name='comingSoon' id="vo" offset="0" length='5'}
+                                    <tr>
+                                        <td class="text-center text-nowrap">
+                                            <a data-open='{:url("marketing/premarketing/customerview")}?id={$vo.id}'>
+                                                {$vo.name}【{$vo.gender|convert_category=3|raw}】
+                                            </a>
+                                        </td>
+                                        <td class="text-center">{$vo.parent_tel|mobile_mask}</td>
+                                        <td class="text-center nowrap">{$vo.branch|convert_branch}</td>
+                                        <td class="text-center">{$vo.title}</td>
+                                        <td class="text-center nowrap">{if $vo.last_num<=5}<span style="color: red;">{$vo.last_num} (即将到期)</span>{else/}{$vo.last_num}{/if}
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                    {if $comingSoon_num>5}
+                                    <tr>
+                                        <td colspan="5" style="text-align: center"><a
+                                                data-open="{:url('educational/renew/index')}?status=4">查看更多</a>
+                                        </td>
+                                    </tr>
+                                    {/if}
+                                </table>
+                                {/if}
+                            </div>
+                            <div class="layui-tab-item">
+                                {if empty($fallow)}
+                                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                                {else/}
+                                <div class="layui-card">
+                                    <div class="layui-card-body">
+                                        <table class="layui-table" lay-even="" lay-skin="nob">
+                                            <colgroup>
+                                                <col width="100">
+                                                <col width="100">
+                                                <col width="100">
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>姓名</th>
+                                                <th>监护人电话</th>
+                                                <th>家长姓名</th>
+                                                <th>销售员</th>
+                                                <th>跟进状态</th>
+                                                <th>需要跟进时间</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {volist name='fallow_data' id='vo' offset="0" length='5'}
+                                            <tr>
+                                                <td>{$vo.name}</td>
+                                                <td>{$vo.parent_tel|mobile_mask}</td>
+                                                <td>{$vo.parent_name}</td>
+                                                <td>{$vo.collect_id|get_employee_name2}</td>
+                                                <td>{$vo.follow_status|convert_category=7|raw}</td>
+                                                <td>{$vo.remind_time|date="y-m-d"}</td>
+                                                <td><a onclick='goCustomer("{$vo.id}")'>去跟进</a></td>
+                                            </tr>
+                                            {/volist}
+                                            {if count($fallow_data)>5}
+                                            <tr>
+                                                <td colspan="7" style="text-align: center"><a data-title="今日待跟进客户"
+                                                                                              data-modal="{:url('getTodayFollow')}" data-area="['50%','70%']">查看更多</a>
+                                                </td>
+                                            </tr>
+                                            {/if}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {/if}
+                            </div>
+                            <div class="layui-tab-item">
+                                {if empty($nopay)}
+                                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                                {else/}
+                                <table class="layui-table" lay-even="" lay-skin="nob">
+                                    <thead>
+                                    <tr>
+                                        <th class='text-center'>订单编号</th>
+                                        <th class='text-center'>姓名</th>
+                                        <th class='text-center'>班级</th>
+                                        <th class='text-center'>金额</th>
+                                        <th class='text-center'>状态</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name="nopay" id="vo" offset="0" length='5'}
+                                    <tr>
+                                        <td class="text-center">
+                                            <a data-open='{:url("educational/order/orderView")}?id={$vo.id}'>{$vo.orderno}</a>
+                                        </td>
+                                        <td class="text-center">{$vo.student_id|get_customer_name|raw}</td>
+                                        <td class="text-center">{$vo.class_id|convert_class|raw|default='<font
+                                                style="color:red">未分班</font>'}
+                                        </td>
+                                        <td class="text-center">￥{$vo.price}元</td>
+                                        <td class="text-center">{$vo.status|convert_category=35|raw}</td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                    {if $nopay_num>5}
+                                    <tr>
+                                        <td colspan="5" style="text-align: center"><a
+                                                data-open="{:url('educational/order/orderlist')}?status=4">查看更多</a>
+                                        </td>
+                                    </tr>
+                                    {/if}
+                                </table>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="padding: 10px;padding-top: 0; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        {if in_array(session('user.authorize'),[1,3,4])}
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane form-search" action="{:request()->url()}"
+                          onsubmit="return false"
+                          method="get">
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">校区</label>
+                            <div class="layui-input-inline">
+                                {:get_branches_select('branch', $Think.get.branch, '', ["lay-filter"=>"branch"],false)}
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header"><span  class="fa fa-bar-chart-o  font-icon">&nbsp;&nbsp;进入客户统计</span></div>
+                <div class="layui-card-body">
+                    <div id="main" style="width: 100%;height:550px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header"><span  class="fa fa-pie-chart  font-icon">&nbsp;&nbsp;跟进状态统计</span></div>
+                <div class="layui-card-body">
+                    <div id="main2" style="width: 100%;height:550px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="padding: 10px;padding-top: 0; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header"><span  class="fa fa-question-circle  font-icon">&nbsp;&nbsp;功能指引</span></div>
+                <div class="layui-card-body">
+                    <div class="layui-tab layui-tab-card layui-box">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">基础指引</li>
+                           <!-- <li>辅助下载</li>-->
+                            <li>敬请期待...</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show" style="min-height: 30rem">
+                                <div class="layui-col-md4">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"> <span  class="fa fa-group   font-icon">&nbsp;&nbsp;CC销售指引</span></div>
+                                        <div class="layui-card-body" style="min-height: 25rem">
+                                            <table class="layui-table" lay-even="" lay-skin="nob">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;添加一条新客户</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/premarketing/createconsultation')}">去添加</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;查看客户详细信息</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/premarketing/consultation')}">进去点客户名称</a>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;给现有客户添加一条新的咨询(来电,去电)记录</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/premarketing/consultation')}">进去找到客户后点新建咨询</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;给现有客户报名,体验课报名,给客户发送短信</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/premarketing/consultation')}">进去点击相应的按钮</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;分配客户给销售</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/customerpool/index')}">选择客户点击分配客户按钮</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;更改客户校区,渠道,采单员</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/customerpool/index')}">选择客户点击批量操作按钮</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;管理员添加编辑渠道</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/channel/index')}">查看</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;客户维护记录</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('marketing/premarketing/consultationlog')}">查看</a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><span  class="fa fa-book  font-icon">&nbsp;&nbsp;教务指引</span></div>
+                                        <div class="layui-card-body" style="min-height: 25rem">
+                                            <table class="layui-table" lay-even="" lay-skin="nob">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;全部课程,编辑,查看</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('courses/courses/index')}">去列表</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;添加一门课程</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('courses/courses/add')}">去列表</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;添加学生</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/student/add')}">去添加</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;学生列表</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/student/index')}">查看</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;订单列表</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/order/orderlist')}">查看</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;班级管理</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/classed/index')}">去管理</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;老师课时</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/teachers/index')}">查看</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;课表</span>
+                                                    </td>
+                                                    <td class="text-left"><a
+                                                            data-open="{:url('educational/courses/classlist')}">查看</a>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header"><span  class="fa fa-address-book-o  font-icon">&nbsp;&nbsp;人事指引</span></div>
+                                        <div class="layui-card-body" style="min-height: 25rem">
+                                            <table class="layui-table" lay-even="" lay-skin="nob">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;添加,修改,删除校区和校区的信息</span>
+                                                    </td>
+                                                    <td class="text-right"><a data-open="{:url('admin/branch/index')}">去管理</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;管理员工,给员工绑卡,设置员工的职务</span>
+                                                    </td>
+                                                    <td class="text-right"><a
+                                                            data-open="{:url('admin/employee/index')}">去设置</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;添加职务,删除职务,管理职务,给职务授权</span>
+                                                    </td>
+                                                    <td class="text-right"><a
+                                                            data-open="{:url('admin/auth/index')}">去管理</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span style="line-height: 20px;" class="fa fa-hand-o-right font-icon">&nbsp;&nbsp;&nbsp;&nbsp;给各个校区,职务,发布通知公告,管理公告</span>
+                                                    </td>
+                                                    <td class="text-right"><a
+                                                            data-open="{:url('admin/notice/noticelist')}">去发布</a></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <!--<div class="layui-tab-item" style="min-height: 30rem">
+                                <div class="layui-col-md6">
+                                    <div class="layui-card text-center">
+                                        <div class="layui-card-header">爱学学android下载</div>
+                                        <div class="layui-card-body">
+                                            <img style="height: 15rem" src="/static/img/aixuexue.png">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-card text-center">
+                                        <div class="layui-card-header">爱学学ios下载</div>
+                                        <div class="layui-card-body">
+                                            <img  style="height: 15rem" src="/static/img/aixuexue.png">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="layui-tab-item" style="height: 30rem">
+                                <div class="layui-card-header">这块放什么你说了算</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script src="/static/plugs/countdown/countdown.js"></script>
+<!--<script src="/static/plugs/echarts/echarts.min.js"></script>-->
+<script type="text/javascript">
+    window.form.render();
+    require(['echarts'], function () {
+        // 基于准备好的dom，初始化echarts实例
+        var echarts = require('echarts');
+        var myChart = echarts.init(document.getElementById('main'));
+        var myChart2 = echarts.init(document.getElementById('main2'));
+        var branch = $('[name="branch"] option:selected').val();
+        // 指定图表的配置项和数据
+        $.post('{:url("$classuri/count_data")}', {branch: branch}, function (data) {
+            var option = {
+                title: {
+                    // text: '成交',
+                    // subtext: data.time
+                },
+                color: ['#0090d9'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#283b56'
+                        }
+                    }
+                },
+                legend: {
+                    data: ['成交率(%)', '新增客户(人)']
+                },
+                toolbox: {
+                    show: true
+                },
+
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: data.day
+                    },
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: data.day
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        scale: true,
+                        name: '成交(%)',
+                        min: 0,
+                        max: 100
+
+
+                    },
+                    {
+                        type: 'value',
+                        scale: true,
+                        name: '数量(人)',
+                        min: 0
+                    }
+                ],
+                series: [
+                    {
+                        name: '新增客户(人)',
+                        type: 'bar',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        data: data.data
+                    },
+                    {
+                        name: '成交率(%)',
+                        type: 'line',
+                        data: data.rate
+                    }
+                ]
+            };
+            option2 = {
+                title: {},
+                color: ['#0090d9', '#f3b71c', '#3e739d', '#28d094', '#00a5a8', '#6b798f', '#f56954', '#464855'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: data.follow_status.key
+                },
+                series: [
+                    {
+                        name: "跟进状态",
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+
+                                formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                backgroundColor: '#eee',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                shadowBlur: 3,
+                                shadowOffsetX: 2,
+                                shadowOffsetY: 2,
+                                shadowColor: '#999',
+                                padding: [0, 7],
+                                rich: {
+                                    a: {
+                                        color: '#999',
+                                        lineHeight: 22,
+                                        align: 'center'
+                                    },
+                                    // abg: {
+                                    //     backgroundColor: '#333',
+                                    //     width: '100%',
+                                    //     align: 'right',
+                                    //     height: 22,
+                                    //     borderRadius: [4, 4, 0, 0]
+                                    // },
+                                    hr: {
+                                        borderColor: '#aaa',
+                                        width: '100%',
+                                        //   borderWidth: 0.5,
+                                        height: 0
+                                    },
+                                    b: {
+                                        fontSize: 16,
+                                        lineHeight: 33
+                                    },
+                                    per: {
+                                        color: '#eee',
+                                        backgroundColor: '#334455',
+                                        padding: [2, 4],
+                                        borderRadius: 2
+                                    }
+                                }
+
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: data.follow_status.value
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            myChart2.setOption(option2);
+        })
+    });
+</script>
+
+{/block}

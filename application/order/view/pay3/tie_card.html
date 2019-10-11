@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>填写新卡信息</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/jquery-weui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/weui.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css"/>-->
+    <style>
+        .form-input{margin-bottom: 18px;}
+        .form-input p{display: inline-block;width: 21%;}
+        .userInput{width: 55%; height: 40px;}
+        .weui-btn_primary {background-color: unset;}
+        .weui-icon-info-circle{font-size: 18px;width: 0%; color: #ff8300}
+    </style>
+</head>
+<body>
+<div class="head">
+    <div class="head-top">
+        <div class="left-btn">
+            <img src="/static/home/pay/img/left-btn.png" />
+        </div>
+
+    </div>
+    <div class="title">
+        <h3 style="color: white;">{:sysconf('app_name')}</h3>
+    </div>
+</div>
+<form id="form">
+<div class="form form-bank">
+    <div class="form-input">
+        <p>姓    名</p>
+        <input type="text" name="name" placeholder="请输入真实姓名" value="{$name}" required="required" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>预留电话</p>
+        <input type="number" name="bankTel" placeholder="请输入银行卡预留电话" value="{$mobile}" required="required" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>身份证号</p>
+        <input type="number" name="idCardNo" placeholder="请输入用户身份证号" required="required" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>信用卡卡号</p>
+        <input type="number" name="bankNo" placeholder="请输入信用卡卡号" required="required" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>开户行</p>
+        <!--<input type="text" name="bankCode" placeholder="请输入银行编码" required="required" class="userInput"/>-->
+        {php}
+            echo $html;
+        {/php}
+    </div>
+    <div class="form-input">
+        <p>有效期</p>
+        <input type="number" name="expireDate" placeholder="银行卡有效期yyyy/MM" required="required" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>银行卡校验码</p>
+        <input type="number" name="bankCvn2" placeholder="请输入银行卡校验码" required="required" class="userInput"/>
+        <a href="javascript:;" class="open-popup" data-target="#half"><i id='cv2' class="weui-icon-info-circle"></i></a>
+    </div>
+</div>
+</form>
+<a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next">
+    下一步
+</a>
+<div id="half" class="weui-popup__container popup-bottom">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <img style="width: 100%" src="/static/home/pay/img/cv2.png">
+    </div>
+</div>
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-weui.min.js"></script>
+<script>
+    $(function () {
+        $('.left-btn').click(function () {
+            history.back(-1);
+        });
+        $("#half").popup();
+        $('.weui-popup__overlay').on('click', function () {
+            $.closePopup();
+        });
+    });
+
+    $('.next').click(function () {
+        var name = $('[name="name"]').val(),
+            bankNo = $('[name="bankNo"]').val(),
+            bankTel = $('[name="bankTel"]').val(),
+            idCardNo = $('[name="idCardNo"]').val(),
+            bankCode = $('[name="bankCode"]').val(),
+            expireDate = $('[name="expireDate"]').val(),
+            bankCvn2 = $('[name="bankCvn2"]').val(),
+            rate = '{$rate}',
+            stageNum = '{$stageNum}',
+            price = '{$price}',
+            oid = '{$oid}',
+            uid = '{$uid}';
+        var url = '{:url("api2/kufenqi/integration")}';
+
+        if (/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idCardNo) === false) {
+            $.alert('请输入正确的身份证号', '提示');
+            return false;
+        }
+
+        if (/\d{15}|\d{19}/.test(bankNo) === false) {
+            $.alert('请输入正确的银行卡号', '提示');
+            return false;
+        }
+        if (expireDate == '') {
+            $.alert('请输入正确的银行有效期', '提示');
+            return false;
+        }
+        if (/^[0-9]{3}$/.test(bankCvn2) === false) {
+            $.alert('请输入正确的3位银行校验码', '提示');
+            return false;
+        }
+
+        $.post(url, {name: name, bankNo: bankNo, bankTel: bankTel, idCardNo: idCardNo, bankCode: bankCode,
+            expireDate: expireDate, bankCvn2: bankCvn2, rate: rate, stageNum: stageNum, price: price, oid: oid, uid: uid}, function (e) {
+            console.log(e);
+            if (e.result == 200) {
+                $.hideLoading();
+                window.location.href = 'verif?uid='+  uid + '&oid=' + oid + '&price=' + price + '&payid=' + e.data.payId + '&applyid=' + e.data.applyId + '&bankno=' + bankNo;
+            } else {
+                $.alert('绑卡失败，请重新绑卡', '提示');
+            }
+        })
+    })
+</script>
+</body>
+</html>
+

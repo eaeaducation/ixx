@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/plugs/spectre/spectre.min.css">
+    <link rel="stylesheet" href="/static/plugs/spectre/spectre-exp.min.css">
+    <link rel="stylesheet" href="/static/plugs/spectre/spectre-icons.min.css">
+    <script src="/static/plugs/jquery/jquery.min.js"></script>
+    <script src="/static/plugs/jquery/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="/static/temp/survey/css/toupiao.css"/>
+    <title>{$survey.title|default="调查问卷"}</title>
+    <!--{notempty name='survey.bg_pic'}-->
+    <style>
+        body {
+            background-image: url("{$survey.bg_pic}");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+    </style>
+    <!--{/notempty}-->
+    <style>
+
+        form {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" id="answerform" onsubmit="return false" method="post">
+    <div class="toup">
+        <div class="swipers">
+            <div class="con">
+                <h1>{$survey.title|default=""}</h1>
+                {$survey.desc|htmlspecialchars_decode|raw}
+            </div>
+        </div>
+    </div>
+    <div class="swipers">
+        <!--{empty name='questions'}-->
+        <p class="help-block text-center well">暂无问题！</p>
+        <!--{else}-->
+        {foreach $questions as $key=>$vo}
+        <div class="scores">
+            <div class="f">{:empty($vo.is_require)?'':'<i style="color:red">* </i>'}<span
+                    class="title">{$key+1}. </span><span>{$vo.name}</span>
+            </div>
+            <div class="choose">
+                {if $vo.type==1}
+                {foreach $vo.items as $k=>$v}
+                <div class="form-group input">
+                    {if $vo.is_require==1}
+                    <label class="form-radio">
+                        <input type="radio" name="answer[{$vo.id}]" value="{$v}" class="required">
+                        <i class="form-icon"></i> {$v}
+                    </label>
+                    {else/}
+                    <label class="form-radio">
+                        <input type="radio" name="answer[{$vo.id}]" value="{$v}">
+                        <i class="form-icon"></i> {$v}
+                    </label>
+                    {/if}
+                </div>
+                {/foreach}
+                {elseif($vo.type==2)/}
+                {foreach $vo.items as $k=>$v}
+                <div class="form-group">
+                    {if $vo.is_require==1}
+                    <!-- form checkbox control -->
+                    <label class="form-checkbox">
+                        <input type="checkbox" name="answer[{$vo.id}][]" value="{$v}" class="required">
+                        <i class="form-icon"></i> {$v}
+                    </label>
+                    {else/}
+                    <!-- form checkbox control -->
+                    <label class="form-checkbox">
+                        <input type="checkbox" name="answer[{$vo.id}][]" value="{$v}">
+                        <i class="form-icon"></i> {$v}
+                    </label>
+                    {/if}
+                </div>
+                {/foreach}
+                {elseif($vo.type==3)/}
+                <div class="form-group">
+                    {if $vo.is_require==1}
+                    <!-- form input control -->
+                    <input type="text" name="answer[{$vo.id}]" class="form-input required">
+                    {else/}
+                    <!-- form input control -->
+                    <input type="text" name="answer[{$vo.id}]" class="form-input">
+                    {/if}
+                </div>
+                {elseif($vo.type==4)/}
+                <div class="form-group">
+                    {if $vo.is_require==1}
+                    <!-- form textarea control -->
+                    <textarea name="answer[{$vo.id}]" class="form-input required" rows="3"></textarea>
+                    {else/}
+                    <!-- form textarea control -->
+                    <textarea name="answer[{$vo.id}]" class="form-input" rows="3"></textarea>
+                    {/if}
+                </div>
+                {/if}
+            </div>
+        </div>
+        <input type="hidden" name="tid" value="{$vo.id}">
+        {/foreach}
+        <input type="hidden" name="qid" value="{$survey.id}">
+        <input type="hidden" name="created_at" value="{:time()}">
+        <input type="hidden" name="userdev" value="System">
+        <input type="hidden" name="status" value="{$survey.status}">
+        <input type="hidden" name="fingerprint" id="fp" class="phone" value=""/>
+        <!--{/empty}-->
+        <div style="margin-bottom: 1.2rem;margin-top: 1rem;">
+            <button type="submit" class="btn btn-block btn-success">提交答案</button>
+        </div>
+    </div>
+</form>
+<script src="/static/plugs/fingerprintjs2/fingerprint2.js"></script>
+<script src="/static/plugs/layer_mobile/layer.js"></script>
+<script>
+    $("#answerform").on("click", function () {
+        var fingerprint = new Fingerprint2();
+        fingerprint.get(function (result) {
+            $("#fp").val(result + '_' + getQueryString());
+        });
+    });
+
+    var input_qid = $("input[name='qid']").val();
+    window.onload = function getcookie() {
+        if ($.cookie("fp_" + input_qid) && (getQueryString() == $.cookie("fp_" + input_qid).split("_")[1])) {
+            layer.open({
+                content: '您已经完成提交啦'
+                , btn: ['知道了']
+            })
+        }
+
+        $("input").each(function () {
+            if ($(this).attr('class') == 'required') {
+                var name = $(this).attr('name');
+                $('input[name="' + name + '"]').attr('disable');
+            }
+        });
+    };
+
+    // 获取urlget到的值
+    function getQueryString() {
+        var str = window.location.href;
+        var es = /index/;
+        es.exec(str);
+        var right = RegExp.rightContext;
+        var id = right.substr(1).split('.');
+        if (right != null && (!isNaN(id[0]))) {
+            return id[0];
+        }
+        return null;
+    }
+
+    $("button[type=submit]").click(function () {
+        var url = '{:url("question/add")}';
+        var formdata = $("#answerform").serialize();
+        var isrequired = true;
+
+        $("input").each(function () {
+            var name = $(this).attr('name');
+            var value_check = $('input[name="' + name + '"]:checked').val();
+            if ($(this).attr('class') == 'required') {
+                if (!value_check) {
+                    isrequired = false;
+                }
+            }
+            var name_input = $(this).attr('name');
+            var value_input = $('input[name="' + name_input + '"]').val();
+            if ($(this).attr('class') == 'form-input required') {
+                if (!value_input) {
+                    isrequired = false;
+                }
+            }
+        });
+        $("textarea").each(function () {
+            var textarea_name = $(this).attr('name');
+            var textarea_val = $('textarea[name="' + textarea_name + '"]').val();
+            if ($("textarea").attr('class') == 'form-input required') {
+                if (!textarea_val) {
+                    isrequired = false;
+                }
+            }
+        });
+
+        if (isrequired == false) {
+            layer.open({
+                content: '您有必选项目未填写'
+                , btn: ['继续填写']
+            })
+        } else {
+            $.post(url, formdata, function (data) {
+                if (data.code == 1) {
+                    $.cookie('fp_' + input_qid, $("#fp").val() + '_' + input_qid, 86400);
+                    window.location.href = '/survey/question/complete/' + input_qid+'?fingerprint='+$("#fp").val();
+                } else {
+                    layer.open({
+                        content: data.msg
+                        , btn: ['知道了']
+                    });
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付状态</label>
+        <div class="layui-input-block">
+            {:get_category_select(35,'status', $status.status, '', [],false)}
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付方式</label>
+        <div class="layui-input-block">
+            {:get_category_select(36,'pay_type','', '', [],true)}
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+
+        <input type='hidden' value='{$id}' name='id'>
+        <input type="hidden" value="{:session('user.id')}" name="userid">
+
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+    <script>
+        window.form.render();
+    </script>
+
+</form>

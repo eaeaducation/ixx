@@ -1,0 +1,40 @@
+<form onsubmit="return false;" data-auto="true" method="post">
+    <div class="layui-box">
+        <table class="table table-bordered">
+            <tr>
+                <th class="text-center">链接:</th>
+                <td>
+                    <code id="code"></code>
+                    <a id="preview" scrolling="yes" class="layui-btn layui-btn-xs layui-btn-normal">预览</a>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-center" style="vertical-align: middle">二维码</th>
+                <td>
+                    <div class="img-responsive">
+                        <img id="ewm" src="" title="我的二维码">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function create() {
+        var id = '{$Think.get.id}';
+        var url = "{:url('survey/createQrCode')}";
+        $.get(url, {'id': id}, function (data) {
+            console.log(data)
+            if (data.msg == 1) {
+                $('#code').text(data.url);
+                $('#preview').attr('data-phone-view', data.url);
+                $('#ewm').attr("src", 'data:image/png;base64,' + data.data)
+            } else {
+                return layer.msg('生成二维码失败');
+            }
+        })
+    }
+
+    create();
+</script>

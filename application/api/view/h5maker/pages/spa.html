@@ -1,0 +1,95 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{$theme.title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- build:css css/vendor.css -->
+    <link rel="stylesheet" href="/h5builder/public/libs/css/animate.min.css">
+    <link rel="stylesheet" href="/h5builder/public/css/main.css">
+</head>
+<body>
+<div id="wx_pic"><img src=""></div>
+<div class="content-container">
+        {foreach $theme.pages as $page}
+            {foreach $page.elements as $element}
+            {if $element.type === 'bg'}
+            <img class="ele-bg" src="{$element['imgSrc']}">
+            {/if}
+            {/foreach}
+            <div class="resize-container mediate flat">
+                <section>
+                    {foreach $page.elements as $element}
+                    {if $element.type === 'pic'}
+                    <div class="ele" style="z-index: {$element['zindex']}; width: {$element['width'] }px; height: {$element['height'] }px; left: {$element['left'] }px; top: {$element['top'] }px;">
+                        <div class="{$element['animatedName']} ani {if $element['loop']} loop{/if} animated" swiper-animate-effect="{$element['animatedName'] }" swiper-animate-duration="{$element['duration'] . 's' }" swiper-animate-delay="{$element['delay'] . 's' }">
+                            {if isset($element.href)}<a target="_blank" href="http://{$element['href'] }"><img class="ele-img" src="{$element['imgSrc'] }" style="opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg)"></a>{else}<img class="ele-img" src="{$element['imgSrc'] }" style="opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg)">{/if}
+                        </div>
+                    </div>
+                    {/if}
+                    {if $element.type === 'video'}
+                    <div class="ele" style="z-index: {$element['zindex'] }; width: {$element['width'] }px; height: {$element['height'] }px; left: {$element['left'] }px; top: {$element['top'] }px;">
+                        <div class="{$element['animatedName']} ani {if $element['loop']} loop{/if} animated" swiper-animate-effect="{$element['animatedName'] }" swiper-animate-duration="{$element['duration'] . 's' }" swiper-animate-delay="{$element['delay'] . 's' }">
+                            {if isset($element.href) }<a target="_blank" href="http://{$element['href']}"><video autoplay="autoplay" class="ele-img" src="{$element['videoSrc'] }" style="opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg)"></a>{else}<video autoplay="autoplay" class="ele-img" src="{$element['videoSrc'] }" style="opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg)">{/if}
+                        </div>
+                    </div>
+                    {/if}
+                    {if $element.type === 'text'}
+                    <div class="ele" style="font-family: '{$element['fontFamily']}';z-index: {$element['zindex'] }; width: {$element['width'] }px; left: {$element['left'] }px; top: {$element['top'] }px;">
+                        <div class="{$element['animatedName']} ani {if $element['loop']} loop{/if}" swiper-animate-effect="{$element['animatedName'] }" swiper-animate-duration="{$element['duration'] . 's' }" swiper-animate-delay="{$element['delay'] . 's' }">
+                            <div style="opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg); color: {$element['color'] }; text-align: {$element['textAlign'] }; line-height: {$element['lineHeight'] }; font-family: {$element['fontFamily'] }; font-size: {$element['fontSize'] }px; white-space: pre-line;font-weight: {$element['fontWeight']|default='normal' }">{if isset($element.href)}<a style="color: {$element['color'] };" target="_blank" href="http://{$element['href'] }">{$element.text }</a>{else}{$element.text }{/if}</div>
+                        </div>
+                    </div>
+                    {/if}
+                    {if $element.type === 'input'}
+                    <div class="ele" style="font-family: '{$element['fontFamily']}';z-index: {$element['zindex'] }; width: {$element['width'] }px;height: {$element.height}px; left: {$element['left'] }px; top: {$element['top'] }px;">
+                        <div class="{$element['animatedName']} ani {if $element['loop']} loop{/if} animated" swiper-animate-effect="{$element['animatedName'] }" swiper-animate-duration="{$element['duration'] . 's' }" swiper-animate-delay="{$element['delay'] . 's' }">
+                            <input name="{$element.name}" style="width:100%;height:100%;opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg); color: {$element['color'] }; text-align: {$element['textAlign'] }; line-height: {$element['lineHeight'] }; font-family: {$element['fontFamily'] }; font-size: {$element['fontSize'] }px; white-space: pre-line;font-weight: {$element['fontWeight']|default='normal'};border:{$element.border};padding-left: {$element.paddingLeft}px;border-radius: {$element.borderRadius}px;" placeholder="{$element.placeholder}"/>
+                        </div>
+                    </div>
+                    {/if}
+                    {if $element.type === 'button'}
+                    <div class="ele" style="font-family: '{$element['fontFamily']}';z-index: {$element['zindex'] }; width: {$element['width'] }px;height: {$element.height}px; left: {$element['left'] }px; top: {$element['top'] }px;">
+                        <div class="{$element['animatedName'] . 'ani ' }{if $element['loop']} loop{/if} animated" swiper-animate-effect="{$element['animatedName'] }" swiper-animate-duration="{$element['duration'] . 's' }" swiper-animate-delay="{$element['delay'] . 's' }">
+                            <button name="submit" style="width:100%;height:100%;opacity: {$element['opacity'] }; transform: rotate({$element['transform'] }deg); color: {$element['color'] }; text-align: {$element['textAlign'] }; line-height: {$element['lineHeight'] }; font-family: {$element['fontFamily'] }; font-size: {$element['fontSize'] }px; white-space: pre-line;font-weight: {$element['fontWeight']|default='normal'};border-radius: {$element.borderRadius}px;text-align: {$element.textAlign}" type="{$element.inputType}">{$element.text}</button>
+                        </div>
+                    </div>
+                    {/if}
+                    {/foreach}
+                </section>
+            </div>
+        {/foreach}
+</div>
+<script>
+    var $theme = JSON.parse('{$theme|json_encode|raw}');
+</script>
+<script>
+    (function () {
+        var designW = 320
+        var designH = 508
+        var designR = designW / designH
+
+        var actualW = document.documentElement.clientWidth
+        var actualH = document.documentElement.clientHeight
+        var actualR = actualW / actualH
+
+        var scale = (actualR > designR) ? (actualH / designH) : (actualW / designW)
+        var style = 'width: ' + designW + 'px;overflow: auto; -webkit-transform: scale(' + scale + '); transform: scale(' + scale + '); ';
+        var top = 52 //375*(scale-1)-11
+        // style += 'top: '+top+'px;bottom:'+top+'px;';
+        if (actualW < designW) {
+            if (actualR > designR) {
+                style += 'margin-left: ' + (actualW - designW) / 2 + 'px;'
+            } else {
+                style += '-webkit-transform-origin: left; transform-origin: left;'
+            }
+        }
+        var containers = document.getElementsByClassName('resize-container')
+        var i
+        for (i = 0; i < containers.length; i++) {
+            containers[i].setAttribute('style', style)
+        }
+    })()
+</script>
+{include file='public/api'}
+</body>
+</html>

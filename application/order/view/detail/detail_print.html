@@ -1,0 +1,234 @@
+<bgsound class=" new-style-radius">
+    <!--startprint1-->
+    <table border="1" align="center" cellpadding="0" cellspacing="0" class="print-table" style="margin-top: 3%; min-width: 700px; max-width: 800px">
+        <tbody>
+        <tr>
+            <td colspan="8" style="text-align: center;">
+                <b><span style="text-align: center;">{:sysconf('app_name')} 业务凭证</span></b>
+                <span style="float: right;">订单编号：{$order_info.orderno}　</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="8">
+                <span class="print-p-l">
+                    <span>学员姓名：{$order_info.name}   </span>
+
+                    <span>&nbsp; &nbsp; &nbsp;订单类型：报名</span>
+                </span>
+                <span style="float: right;">经办日期：{$order_info.created_at|format_date}　</span>
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="5">交易内容</th>
+            <th>数量</th>
+            <th>优惠</th>
+            <th>应收</th>
+        </tr>
+        {if !empty($order_course)}
+        {volist name='order_course' id='vo' key='k'}
+        <tr>
+            <td colspan="5" class="t-left">
+                <table style="width: 100%; border: 0;" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td colspan="8">
+                            <b>课程：</b>
+                            <b>{$vo.title}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" align="right">
+                            <small> 备注：{$vo.remark|default='无'}　</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="text-align: center">
+                {$vo.goods_num}学时
+            </td>
+            <td>
+                　优惠:{$vo.old_price - $vo.price}元　<br>
+            </td>
+            <td>
+                　￥{$vo.price}元　
+            </td>
+        </tr>
+        {/volist}
+        {/if}
+        {if !empty($order_jc)}
+        {volist name='$order_jc' id='vo' key='k'}
+        <tr>
+            <td colspan="5" class="t-left">
+                <table style="width: 100%; border: 0;" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td colspan="8">
+                            <b>教材：</b>
+                            <b>{$vo.title}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" align="right">
+                            <small> 备注：{$vo.remark|default='无'}　</small>　
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="text-align: center">
+                {$vo.goods_num}件
+            </td>
+            <td>
+                　优惠:{$vo.old_price - $vo.price}元　<br>
+            </td>
+            <td>
+                　￥{$vo.price}元　
+            </td>
+        </tr>
+        {/volist}
+        {/if}
+        {if !empty($order_zf)}
+        {volist name='$order_zf' id='vo' key='k'}
+        <tr>
+            <td colspan="5" class="t-left">
+                <table style="width: 100%; border: 0;" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td colspan="8">
+                            <b>杂费：</b>
+                            <b>{$vo.title}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                            <small> 备注：{$vo.remark|default='无'}　</small>　 　
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="text-align: center">
+                {$vo.goods_num}件
+            </td>
+            <td>
+                　优惠:{$vo.old_price - $vo.price}元　<br>
+            </td>
+            <td>
+                　￥{$vo.price}元　
+            </td>
+        </tr>
+        {/volist}
+        {/if}
+
+        <!--<tr>-->
+        <!--<td colspan="8" class="t-left">备注：</td>-->
+        <!--</tr>-->
+        {if !empty($order_info)}
+        <tr>
+            <td>
+                <b>应收总计：</b>
+            </td>
+            <td>
+                <b>&nbsp; <span class="count_num">￥+{$order_info.price + $order_info.monty_yh}元</span>&nbsp; </b>
+            </td>
+            <td>
+                <b>&nbsp; 优惠总计：</b>
+            </td>
+            <td>
+                <b><span class="count_num">&nbsp; ￥+{$order_info.monty_yh}元&nbsp;</span></b>
+            </td>
+            <td style="text-align: center">
+                <b>实际总计：</b>
+            </td>
+            <td colspan="3" style="text-align: center">
+                <b><span class="count_num">￥{$order_info.price}元</span></b>
+            </td>
+
+        </tr>
+
+
+        <tr>
+            <td>
+                <b>付款方式：</b>
+            </td>
+            <td colspan="7" style="text-align:left;">
+                {$order_info.pay_type|convert_category=36|raw|default='未知'}：￥{$order_info.price}
+            </td>
+        </tr>
+        {/if}
+
+        <tr>
+            <td colspan="8" style="text-align:center">
+                开课三次后不予办理退费。请您保管好您的收据，丢失不予补办。
+            </td>
+        </tr>
+
+        {if !empty($branch_info)}
+        <tr>
+            <td>
+                电话：{$branch_info.tel}
+            </td>
+            <td colspan="2">
+                地址：{$branch_info.address}
+            </td>
+            <td colspan="2">
+                打印时间：{php}echo date('Y-m-d H:i:s',time()){/php}
+            </td>
+            <td>
+                　经办人：{$print_user}　
+            </td>
+            <td valign="top">
+                经办签名：　　　　
+            </td>
+            <td valign="top">
+                客户签字：　　　　
+            </td>
+        </tr>
+        {/if}
+        </tbody>
+    </table>
+    <!--endprint1-->
+</bgsound>
+
+<div class="table-b-a" style="text-align: center;margin-top: 1% ;margin-bottom: 3%">
+    <input class="layui-btn" id="btnPrint" type="button" value="打印预览" onclick="preview(1);" />
+    <input  class="layui-btn layui-btn-danger" id="btnPrint1" type="button" value="取消打印" onclick=closebtn() />
+</div>
+<script>
+    function closebtn(){
+        layer.closeAll();
+    }
+
+    function preview(oper)
+    {
+        if (oper < 10)
+        {
+            bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+            sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+            eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+            prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+            prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+            window.document.body.innerHTML=prnhtml;
+            window.print();
+            window.document.body.innerHTML=bdhtml;
+        } else {
+            window.print();
+        }
+    }
+</script>
+</body>

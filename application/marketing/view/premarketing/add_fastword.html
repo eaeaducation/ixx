@@ -1,0 +1,55 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+    <div class="layui-form-item">
+        <label class="col-sm-1 control-label">选择角色</label>
+        <div class="col-sm-10">
+            {:get_authorizes_radio('', 'authorize_id', isset($vo.authorize_id)?$vo.authorize_id:'',
+            '',["required"=>''])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="col-sm-1 control-label">短信内容</label>
+        <div class="col-sm-10">
+            <textarea name="content" required placeholder="请输入短信内容" class="layui-textarea"
+                      maxlength="60" required>{$vo.content|default=""}</textarea>
+            <div class="help-block">
+                <p class="text-danger">短信内容最大为60个汉字,请精简您的内容信息!</p>
+            </div>
+        </div>
+    </div>
+    {if isset($vo.id)}
+    <input type="hidden" name="id" value="{$vo.id}">
+    {else}
+    <input type="hidden" name="addtime" value="{:time()}">
+    {/if}
+    <div class="hr-line-dashed"></div>
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">保存</button>
+        </div>
+    </div>
+</form>
+{block name="script"}
+<script>
+    window.form.render();
+    window.laydate.render({range: false, elem: 'input[name="birthday"]', max: '{:date("Y-m-d")}'});
+    window.laydate.render({range: false, elem: 'input[name="zz_date"]', max: '{:date("Y-m-d")}'});
+    window.laydate.render({range: false, elem: 'input[name="contract_date_begin"]', max: '{:date("Y-m-d")}'});
+    window.laydate.render({range: false, elem: 'input[name="contract_date_end"]'});
+
+    function showMore() {
+        $("[data-consultation-type='other']").toggle();
+    }
+
+    function isManagers() {
+        $("[data-consultation-type='manager']").toggle();
+    }
+
+    var is_manager = '{:isset($vo.user)}';
+    $(function () {
+        if (is_manager != '') {
+            isManagers();
+        }
+    });
+</script>
+{/block}

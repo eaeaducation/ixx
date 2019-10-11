@@ -1,0 +1,269 @@
+{extend name='home@public/mobile_content'}
+
+{block name="content"}
+<!--正文begin-->
+<section class="content">
+    <!--flash start-->
+    <div class="flash swiper-container" style="width: 414px; height: 226.406px;">
+        <ul class="ul_flash swiper-wrapper"
+            style="width: 2070px; height: 226.406px; transform: translate3d(-1656px, 0px, 0px); transition-duration: 0.3s;">
+
+            {foreach $banner as $k=>$v}
+            <li class="swiper-slide" style="width: 414px; height: 226.406px;">
+                <a href="http://m.eaeducation.net/#" title="">
+                    <img src="{$v.thumb}">
+                </a>
+            </li>
+            {/foreach}
+        </ul>
+        <div class="pagination" style="left: 183px;">
+            <span class="swiper-pagination-switch swiper-visible-switch swiper-active-switch"></span>
+            <span class="swiper-pagination-switch"></span>
+            <span class="swiper-pagination-switch"></span>
+        </div>
+    </div>
+    <!--flash end-->
+    <!--建站服务begin-->
+    <div class="i_title">
+        <h2>少儿英语教育</h2>
+        <img src="/static/home/mobile/images/txt1.png" alt="">
+        <a href="http://m.eaeducation.net/kechengjieshao/" class="imore">More</a>
+    </div>
+    <div class="i_one">
+        <table width="100%" border="0" cellspacing="1" cellpadding="0">
+            <tbody>
+            <tr>
+                <td width="100%">
+                    <a href="{:url('home/mobile/about_us')}" title="关于我们">
+                        <img src="/static/home/mobile/images/sy1.jpg" alt="关于我们">
+                    </a>
+                </td>
+                <td>
+                    <a href="{:url('home/mobile/course_introduce')}" title="课程介绍">
+                        <img src="/static/home/mobile/images/sy2.jpg" alt="课程介绍">
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{:url('home/mobile/teaching_environment')}" title="授课环境">
+                        <img src="/static/home/mobile/images/sy3.jpg" alt="授课环境">
+                    </a>
+                </td>
+                <td>
+                    <a href="{:url('home/mobile/investment')}" title="招商加盟">
+                        <img src="/static/home/mobile/images/sy4.jpg" alt="招商加盟">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <!--建站服务end-->
+    <!--成功案例begin-->
+    <div class="i_title">
+        <h2>经典案例</h2>
+        <img src="/static/home/mobile/images/txt2.png" alt="">
+        <a href="http://m.eaeducation.net/jingdiananli/" class="imore">More</a>
+    </div>
+    <div class="i_case">
+        <ul class="clearfix">
+            <li>
+                <a href="http://m.eaeducation.net/jingdiananli/20180907/10.html">
+                    <img src="/static/home/mobile/images/1-1PZG15Z21A-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180907/10.html">EA优秀学子-老师的小帮手Emma</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180907/10.html">EA 国际教育夏令营让孩子度过了...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/jingdiananli/20180904/9.html">
+                    <img src="/static/home/mobile/images/1-1PZ4114I5393-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180904/9.html">宝鸡高新一中EA课程班-家长给孩</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180904/9.html">写给女儿的一份信 朗读者 | 马愉...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/jingdiananli/20180814/2.html">
+                    <img src="/static/home/mobile/images/1-1PQ4115G2J5-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180814/2.html">EA国际教育告诉小孩学习英语压力</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180814/2.html">对于现在已经成年的人来说，看到...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/jingdiananli/20180814/1.html">
+                    <img src="/static/home/mobile/images/1-1PQ411552J37-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180814/1.html">EA学员赴英留学-优质小学霸英伦</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/jingdiananli/20180814/1.html">苏同学，乌鲁木齐第一小学，11岁...</a>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <!--成功案例end-->
+
+    <!--新闻动态begin-->
+    <div class="i_title">
+        <h2>新闻动态</h2>
+        <img src="/static/home/mobile/images/txt2.png" alt="">
+        <a href="http://m.eaeducation.net/zixundongtai/" class="imore">More</a>
+    </div>
+    <div class="i_case">
+        <ul class="clearfix">
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180918/15.html">
+                    <img src="/static/home/mobile/images/1-1P91Q02354Z0-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180918/15.html">学好少儿英语要记住这七多七少原</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180918/15.html">我们都知道学习英语是一个长期的...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180915/14.html">
+                    <img src="/static/home/mobile/images/1-1P91515223M17-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180915/14.html">西安少儿英语50句英语常用短语汇</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180915/14.html">我们都知道英语的组成包括单词语...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180914/13.html">
+                    <img src="/static/home/mobile/images/1-1P91414210A53-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180914/13.html">西安少儿英语培训机构那家好?排</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180914/13.html">现在的社会人们对于孩子的教育抓...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180913/12.html">
+                    <img src="/static/home/mobile/images/1-1P913152039116-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180913/12.html">西安小学生必备英语词汇-家庭成</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180913/12.html">英语学习离不开基础积累，基础的...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180908/11.html">
+                    <img src="/static/home/mobile/images/1-1PZQ50505443-lp.jpg" alt="">
+                </a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180908/11.html">EA教育英语学习顺口溜,家长赶紧</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180908/11.html">大多数家长肯定知道，英语是困扰...</a>
+                </p>
+            </li>
+            <li>
+                <a href="http://m.eaeducation.net/zixundongtai/20180825/8.html">
+                    <img src="/static/home/mobile/images/1-1PR514362S41.jpg" alt=""></a>
+                <h4>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180825/8.html">西安少儿英语培训-怎么正确学英</a>
+                </h4>
+                <p>
+                    <a href="http://m.eaeducation.net/zixundongtai/20180825/8.html">英语学习其实是一个系统的学习过...</a>
+                </p>
+            </li>
+
+        </ul>
+    </div>
+    <!--新闻动态end-->
+    <a href="http://m.eaeducation.net/lianxiwomen/" title="点击免费领取598元大礼包" class="i_tel_a">
+        <img src="/static/home/mobile/images/i_pic5.png">
+        <span>点击免费领取598元大礼包</span>
+    </a>
+    <!--联系我们begin-->
+    <div class="i_foot_bg">
+        <div class="foot_service">
+            <div class="foot_service_t">
+                <a class="f18" href="">服务范围</a>
+            </div>
+            <div class="foot_service_list">
+                <ul class="fix">
+                    <li>
+                        <a href="{:url('home/mobile/course_introduce')}" class="f24">少儿英语教育</a>
+                    </li>
+                    <li>
+                        <a href="{:url('home/mobile/course_introduce')}" class="f24">出国留学</a>
+                    </li>
+                    <li class="last">
+                        <a href="{:url('home/mobile/course_introduce')}" class="f24">短期游学</a>
+                    </li>
+                    <li>
+                        <a href="{:url('home/mobile/investment')}" class="f24">招商加盟</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="foot_contact">
+            <div class="foot_contact_t">
+                <a class="f18" href="">公馆分布</a>
+            </div>
+            <div class="foot_contact_list">
+                <ul class="fix">
+                    <li class="f24">
+                        <div>
+                            <img src="/static/home/mobile/images/foot_ico_home.png" class="width100">
+                        </div>
+                        <span>高新：</span>
+                        <a href="http://m.eaeducation.net/#">西安市高新区高新二路i创途众创公园</a>
+                    </li>
+                    <li class="f24">
+                        <div>
+                            <img src="/static/home/mobile/images/foot_ico_qq.png" class="width100">
+                        </div>
+                        太白：<a rel="nofollow" href="http://m.eaeducation.net/#">西安市未央区凤城九路海珀兰轩</a>
+                    </li>
+                    <li class="f24">
+                        <div>
+                            <img src="/static/home/mobile/images/foot_ico_email.png" class="width100">
+                        </div>
+                        曲江：<a rel="nofollow" href="http://m.eaeducation.net/#">西安市雁塔区电子三路36号兰乔圣菲</a>
+                    </li>
+                    <li class="f24">
+                        <div>
+                            <img src="/static/home/mobile/images/foot_ico_tel.png" class="width100">
+                        </div>
+                        北郊：<a rel="nofollow" href="http://m.eaeducation.net/#">西安市曲江新区中海凯旋新天地 </a>
+                    </li>
+                    <li class="calltel">
+                        <div>
+                            <img src="/static/home/mobile/images/foot_ico_pay.png" class="width100">
+                        </div>
+                        联系电话：<a href="tel:4006692620">400-6692-620</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <!--联系我们end-->
+</section>
+<!--正文end-->
+{/block}

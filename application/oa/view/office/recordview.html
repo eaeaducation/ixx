@@ -1,0 +1,41 @@
+<link href="/static/plugs/awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="/static/plugs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/plugs/layui/css/layui.css" rel="stylesheet">
+<link href="/static/theme/css/console.css" rel="stylesheet">
+<link href="/static/theme/css/animate.css" rel="stylesheet">
+<link href="/static/plugs/adminlte/css/AdminLTE.min.css" rel="stylesheet">
+
+<style>
+    .layui-table img {
+        max-width: 120px;
+    }
+
+    .content_box {
+        width: 80%;
+        margin: 0 auto;
+    }
+</style>
+<div class="content_box" style="margin-bottom: 20%">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>日志详情</legend>
+    </fieldset>
+    <table class="layui-table" lay-skin="line">
+
+        <thead>
+        <tr class="text-center">
+            <th>发件人</th>
+            <th>收件人</th>
+            <th width="40%">日志内容</th>
+            <th width="30%">日志回复</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{$vo.from_user|get_employee_name}</td>
+            <td>{$vo.to_user|get_employee_name}</td>
+            <td>{:htmlspecialchars_decode($vo.content)}</td>
+            <td>{:htmlspecialchars_decode($replay)}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

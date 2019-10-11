@@ -1,0 +1,27 @@
+{extend name='admin@public/content'}
+{block name="content"}
+
+<button onclick="openset('我的活动A',3)">设置活动模板内容</button>
+
+
+
+<script>
+layui.use(['element', 'layer'], function () {
+var element = layui.element;
+var layer = layui.layer;
+
+});
+function openset(title,actid){
+    perContent = layer.open({
+        type: 2,
+        title: title+'-tpl001-模板设置 ',
+        shadeClose: false,
+        shade: false,
+        // maxmin: true, //开启最大化最小化按钮
+        area: ['80%', '90%'],
+        shade: [0.8, '#393D49'],//遮罩层
+        content: '{:url("showactb/updatetpl")}?act_id='+actid //iframe的url
+    });
+}
+</script>
+{/block}

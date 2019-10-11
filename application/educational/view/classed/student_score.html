@@ -1,0 +1,55 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post" id="form_data">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">学生姓名</label>
+        <div class="layui-input-inline">
+            <input name="student[name]" class="layui-input" readonly value="{$student.name}">
+        </div>
+        <label class="layui-form-label">家长电话</label>
+        <div class="layui-input-inline">
+            <input name="student[parent_tel]" class="layui-input" readonly value="{$student.parent_tel}">
+            <input name="student[id]" class="layui-input" value="{$student.id}" style="display: none">
+        </div>
+        <input name="student[id]" class="layui-input" value="{$student.id}" style="display: none">
+    </div>
+    <!--{foreach $courses as $k=>$v}-->
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">课程</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" value="{$v.title}" readonly>
+            <input class="layui-input" value="{$v.course_id}" name="{$v.course_id}[course_id]" style="display: none">
+        </div>
+        <label class="layui-form-label">成绩</label>
+        <div class="layui-input-inline">
+            <input name="{$v.course_id}[score]" class="layui-input" value="">
+        </div>
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-inline">
+            <input name="{$v.course_id}[remark]" class="layui-input" value="">
+        </div>
+    </div>
+    <!--{/foreach}-->
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+
+        <button class="layui-btn" id='submit' {if empty($student.wxopenid)} disabled style="color: #cccccc;" title="未关注微信公众号" {/if}>保存并推送微信</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    $("#submit").click('on',function () {
+        $("#submit").append(
+            "<input type='text' name='push' value='true' hidden/>"
+        );
+        var data = $("#form_data").serialize();
+        $.post(
+            '/educational/Classed/student_score',{
+                data:data
+            },function (res) {
+                console.log(res);
+            }
+        )
+    })
+</script>

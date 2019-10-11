@@ -1,0 +1,17 @@
+.swiper-container {
+    width: 343px;
+    height: 607px;
+}
+.slide-one{
+    background-size: cover;
+}
+.slide-two{
+    background-size: cover;
+}
+.slide-four{
+    background-size: cover;
+}
+.title{color: #ff9933; font-size: 20px; text-align: center;}
+.theme{color: #0075f0; font-size: 30px; text-align: center;}
+.slide-two .logo{width: 215px; height: 80px; margin-left: 80px;}
+.slide-two .img{width:258px; height: 180px; margin-left: 50px; margin-top: 110px;}

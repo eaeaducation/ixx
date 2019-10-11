@@ -1,0 +1,56 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        .hui-header {background: #00255a; height: unset; display: flex}
+        .header h1{color: #fff;padding: 0 1rem; font-size: 17px;line-height: 2.2rem;}
+        .hui-footer-icon img{width: 30%;}
+        .hui-footer-icon {text-align: center;}
+        .hui-footer-text {padding-top: unset;}
+        .back {z-index:2;position:absolute;height:3.2rem;padding-left:1.5rem;background:url(/static/home/shop/images/product/back1.png) no-repeat .75rem center;background-size:auto 1.2rem;width:.5rem;}
+        #syscou {width: 100%; margin-top: 10%;}
+        .hui-media-list {padding:10%; margin-bottom: 3%;}
+        .hui-media-list ul li{padding: unset;}
+        .hui-media-list .hui-media-list-img{width: 41%;}
+        .hui-media-content h1 {padding: 8% 10% 8% 10%;height: 42px;font-size: 14px;}
+    </style>
+{/block}
+{block name="body"}
+<header class="hui-header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em style="color: #fff;">发现</em></h1>
+</header>
+<div id="syscou">
+    <div class="hui-swipe common" id="system">
+        <div class="hui-swipe-items">
+            {foreach $banner as $key => $vo}
+            <div class="hui-swipe-item"><img onerror="error_img(this)" src="{$vo.thumb}"/></div>
+            {/foreach}
+        </div>
+    </div>
+</div>
+<div class="hui-media-list">
+    <ul>
+        {foreach $content as $key => $vo}
+        <li>
+            <a href="{:url('study/detail')}?id={$vo.id}" style="border: 1px solid #e1e1e1;">
+                <div class="hui-media-list-img">
+                    <img onerror="error_img(this)" src="{$vo.thumb}" />
+                </div>
+                <div class="hui-media-content">
+                    <h1>{$vo.title}</h1>
+                </div>
+            </a>
+        </li>
+       {/foreach}
+    </ul>
+</div>
+{include file="public:footer" /}
+<script>
+    var system = new huiSwpie('#system');
+    system.autoPlay = true;
+    system.loop = true;
+    system.delay = 3000;
+    system.indicatorOn = true;
+    system.run();
+</script>
+{/block}

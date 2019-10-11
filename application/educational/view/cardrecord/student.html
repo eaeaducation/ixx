@@ -1,0 +1,127 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:url('educational/cardrecord/student')}"
+      onsubmit="return false" method="get">
+    <div class="row">
+        <div style="margin-left:1%;float: left">
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="请输入关键字"
+                           class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">校区</label>
+                <div class="layui-input-inline">
+                    {:get_branches_select('branch', $Think.get.branch, '', ["lay-filter"=>"campus"],false)}
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">班级名称</label>
+                <div class="layui-input-inline" id="class_add">
+                    {:get_class_select('class_id', $Think.get.class_id, '', ['lay-search' => '', "lay-filter" => "class"],false)}
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">选择时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                           placeholder="选择时间" class="input-sm form-control">
+                </div>
+            </div>
+            <div class="layui-form-item layui-inline">
+                <button class="layui-btn layui-btn-primary"><i class="layui-icon"></i> 搜 索</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+    form.on('select(campus)', function (data) {
+        $.post('{:url("punch/get_class")}', {branch: data.value}, function (e) {
+            var class_html = '<select name="class_id" lay-filter="class"><option value="">-请选择班级-</option>';
+            for (var i = 0; i < e.class.length; i++) {
+                class_html += '<option value="' + e.class[i].id + '">' + e.class[i].title + '</option>'
+            }
+            class_html += '</seclect>';
+            $("#class_add").html(class_html);
+            window.form.render();
+        })
+    });
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                if ((endDate - date) / 1000 / 86400 > 31) {
+                    $.msg.alert('最大时间范围为31天', function () {
+                        $('#time_range').val('')
+                    })
+                }
+            }
+        })
+    })
+</script>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">学员姓名</th>
+            <th class="text-center">班级</th>
+            <th class="text-center">课程名称</th>
+            <th class="text-center">消耗课时</th>
+            <th class="text-center">学员卡号</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">打卡时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">
+                {$vo.name}【{$vo.gender|convert_category=3|raw}】
+            </td>
+            <td class="text-center">{$vo.class_id|convert_class}</td>
+            <td class="text-center">{$vo.course_id|get_courses_title}</td>
+            <td class="text-center text-red">{$vo.course_hour}</td>
+            <td class="text-center">{$vo.icard}</td>
+            {if $vo.status == 1}
+            <td class="text-center text-blue">正常</td>
+            {elseif  $vo.status == 2 /}
+            <td class="text-center text-red">补课</td>
+            {elseif  $vo.status == 3 /}
+            <td class="text-center text-orange">请假</td>
+            {elseif  $vo.status == 4 /}
+            <td class="text-center text-orange">旷课</td>
+            {/if}
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-center">
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <div class="text-nowrap text-right margin-top-10" style="color: #000;font-size: 14px; font-weight: bold ;padding-right: 2%"><p>课时总数：<span style="color: #FF5722;font-size: 18px;">{$count}</span>课时</p></div>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

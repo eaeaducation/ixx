@@ -1,0 +1,116 @@
+body {
+    margin: 8px;
+    padding: 0;
+}
+
+.ad_top img {
+    width: 100%;
+}
+
+.ad_top .h4 {
+    margin-top: 5%;
+    font-family: HiraginoSansGB-W3;
+}
+
+.ad_top .city {
+    color: #999999;
+    font-size: 12px;
+    font-family: HiraginoSansGB-W3;
+}
+
+.ad_content {
+    margin-top: 10%;
+}
+
+.ad_content .introduce span {
+    color: #333333;
+    font-size: 15px;
+}
+
+.ad_content .title {
+    margin-top: 10%;
+}
+
+.ad_content .title span {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333333;
+}
+
+.ad_content .ad_neirong {
+    margin-top: 3%;
+    color: #666666;
+}
+
+.ad_content .ad_neirong img {
+    display: block;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+/*.about_us .connect {*/
+    /*margin-top: 10%;*/
+/*}*/
+
+/*.about_us .connect img {*/
+    /*margin-left: 18%;*/
+/*}*/
+
+.about_us .logo{
+    text-align: center;
+}
+
+.about_us .logo img {
+    margin-top: 10%;
+    margin-bottom: 5%;
+}
+
+/*.text-with-hr {*/
+    /*margin-top: 5%;*/
+    /*text-align: center;*/
+    /*position: relative;*/
+    /*z-index: 2;*/
+/*}*/
+
+/*!**/
+/*横线，并通过z-index：-1将文字附近的横线遮盖住*/
+/**!*/
+/*.text-with-hr:before {*/
+    /*position: absolute;*/
+    /*content: '';*/
+    /*top: 20px;*/
+    /*left: 0px;*/
+    /*width: 100%;*/
+    /*border-bottom: 1px solid #d4d4d4;*/
+    /*z-index: -1;*/
+/*}*/
+
+/*.text-with-hr span {*/
+    /*display: inline-block;*/
+    /*background: white;*/
+    /*padding: 10px;*/
+    /*color: #191919;*/
+/*}*/
+
+/*.item{*/
+    /*height: 130px;*/
+    /*margin-left: 2%;*/
+/*}*/
+
+/*.item .left_img{*/
+    /*float: left;*/
+/*}*/
+
+/*.link .right_desc {*/
+    /*text-indent: 8px;*/
+/*}*/
+
+/*.item .right_desc .link_content{*/
+    /*color: #666666;*/
+/*}*/
+
+/*.item .right_desc .link_jigou{*/
+    /*text-indent: 140px;*/
+    /*color: #666666;*/
+/*}*/

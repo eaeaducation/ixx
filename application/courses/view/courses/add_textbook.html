@@ -1,0 +1,68 @@
+<div class="padding-15">
+    <!-- 表单搜索 开始 -->
+    <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false"
+          method="get">
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-inline">
+                <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">费用类型</label>
+            <div class="layui-input-inline">
+                {:get_category_select(33, 'cost_type', $Think.get.cost_type,'',[],false)}
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </form>
+    <script>
+        window.form.render();
+    </script>
+    <!-- 表单搜索 结束 -->
+
+    <form onsubmit="return false;" data-auto="true" method="post">
+        <!--{empty name='list'}-->
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+        <!--{else}-->
+        <input type="hidden" value="resort" name="action">
+        <table id="test" class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th class='list-table-check-td'>
+                    <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+                </th>
+                <th class='text-center'>名称</th>
+                <th class="text-center">费用类型</th>
+                <th class="text-center">金额</th>
+                <th class="text-center">积分</th>
+                <th class="text-center">详细描述</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$vo}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+                </td>
+                <td class="text-center">{$vo.title}</td>
+                <td class="text-center">{$vo.cost_type|convert_category=33|raw}</td>
+                <td class="text-center">{$vo.price|format_money}</td>
+                <td class="text-center">{$vo.integral}</td>
+                <td class="text-center">{$vo.content}</td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+        {if isset($page)}<p>{$page|raw}</p>{/if}
+        <hr class="hr-line-solid">
+        <div class="layui-form-item text-center">
+            <a data-update data-field='delete' data-action='{:url("$classuri/addTextbookDo")}?cid={$Think.get.id}'
+               class="layui-btn" data-title="确定要添加吗?">
+                添加 </a>
+        </div>
+        <!--{/empty}-->
+    </form>
+</div>

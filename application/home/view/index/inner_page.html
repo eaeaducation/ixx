@@ -1,0 +1,62 @@
+{extend name='home@public/content'}
+{block name="style"}
+<style>
+    .ar-til {
+        margin-top:0px;
+        line-height:35px;
+        font-size:24px;
+        text-align:center;
+    }
+    .ar-ftil {
+        margin-bottom:40px;
+        padding-bottom:20px;
+        border-bottom:1px dotted #333;
+        line-height:18px;
+        font-size:14px;
+        text-align:center;
+    }
+    .ar-ftil span {
+        margin:0 10px;
+    }
+    .ar-body {
+        padding-bottom:100px;
+    }
+    .container img{
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+    }
+</style>
+{/block}
+{block name="content"}
+
+<div class="ztc-back02">
+    <div class="container">
+        <h3 class="ar-til">{:htmlspecialchars_decode($content.title)}
+        </h3>
+        <p class="ar-ftil"><span>时间：2018-09-19 14:00</span><span>作者：EA国际教育</span><span>浏览次数：<script
+                src="/static/home/js/count.php" type="text/javascript" language="javascript"></script>216</span></p>
+       <!--这里是内容-->
+        {:htmlspecialchars_decode($content.content)}
+
+    </div>
+</div>
+
+<!--<p1>上一篇：<a href="http://eaeducation.net/tf/news/51.html">学好少儿英语要记住这七多七少原则</a></p1>-->
+<!--<br>-->
+<!--<p1>下一篇：没有了</p1>-->
+<!--<p></p>-->
+<!-- Home End -->
+
+<div class="play-box">
+    <div class="video-body">
+        <video id="orginal-video" src="" width="960" height="540" controls="" autoplay=""></video>
+    </div>
+    <a href="javascript:void(0);" class="close"></a>
+</div>
+<div class="gray-bg" style="background-color:#000000;"></div>
+
+
+<!-- Footer Start -->
+<!-- Footer Start -->
+{/block}

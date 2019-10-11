@@ -1,0 +1,83 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">姓名/昵称</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" value="{$Think.get.keyword|default=''}" name="keyword">
+        </div>
+    </div>
+
+    {if in_array(session('user.authorize'),[1,3,4,22])}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">选择时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="选择时间" class="input-sm form-control">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+        })
+    })
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">姓名</th>
+            <th class="text-center">昵称</th>
+            <th class="text-center">电话</th>
+            <th class="text-center">校区</th>
+            <th class="text-center">累计课时</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.name|default=''}</td>
+            <td class="text-center">{$vo.english_name|default=''}</td>
+            <td class="text-center">{$vo.mobile|default=''}</td>
+            <td class="text-center">{$vo.department|convert_branch}</td>
+            <td class="text-center nowrap"><a class="text-red">{$vo.total_hour|default='0'} 课时</a></td>
+            <td class="text-nowrap text-center">
+                <span class="text-explode">|</span>
+                <a data-title="教师-【{$vo.name}】 课时明细"
+                   data-open='{:url("$classuri/hour_detail")}?id={$vo.id}&name={$vo.name}&start={$start}&end={$end}'>上课明细</a>
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,160 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+</style>
+<div class="">
+    <table id="basic" class="layui-table" lay-skin="line">
+        <tbody>
+        <tr>
+            <th>标题</th>
+            <td>{$vo.title}</td>
+            <th>课程编号</th>
+            <td>{$vo.no|default=''}</td>
+        </tr>
+        <tr>
+            <th>课程类型</th>
+            <td>{$vo.type |convert_category=10|raw}</td>
+            <th>课程类别</th>
+            <td>{$vo.category| convert_category=6|raw}</td>
+        </tr>
+        <tr>
+            <th>科目</th>
+            <td>{$vo.subject| convert_subject|raw }</td>
+            <th>校区</th>
+            <td>{$vo.branch|convert_branch|raw }</td>
+        </tr>
+        <!--<tr>-->
+            <!--<th>学年</th>-->
+            <!--<td>{$vo.school_year|default=''}</td>-->
+            <!--<th>课程时间</th>-->
+            <!--<td>{$vo.time_range|default=''}</td>-->
+        <!--</tr>-->
+        <tr>
+            <th>积分</th>
+            <td>{$vo.integral|default='' }</td>
+            <th>状态</th>
+            <td>{$vo.status|convert_category=8|raw}</td>
+        </tr>
+        <tr>
+            <th>是否为线上课程</th>
+            <td>{$vo.is_online|convert_category=11|raw}</td>
+            <th>课程售价</th>
+            <td>{$vo.price|format_money}</td>
+        </tr>
+        <tr>
+            <th>备注</th>
+            <td>{$vo.remark|default=''}</td>
+            <th>创建时间</th>
+            <td>{$vo.created_at|date='Y-m-d H:m:s'}</td>
+        </tr>
+        <tr>
+            <th>介绍图片</th>
+            <td>{$vo.thumb|default=''}</td>
+            <th>介绍内容</th>
+            <td>{$vo.content|default=''}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="layui-tab layui-tab-card layui-box">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="textbook">教材杂费</li>
+            <li lay-id="courseware">课件管理</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                {if auth("$classuri/addTextbook")}
+                <a class="layui-btn layui-btn-normal layui-btn-xs"
+                   data-iframe='admin/index/fragment.html#{:url("$classuri/addTextbook")}?id={$vo->id}&type={$vo.type}&except={:join(",", array_column($textbooks, "id"))}'
+                   data-title="增加教材/杂费">增加教材/杂费</a>
+                {/if}
+                <div class="layui-row">
+                    <!--{empty name='textbooks'}-->
+                    <p class="help-block text-center well">没 有 记 录 哦！</p>
+                    <!--{else}-->
+                    <table class="layui-table" lay-even lay-skin="line" lay-size="sm">
+                        <thead>
+                        <tr style="background-color: #F2F2F2;">
+                            <th class='text-center'>名称</th>
+                            <th class='text-center'>费用类型</th>
+                            <th class="text-center">金额</th>
+                            <th class="text-center">积分</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach $textbooks as $item}
+                        <tr>
+                            <td class="text-center">{$item.title}</td>
+                            <td class='text-center'>{$item.cost_type||convert_category=33|raw}</td>
+                            <td class="text-center">{$item.price|format_money}</td>
+                            <td class="text-center">{$item.integral}</td>
+                            <td class="text-center nowrap">
+                                {if auth("$classuri/delCourseware")}
+                                <span class="text-explode">|</span>
+                                <a data-update="{$item.id}" data-field='delete'
+                                   data-action='{:url("$classuri/delTextbook")}?cid={$vo.id}'
+                                   data-title="您确定要删除这项吗? ">删除</a>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                    <!--{/empty}-->
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <a class="layui-btn layui-btn-normal layui-btn-xs"
+                   data-modal='{:url("$classuri/addCourseware")}?id={$vo->id}&type={$vo.type}&except={:join(",", array_column($textbooks, "id"))}'
+                   data-title="增加课件">增加课件</a>
+
+
+                <!--{empty name='coursewares'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line" lay-size="sm">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th>课件标题</th>
+                        <th>备注</th>
+                        <th>资源地址</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $coursewares as $item}
+                    <tr>
+                        <td class="text-left nowrap">{$item.title}</td>
+                        <td class="text-left nowrap" title="{$item.remark}">{:cn_substr($item.remark)}</td>
+                        <td class="text-left nowrap">{$item.url}</td>
+                        <td class="text-left nowrap">{$item.created_at|format_date}</td>
+                        <td class="text-left nowrap">
+                            {if auth("$classuri/delCourseware")}
+                            <span class="text-explode">|</span>
+                            <a data-update="{$item.id}" data-field='delete'
+                               data-action='{:url("$classuri/delCourseware")}?id={$item.id}'>删除</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+</script>
+{/block}
+{block name="style"}
+
+{/block}

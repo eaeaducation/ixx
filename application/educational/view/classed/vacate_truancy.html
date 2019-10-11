@@ -1,0 +1,84 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">学员ID</label>
+        <div class="layui-input-inline">
+            <input type="text" name="student_id" value='{$student_id|default=""}' required="required" readonly  class="layui-input">
+        </div>
+        <label class="layui-form-label">请假/旷课</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="status" value="3" title="请假" checked="" style="display: none !important;" required>
+            <input type="radio" name="status" value="4" title="旷课" style="display: none !important;" required>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">课程</label>
+        <div class="layui-input-inline">
+            <select name="course" lay-filter="course" lay-verify="course" required>
+                <option value="">-请选择课程-</option>
+                <!--{foreach $courses as $k=>$v}-->
+                  <option value="{$v['course_id']}">{$v.course_id|get_courses_title=$v.course_id}</option>
+                <!--{/foreach}-->
+            </select>
+        </div>
+        <label class="layui-form-label">请假/旷课时间</label>
+            <div class="layui-input-inline">
+                <select name="time" lay-filter="hour" id="hour">
+                    <option value="">-请选择-</option>
+                </select>
+            </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="col-sm-8" >
+            <textarea name="remark" id="" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <input type='hidden' value='{$class_id}' name='class_id'>
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use(['laydate','form'], function () {
+        var form = layui.form;
+        var class_id = $('input[name="class_id"]').val();
+        var course = '';
+        var hour = '';
+        form.on('select(course)', function (data) {
+            course = data.value;
+            tool();
+        });
+        form.on('select(hour)', function (data) {
+            course = $('select[name="course"] option:selected').val();
+            if (course == '') {
+                layer.msg('请先选择课程!', {icon: 5});
+                return false;
+            }
+            hour = data.value;
+        });
+        function tool() {
+            $.post('{:url("educational/punch/get_course_time")}', {class_id: class_id, course: course}, function (res) {
+                var hour_html = '<option value="">-请选择时间-</option>';
+                if (res.code == 1) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        hour_html += '<option value="' + res.data[i].begin + '-' + res.data[i].end +'-'+res.data[i].hour + '">' + res.data[i].begin + ' - ' + res.data[i].end + '</option>'
+                    }
+                    $("#hour").html(hour_html);
+                } else {
+                    $("#hour").html(hour_html);
+                }
+                window.form.render();
+            })
+        }
+    });
+</script>

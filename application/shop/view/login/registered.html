@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="search-page">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>注册</title>
+    <meta name="charset" content="utf-8">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="/static/home/shop/css/product/common.css">
+    <link rel="stylesheet" href="/static/extend_res/mobile/css/hui.css">
+    <style>
+        .header{background: #002458}
+        .header h1{color: #fff;padding: 0 1rem;}
+        .header h1 .sign{margin-left: 29px; color: #fff;}
+        .header h1 .reg{float: right; font-size: 13px;color: #fff;}
+        .header .back{background: url("/static/home/shop/images/product/back1.png") no-repeat .75rem center; background-size: auto 16px;}
+        form {text-align: center; margin-top: 45px;}
+        form input {
+            width: 85%;
+            height: 45px;
+            color: #0C2958;
+            border: none;
+            text-align: center;
+            outline: none;
+            font-size: 15px;
+            margin-bottom: 25px;
+            border: 1px #888888 solid;
+            box-shadow: 0px 0px 2px 2px #88888840;
+        }
+        button {
+            margin-top: 10px;
+            width: 85%;
+            height: 45px;
+            font-size: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #00a1e9;
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="defwidth">
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1>
+        <span class="sign">注册</span>
+        <a href="{:url('login/index')}">
+            <span class="reg">登录</span>
+        </a>
+    </h1>
+</header>
+
+<div>
+    <form method="post">
+        <input type="text" name="mobile" placeholder="手机号" autocomplete="off">
+        <input type="text" name="name" placeholder="请输入家长姓名" autocomplete="off">
+        <button type="button" class="register">注册</button>
+    </form>
+</div>
+<script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+<script src="/static/extend_res/mobile/js/hui.js"></script>
+<script>
+    $(function () {
+        $('.register').click(function () {
+            var mobile = $('[name="mobile"]').val(),
+                pre = /^\d{11}$/,
+                url = '{:url("registered")}';
+            if (!pre.test(mobile)) {
+                hui.alert('请输入正确的电话号码');
+                return false;
+            }
+            var name = $('[name="name"]').val(),
+                name_pre = /^[\u4E00-\u9FA5]{2,10}$/;
+            if(!name_pre.test(name)) {
+                hui.alert('请输入正确姓名');
+                return false;
+            }
+            $.post(url, {parent_tel: mobile, parent_name: name}, function (e) {
+                if (e.code == 1) {
+                    hui.iconToast(e.msg, 'success');
+                    setTimeout(function () {
+                        window.location.href = 'index'
+                    }, 2000)
+                } else {
+                    hui.toast(e.msg);
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<a   href= "{:request()->url()}&action=down"
+     class='layui-btn layui-btn-sm '>导出列表
+</a>
+{/block}
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline text-left">
+        <label class="layui-form-label">跟进状态</label>
+        <div class="layui-input-inline">
+            {:get_category_select('7','follow_status', $Think.get.follow_status, '', [],false)}
+        </div>
+    </div>
+
+    {if isset($myauth)}
+    {if in_array($myauth,[3,4])}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+    {else /}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+
+    <div class="layui-form-item layui-inline text-left">
+        <label class="layui-form-label">采单员</label>
+        <div class="layui-input-inline">
+            {:get_employee_select('', 'dxy', session('user.employee.department'), $Think.get.dxy, '', [], false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline text-left">
+        <label class="layui-form-label">销售员(cc)</label>
+        <div class="layui-input-inline">
+            {:get_sellers_select('cc','cc', $Think.get.cc, 'input-sm form-control', [],false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">选择时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="选择时间" class="input-sm form-control">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">关键字</label>
+        <div class="layui-input-inline">
+            <input type="text" name="keyword" value="{$Think.get.keyword|default=''}" placeholder="请输入关键字"
+                   class="input-sm form-control">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center nowrap">姓名</th>
+            <th class="text-center nowrap">监护人电话</th>
+            <th class="text-center nowrap">采单员</th>
+            <th class="text-center nowrap">销售员(CC)</th>
+            <th class="text-center nowrap">跟进状态</th>
+            <th class="text-center nowrap">校区</th>
+            <th class="text-center nowrap">渠道</th>
+            <th class="text-center nowrap">跟进时间</th>
+            <th class="text-center nowrap">下次跟进时间</th>
+            <th class="text-center nowrap">创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center text-nowrap">
+                <a data-open='{:url("marketing/Salelog/customerViewlog")}?id={$vo.id}'>
+                    {$vo.name}【{$vo.gender|convert_category=3|raw}】
+                </a>
+            </td>
+            {if($authorize == 1 || $authorize == 3 ||$authorize == 4)}
+            <td class="text-center nowrap">{:$vo.parent_tel}{$vo.parent_tel|make_call|raw}</td>
+            {else}
+            <td class="text-center nowrap">{:mobile_mask($vo.parent_tel)}{$vo.parent_tel|make_call|raw}</td>
+            {/if}
+            <td class="text-center nowrap">{:get_user_realname($vo.sales_id)}</td>
+            <td class="text-center nowrap">{:get_user_realname($vo.collect_id)}</td>
+
+            <td class="text-center nowrap">{$vo.follow_status|convert_category=7|raw}</td>
+            <td class="text-center nowrap">{$vo.branch|convert_branch}</td>
+            <td class="text-center nowrap">{$vo.source|convert_channel}</td>
+            <td class="text-center nowrap">{$vo.follow_time|format_time}</td>
+            <td class="text-center nowrap">{$vo.remind_time|format_date}</td>
+            <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+
+    {if isset($pages)}<p>{$pages|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                if ((endDate - date) / 1000 / 86400 > 31) {
+                    $.msg.alert('最大时间范围为31天', function () {
+                        $('#time_range').val('')
+                    })
+                }
+            }
+        })
+    })
+</script>
+{/block}

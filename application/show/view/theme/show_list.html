@@ -1,0 +1,109 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-method="confirmTrans" onclick="chageact()" class="layui-btn layui-btn-sm">添加活动</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+        class='layui-btn layui-btn-sm layui-btn-danger'>删除活动
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">活动标题</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    function chageact() {
+        var act = layer.msg('请选择活动类型', {
+            time: 20000, //20s后自动关闭
+            btn: ['单页模型', '翻页模型', '取消'],
+            btn1: function () {
+                window.open('/h5builder/#/spaeditor?');
+                layer.close(act)
+            },
+            btn2: function () {
+                window.open('/h5builder/#/h5editor?');
+                layer.close(act)
+            }
+        });
+    }
+
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <div class="table-responsive">
+        <table id="test" class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th class='list-table-check-td'>
+                    <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+                </th>
+                <th class="text-center nowrap">编号</th>
+                <th class='text-center nowrap'>标题</th>
+                <th class="text-center nowrap">描述</th>
+                <th class='text-center nowrap'>类型</th>
+                <th class="text-center nowrap">价钱</th>
+                <th class="text-center nowrap">发布时间</th>
+                <th class="text-center nowrap">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$vo}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+                </td>
+                <td class="text-center">{$vo.id}</td>
+                <td class="text-center">
+                    {$vo.title}
+                </td>
+                <td class="text-center nowrap">{$vo.description}</td>
+                <td class="text-center nowrap">{$vo.type}</td>
+                <td class="text-center nowrap">{$vo.price}</td>
+                <td class="text-center nowrap">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+                <td class="text-nowrap text-center">
+                    <span class="text-explode">|</span>
+                    <a id="preview" scrolling="yes" data-phone-view="/api/h5maker.pages/view/{$vo.id}">查看</a>
+                    {if auth("$classuri/edit")}
+                    <span class="text-explode">|</span>
+                    {if $vo.type=='h5'}
+                    <a href="h5builder/#/h5editor?itemId={$vo.id}" target="_blank">编辑模板</a>
+                    {else/}
+                    <a href="h5builder/#/spaeditor?itemId={$vo.id}" target="_blank">编辑模板</a>
+                    {/if}
+                    {/if}
+                    {if auth("$classuri/del")}
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='delete'
+                       data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                    {/if}
+                </td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+    </div>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,77 @@
+html {
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444;
+    background-color: #fff
+}
+.m-top-title-nav .top-title h2 {
+    font-size: 16px;
+    line-height: 16px
+}
+
+.m-top-title-nav {
+    position: relative;
+    display: -webkit-box;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    font-size: 16px;
+    background: #f4f4f4;
+    border-bottom: 1px solid #e1e1e1;
+    color: #000;
+    box-shadow: 0 2px 4px rgba(235, 235, 235, .9)
+}
+.m-top-title-nav .top-title {
+    width: 100%;
+    text-align: center
+}
+.m-card {
+    background-color: #efefef;
+    margin: 10px 10px 10px;
+    padding: 15px
+}
+.m-card .card-head {
+    margin-bottom: 10px;
+    line-height: 24px;
+    height: 24px
+}
+.m-card .icon-half-remind, .m-card .icon-basic-info {
+    font-size: 20px;
+    color: #dd0202;
+    margin-right: 5px;
+    vertical-align: sub
+}
+.m-card .card-title {
+    font-size: 15px;
+    font-weight: 700
+}
+.my-info .info-item span {
+    height: 15px;
+    line-height: 15px;
+    display: inline-block;
+    margin: 7px 0
+}
+.my-info .key {
+    width: 30%
+}
+
+
+.m-footer-row {
+    padding-top: 10px;
+    background: #f3f3f3
+}
+.m-footer {
+    padding: 10px 0;
+    text-align: center;
+    background: #f3f3f3
+}
+
+.m-footer .footer-text {
+    margin-bottom: 5px
+}
+

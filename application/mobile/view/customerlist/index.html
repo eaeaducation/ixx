@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>客户列表</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css" />
+    <script src="__STATIC__/extend_res/jquery/jquery-3.3.1.js"></script>
+    <style>
+        #hui-water-fall-left {width: 100%; overflow:hidden;}
+        #hui-water-fall-right {width: 100%; overflow:hidden;}
+        #hui-header-sreach #searchKey {width:82%; border-radius: 5px;}
+        #hui-header-sreach #submitBtn {height:32px; line-height: 0px}
+    </style>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back" onclick="window.history.go(-1);"></div>
+    <h1>客户列表</h1>
+</header>
+<div class="hui-wrap">
+    <div class="hui-common-title" style="height:40px; margin-top: 2px;">
+        <form id="hui-header-sreach" style="background: none;">
+            <input type="search" id="searchKey" name="keyword" placeholder="请输入手机后四位/宝贝名称" required="" />
+            <button type="button" class="hui-button hui-primary hui-fr" id="submitBtn">搜索</button>
+        </form>
+    </div>
+    <div class="hui-list" style="margin-top:2px;">
+        <div style="padding:10px 0px;" id="HUI_Waterfall"></div>
+    </div>
+</div>
+<script src="/static/extend_res/mobile/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="UTF-8" src="/static/extend_res/mobile/js/hui-water-fall.js"></script>
+<script type="text/javascript" charset="UTF-8" src="/static/extend_res/mobile/js/hui-refresh-load-more.js"></script>
+<script type="text/javascript">
+    var Waterfall = new huiWaterfall('#HUI_Waterfall');
+
+    var page = 1;
+
+    var data = new Array();
+
+    var url = '{url{"$classuri/index"}';
+
+    hui('#submitBtn').click(function () {
+        var key = hui('#searchKey').val();
+        url = url + '?keyword='+ key;
+        $(".hui-water-items").remove();
+        getList_search();
+        hui.loadMore(getList_search);
+        url = '';
+        return false;
+    })
+
+    function getList_search(){
+        $.post(url, {page: page}, function (res) {
+            data = res;
+            //组合dom
+            var str = '';
+
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    str += '<div class="hui-water-items">' +
+                        '<div class="hui-list-text">\n' +
+                        '<div class="hui-list-text-content"><a href="tel:'+ data[i].parent_tel +'">' + data[i].parent_tel + '</a> (' + data[i].name + ')</div>\n' +
+                        '<div class="hui-list-info">\n' +
+                        '<a href="/mobile/customerlist/detail?id='+ data[i].id +'">\n' +
+                        '查看 <span class="hui-icons hui-icons-right"></span>\n' +
+                        '</a>' +
+                        '</div>\n' +
+                        '</div>\n' +
+                        '</div>';
+                }
+            } else {
+                str += '<div class="hui-water-items hui-text-center" style="color: #9f191f;">暂无记录哦！</div>';
+            }
+            Waterfall.addItems(str);
+        })
+    }
+
+
+
+    getList();
+    //模拟远程获取数据 随机对数据进行排序
+    function getList(){
+        $.post(url, {page: page}, function (res) {
+            data = res;
+            //组合dom
+            var str = '';
+            for(var i = 0; i < data.length; i++){
+                str += '<div class="hui-water-items">'+
+                    '<div class="hui-list-text">\n' +
+                    '<div class="hui-list-text-content"><a href="tel:'+ data[i].parent_tel +'">' + data[i].parent_tel +'</a> ('+data[i].name +')</div>\n' +
+                    '<div class="hui-list-info">\n' +
+                    '<a href="/mobile/customerlist/detail?id='+ data[i].id +'">\n' +
+                    '查看 <span class="hui-icons hui-icons-right"></span>\n' +
+                    '</a>' +
+                    '</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+            }
+            Waterfall.addItems(str);
+            if(page >= 4){
+                hui.endLoadMore(true);
+            }else{
+                hui.endLoadMore();
+            }
+            page++;
+        })
+    }
+    hui.loadMore(getList);
+</script>
+</body>
+</html>

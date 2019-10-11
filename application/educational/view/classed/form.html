@@ -1,0 +1,392 @@
+{extend name='admin@public/content'}
+{block name='style'}
+<style>
+    .class-item {
+        border: 1px solid #1E9FFF;
+        margin-top: 5px;
+        padding: 15px;
+        box-shadow: 3px 3px 3px #1E9FFF;
+        position: relative;
+    }
+
+    .class-item .close {
+        display: block;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
+</style>
+{/block}
+{block name='content'}
+<form class="form-horizontal layui-form padding-top-20 col-lg-10"
+      method="post" id="class-form">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">班级信息</h3>
+        </div>
+        <div class="box-body">
+            <!-- begin 1 -->
+            <div class="layui-form-item">
+                <label class="col-sm-1 layui-form-label">班级名称</label>
+                <div class="col-sm-4">
+                    <input type="text" name="title" value="{$vo.title|default=''}" required="required" title="请输入班级名称"
+                           placeholder="请输入班级名称" class="layui-input">
+                </div>
+                <label class="col-sm-1 layui-form-label">班主任</label>
+                <div class="col-sm-4">
+                    <select name="teacher_id" id="headmaster">
+                        <option value="">-请先选择校区-</option>
+                    </select>
+     </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 layui-form-label">开课校区</label>
+                <div class='col-sm-4'>
+                    {if in_array(session('user.authorize'),[1,3,4,22])}
+                    {:get_branches_select('branch', '', 'layui-input', ['lay-filter' => 'select-branch', 'ng-model' =>
+                    'branch','lay-ignore' => '', 'required'=>'true', 'ng-change' => 'selectBranch(this)'],
+                    false)}
+                    {else/}
+                    <input type="text" class="layui-input"
+                           value="{:convert_branch(session('user.employee.department'))}" readonly>
+                    <input type="hidden" name="branch" value="{:session('user.employee.department')}">
+                    {/if}
+                    <div class="help-block">
+                        <p class="text-danger">* 请先选择校区, 后选择课程</p>
+                    </div>
+                </div>
+                <label class="col-sm-1 layui-form-label">开班日期</label>
+                <div class="col-sm-4">
+                    <input type="text" name="begin_time" value='{$vo.begin_time|default=time()|format_date}'
+                           title="请选择开班日期"
+                           placeholder="请选择开班日期" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 layui-form-label">招生人数</label>
+                <div class="col-sm-4">
+                    <input type="number" name="student_count" value='{$vo.student_count|default=""}' required="required"
+                           title="请输入招生人数"
+                           placeholder="请输入招生人数" class="layui-input">
+                </div>
+                <label class="col-sm-1 layui-form-label">招生状态</label>
+                <div class="col-sm-4">
+                    {if isset($vo.status)}
+                    {:get_category_radio(31, 'status', $vo.status, '',['required' => ''])}
+                    {else}
+                    {:get_category_radio(31, 'status', 1,'',['required' => ''])}
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 layui-form-label">备注</label>
+                <div class="col-sm-9">
+                    <input type="text" name="remark" value="{$vo.remark|default=''}" class="layui-input">
+                </div>
+            </div>
+            <!--end 1-->
+        </div>
+    </div>
+    <div class="box box-warning">
+        <div class="box-header with-border">
+            <h4 class="box-title">上课时间</h4>
+        </div>
+        <div class="box-body" id="item-container">
+            <div class="class-item transition" ng-repeat="x in paramList">
+                <!-- begin 2 -->
+                <div class="layui-form-item" ng-value="$index">
+                    <label class="col-sm-1 layui-form-label label-required">选择课程</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="courses_id" ng-model="x.courses_id">
+                        <input type="hidden" name="class_course_no" ng-model="x.class_course_no">
+                        <input type="text" name="courses_name" ng-model="x.courses_name" ng-show="x.courses_name!=''"
+                               disabled class="layui-inline layui-input">
+                        <button type="button"
+                                class="btn layui-btn layui-btn-normal layui-btn-xs select-branch-t"
+                                data-area="['50%', '60%']"
+                                data-title="选择课程"
+                                ng-disabled="branch==''"
+                                ng-show="x.courses_name==''"
+                                ng-click="selectCourse($index)"
+                        >
+                            <i class="fa fa-plus">&nbsp;</i>
+                            点击选择课程
+                        </button>
+                    </div>
+                    <label class="col-sm-1 layui-form-label">选择教室</label>
+                    <div class="col-sm-4">
+                        <select required class="layui-input layui-select ng-pristine ng-untouched ng-valid ng-empty"
+                                ng-model="x.room_id" lay-ignore>
+                            <option value selected>--请选择--</option>
+                            <option ng-repeat="a in optionRooms" value="{{a.id}}">{{a.code}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="col-sm-1 layui-form-label">教师
+                        <span class="nowrap color-desc">Teacher</span>
+                    </label>
+                    <div class="col-sm-4">
+                        <select required class="layui-input layui-select ng-pristine ng-untouched ng-valid ng-empty"
+                                ng-model="x.teacher_id" lay-ignore>
+                            <option value selected>--请选择--</option>
+                            <option ng-repeat="t in optionTeacher" value="{{t.id}}">{{t.name}}</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-1 layui-form-label">助教
+                        <span class="nowrap color-desc">TA</span>
+                    </label>
+                    <div class="col-sm-4">
+                        <select required class="layui-input layui-select ng-pristine ng-untouched ng-valid ng-empty"
+                                ng-model="x.ta_id" lay-ignore>
+                            <option value selected>--请选择--</option>
+                            <option ng-repeat="s in optionTa" value="{{s.id}}">{{s.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="col-sm-1 layui-form-label">上课时间
+                    </label>
+                    <div class="col-sm-2">
+                        {:get_courses_time_select('class_time','','layui-input layui-select',['lay-ignore' => '',
+                        'ng-model' => 'x.class_time', 'required' => 'true'],
+                        false)}
+                    </div>
+                    <div class="col-sm-2 ">
+                        <button type="button"
+                                data-modal='{:url("Coursestime/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'
+                                data-title="添加时间"
+                                class='layui-btn layui-btn-sm layui-btn-primary'>添加时间
+                        </button>
+                    </div>
+                    <label class="col-sm-1 layui-form-label">重复方式
+                    </label>
+                    <div class="col-sm-4">
+                        {:get_category_select(13, 'cycle', 1,'layui-input layui-select',['required' => '', 'lay-ignore'
+                        => '','ng-model'=>'x.cycle'])}
+                    </div>
+                </div>
+                <div class="layui-form-item" ng-show="x.cycle!=5">
+                    <label class="col-sm-1 layui-form-label">重复设置
+                    </label>
+                    <div class="col-sm-9">
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.mon" lay-ignore> 星期一
+                        </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.tues" lay-ignore> 星期二 </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.wed" lay-ignore> 星期三 </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.thur" lay-ignore> 星期四 </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.fri" lay-ignore> 星期五 </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.sat" lay-ignore> 星期六 </label>
+                        <label class="think-checkbox">
+                            <input type="checkbox" ng-model="x.week.sun" lay-ignore> 星期日
+                        </label>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="col-sm-1 layui-form-label">教师获得课时
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="school_hour_teacher" ng-model="x.school_hour_teacher"
+                               required="required" title="请输入教师获得课时"
+                               placeholder="请输入教师获得课时" class="layui-input">
+                    </div>
+                    <label class="col-sm-1 layui-form-label">助教获得课时
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="is_ta_hour" ng-model="x.is_ta_hour"
+                               required="required" title="请输入助教教师获得课时"
+                               placeholder="请输入助教教师获得课时" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="col-sm-1 layui-form-label">学生消耗课时
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="school_hour_student" ng-model="x.school_hour_student"
+                               required="required" title="请输入学生消耗课时"
+                               placeholder="请输入学生消耗课时" class="layui-input">
+                    </div>
+                </div>
+                <div class="close" ng-click="delParam($index)"><i class="fa fa-close">&nbsp;</i></div>
+                <!--end 2-->
+            </div>
+        </div>
+        <div class="box-footer text-center">
+            <button ng-click="addParam()" class="layui-btn layui-btn-sm" type="button">新增上课时间</button>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑
+        </button>
+    </div>
+</form>
+<script>
+    window.laydate.render({
+        range: false,
+        elem: 'input[name="begin_time"]',
+        type: 'date'
+    });
+    var choose_course_url = '/admin/index/fragment.html#{:url("$classuri/chooseCourse")}';
+
+    require(['angular'], function () {
+        // 应用创建与初始化
+        window.app = angular.module("ClassForm", []).run(callback);
+        angular.bootstrap(document.getElementById('class-form'), [app.name]);
+
+            function callback($rootScope) {
+            $rootScope.paramList = filterParamList(JSON.parse('{$vo.params|default="[]"|raw}') || []);
+            {php}
+            if (in_array(session('user.authorize'), [1, 3, 4])) {
+                if (!isset($vo['branch'])) {
+                    $vo['branch'] = '';
+                }
+                echo  '$rootScope.branch ="'.$vo['branch'].'";';
+            }
+            else {
+                echo  '$rootScope.branch = $("input[name=\'branch\']").val();';
+            }
+            {/php}
+            $rootScope.getBranchInfo = function (branch) {
+                $.post('{:url("Courses/getBranchData")}', {"branch": branch}, function (info) {
+                    $rootScope.$apply(function () {
+                        $rootScope.optionRooms = info.room;
+                        $rootScope.optionTeacher = info.teacher;
+                        $rootScope.optionTa = info.ta;
+                       var headmaster= "{$vo.teacher_id|default=''}";
+                        var h_html="<option value=''>-请选择-</option>";
+                        for(var i=0;i<info.ta.length;i++){
+                            if(info.ta[i].id==headmaster) {
+                                h_html += "<option selected value=" + info.ta[i].id + ">"+ info.ta[i].name + "</option>";
+                            }else{
+                                h_html += "<option value=" + info.ta[i].id + ">" + info.ta[i].name + "</option>";
+                            }
+                        }
+                        $('#headmaster').html(h_html);
+                        window.form.render();
+
+                    });
+                });
+            };
+            if ($rootScope.branch != '') {
+                $rootScope.getBranchInfo($rootScope.branch);
+            }
+            $rootScope.addParam = function () {
+                $rootScope.paramList.push({
+                    courses_id: '',
+                    room_id: '',
+                    teacher_id: '',
+                    ta_id: '',
+                    class_time: '',
+                    cycle: '1',
+                    week: {},
+                    school_hour_student: '',
+                    school_hour_teacher: '',
+                    courses_name: '',
+                    is_ta_hour: '0',
+                    class_course_no: '',
+                    created_at: '{:time()}'
+                });
+            };
+
+            $rootScope.delParam = function (x) {
+                var dialogIndex = $.msg.confirm('确定要删除吗？', function () {
+                    $rootScope.$apply(function () {
+                        var tmp = [];
+                        for (var i in $rootScope.paramList) {
+                            (parseInt(i) !== parseInt(x)) && tmp.push($rootScope.paramList[i]);
+                        }
+                        $rootScope.paramList = filterParamList(tmp);
+                        $.msg.close(dialogIndex);
+                    });
+                });
+            };
+            $rootScope.selectBranch = function (e) {
+                $rootScope.paramList = filterParamList([]);
+                $rootScope.getBranchInfo(e.branch)
+            };
+            $rootScope.selectCourse = function (x) {
+                return $.form.iframe(choose_course_url + '?branch=' + $rootScope.branch + '&index=' + x, '选择课程');
+            };
+            // 表单验证
+            $('#class-form').vali(function (ret) {
+                try {
+                    var spect_param = [];
+                    for (var i in $rootScope.paramList) {
+                        var temp = $rootScope.paramList[i];
+                        if (temp.courses_id == '' || temp.room_id == '' || temp.teacher_id == '' ||
+                            temp.school_hour_teacher == '' || temp.school_hour_student == '' || temp.is_ta_hour == '' ||
+                            temp.class_time == '' || temp.courses_id == 0 || temp.room_id == 0 || temp.teacher_id == 0 || temp.class_time == 0
+                        ) {
+                            $.msg.alert('表单填写不完整,请重新填写');
+                            return false;
+                        }
+                        if (temp.cycle != 5 && !temp.week.mon && !temp.week.tues && !temp.week.wed && !temp.week.thur && !temp.week.fri && !temp.week.sat && !temp.week.sun) {
+                            $.msg.alert('请选择周几上课');
+                            return false;
+                        }
+                        delete temp.$$hashKey;
+                        spect_param.push(temp);
+                    }
+                    var $base_data = {};
+                    $base_data.title = $("input[name=title]").val();
+                    $base_data.begin_time = $("input[name=begin_time]").val();
+                    $base_data.student_count = $("input[name=student_count]").val();
+                    $base_data.remark = $("input[name=remark]").val();
+                    $base_data.branch = $rootScope.branch;
+                    $base_data.teacher_id = $("select[name=teacher_id]").val();
+                    $base_data.class_course_no = $("input[name=class_course_no]").val();
+                    $base_data.created_at = '{:time()}';
+                    $base_data.params = JSON.stringify(spect_param);
+                    var id = '{$vo.id|default=0}';
+                    id > 0 && ($base_data.id = id);
+                    $.form.load('{:request()->url()}', $base_data, 'post');
+                } catch ($e) {
+                    return false;
+                }
+                return false;
+            });
+            window.choose_course = function (id) {
+                var ids = id.split(',');
+                $rootScope.$apply(function () {
+                    $rootScope.paramList[ids[0]].courses_id = ids[1];
+                    $rootScope.paramList[ids[0]].courses_name = ids[2];
+                });
+            };
+            window.form.render();
+        }
+
+        function filterParamList(list) {
+            return list.length < 1 ? [{
+                courses_id: '',
+                room_id: '',
+                teacher_id: '',
+                ta_id: '',
+                class_time: '',
+                cycle: '1',
+                week: {},
+                school_hour_student: '',
+                school_hour_teacher: '',
+                courses_name: '',
+                is_ta_hour: '0',
+                class_course_no: '',
+                created_at: '{:time()}'
+            }] : list;
+        }
+    });
+</script>
+
+{/block}

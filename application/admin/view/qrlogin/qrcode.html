@@ -1,0 +1,69 @@
+<script src="__STATIC__/plugs/jquery/jquery.min.js"></script>
+<script src="__STATIC__/plugs/layui/layui.all.js"></script>
+<style>
+    .img-box{
+        width: 80% ;
+        height: 340px;
+        margin: 0 auto;
+       display: flex;
+    }
+    #ewm {
+        width: 100%;
+        margin: auto;
+    }
+</style>
+<body>
+<div class="img-box" >
+<img id="ewm" src="" >
+    <input type="hidden" value="0" id="limits">
+    <input type="hidden" value="" id="lsign">
+    <input type="hidden" value="" id="lsignurl">
+</div>
+</body>
+<script type="text/javascript">
+    function create() {
+        var id = '{$Think.get.id}';
+        var url = "{:url('qrlogin/createQrCode')}";
+        $.get(url, {'id': id}, function (data) {
+            if (data.msg == 1) {
+                $("#lsign").val(data.lsign);
+                $("#lsignurl").val(data.lsin_url);
+                $('#ewm').attr("src", 'data:image/png;base64,' + data.data)
+            } else {
+                 layer.msg('生成二维码失败');
+            }
+        })
+    }
+    create();
+
+    function getmobile() {
+        var limits =  $("#limits").val();
+        var lsign =  $("#lsign").val();
+        $("#limits").val(limits*1+1);
+        if($("#limits").val()*1 > 30){
+            clearInterval(interval);
+            $(".img-box").css("background","#ccc");
+            $("body").css("background","#ccc");
+            layer.msg('扫码超时，二维码已失效，请关闭重试！',{icon: 5, time: 0, shade: 0.3});
+        }else{
+            var checkurl = "{:url('qrlogin/check_lsign_cache')}";
+            $.post(checkurl,{'lsign':lsign},function(res){
+                if(res.msg == 'yes'){
+                    clearInterval(interval);
+                    layer.closeAll();
+                    layer.msg('登陆成功，正在跳转……',{icon: 6},function(){
+                        parent.location.href = "/admin.html";
+                    });
+                }else if(res.msg == 'no'){
+                    clearInterval(interval);
+                    $(".img-box").css("background","#ccc");
+                    $("body").css("background","#ccc");
+                    layer.msg('该号码未入驻SAAS',{icon: 5, time: 60000, shade: 0.3});
+                }
+            })
+        }
+    }
+    var interval = setInterval(getmobile, 1000);
+
+
+</script>

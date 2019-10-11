@@ -1,0 +1,113 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" onsubmit="return false">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">学生姓名</label>
+        <div class="layui-input-inline">
+            <input name="name" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">家长电话</label>
+        <div class="layui-input-inline">
+            <input name="mobile" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button id="search" class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+
+    var class_id = '{$class}';
+    var course = '{$course}';
+    var time = '{$hour}';
+    var status = '{$status}';
+
+    $('#search').click(function () {
+
+        var name = $('[name="name"]').val();
+        if (name == '') {
+            layer.msg('学生姓名不能为空!', {icon: 5});
+            return false;
+        }
+
+        var mobile = $('[name="mobile"]').val();
+
+        $.post("{:url('educational/punch/search')}", {name: name, mobile: mobile, class_id: class_id, course: course, time: time}, function (res) {
+
+            var e = res.data
+
+            var str = '';
+
+            if (res.code == 1) {
+                for (var i=0; i<e.length; i++) {
+                     str += '<tr><td class="text-center text-nowrap">' + e[i].name + '</td>' +
+
+                         '<td class="text-center text-red">' + e[i].goods_num + '</td>' +
+
+                         '<td class="text-center text-blue xh">' + e[i].consume_num + '</td>' +
+
+                         '<td class="text-center text-green sy">' + (e[i].goods_num*1-e[i].consume_num*1) +'</td>' +
+
+                         '<td class="text-center text-green">' + e[i].school_hour_student + '</td>'+
+
+                         '<td class="text-center status"><a data-mine="'+e[i].id +'" class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" style="width: 60px" onclick="dk('+e[i].id+','+course+',' + e[i].oid +','+ e[i].school_hour_student +',\'' + e[i].icard + '\',' + e[i].consume_num + ',' + (e[i].goods_num*1-e[i].consume_num*1) +')">打卡</ a></td></tr>';
+                }
+                $('#course').html(str);
+            }
+
+        })
+
+    })
+
+    function dk(cid, course, oid, hour, icard, xhks, syks) {
+
+        $.post('{:url("educational/punch/daKa")}', {id: cid, course_id: course, oid: oid, status: status, time: time, icard: icard}, function (res) {
+
+            if (res.code == 1) {
+
+                layer.msg(res.msg, {icon: 6});
+
+                $('.status').html('打卡成功');
+
+                $('.status').attr('style', 'color: green');
+
+                var xh = (xhks+hour);
+
+                var sy = (syks-hour);
+
+                $('.xh').text(xh);
+
+                $('.sy').text(sy);
+
+            } else {
+
+                layer.msg(res.msg, {icon: 5});
+
+            }
+        })
+    }
+</script>
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="true" method="post">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">学员姓名</th>
+            <th class="text-center">总课时</th>
+            <th class="text-center">消耗课时</th>
+            <th class="text-center">剩余课时</th>
+            <th class="text-center">当前消耗课时</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody id="course">
+
+        </tbody>
+    </table>
+</form>
+{/block}

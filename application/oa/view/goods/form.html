@@ -1,0 +1,84 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="col-sm-9">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请输入物品名称"
+                   placeholder="请输入物品名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">课程类型</label>
+        <div class='col-sm-3'>
+            {if isset($vo.type)}
+            {:get_category_radio(10, 'type', $vo.type, '', ['required' => 'required'], false)}
+            {else}
+            {:get_category_radio(10, 'type', '1', '', ['required' => 'required'], false)}
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">费用类型</label>
+        <div class='col-sm-3'>
+            {if isset($vo.cost_type)}
+            {:get_category_select(33, 'cost_type', $vo.cost_type, '', ['required' => 'required'], false)}
+            {else}
+            {:get_category_select(33, 'cost_type', '1', '', ['required' => 'required'], false)}
+            {/if}
+        </div>
+        <label class="layui-form-label">数量</label>
+        <div class='col-sm-3'>
+            <input type="text" name="num" value='{$vo.num|default=""}' required="required" title="请输物品入数量"
+                   placeholder="请输入数量" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">进价</label>
+        <div class='col-sm-3'>
+            <input type="text" name="cast" value='{$vo.cast|default=""}' title="请输入进价"
+                   placeholder="请输入进价" class="layui-input">
+        </div>
+        <label class="layui-form-label">售价</label>
+        <div class='col-sm-3'>
+            <input type="text" name="price" value='{$vo.price|default=""}' required="required" title="请输入售价"
+                   placeholder="请输入售价" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">积分</label>
+        <div class='col-sm-3'>
+            <input type="text" name="integral" value='{$vo.integral|default=""}' title="请输入积分"
+                   placeholder="请输入积分" class="layui-input">
+        </div>
+        <label class="layui-form-label">状态</label>
+        <div class='col-sm-3'>
+            {if isset($vo.status)}
+            {:get_category_radio(8, 'status', $vo.status, '',['required' => ''])}
+            {else}
+            {:get_category_radio(8, 'status', '1','',['required' => ''])}
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">详细描述</label>
+        <div class='col-sm-9'>
+            <textarea name="content" class="layui-textarea" placeholder="请输入描述"
+            >{$vo.content|default=""}</textarea>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>

@@ -1,0 +1,320 @@
+
+
+body {
+    font-size: 16px;
+    font-family: "微软雅黑";
+}
+
+img {
+    vertical-align: middle;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+input, select {
+    font-size: 16px;
+    -webkit-appearance: none;
+}
+
+.head {
+    /*background: url(/static/home/pay/img/head-top.png) no-repeat;*/
+    background-size: cover;
+    width: 100%;
+    height: 142px;
+}
+
+.head-top {
+    height: 40px;
+    display: flex;
+    color: #fff;
+    align-items: center;
+    padding: 12px 15px 0 15px;
+}
+
+.left-btn {
+    width: 6%;
+}
+
+.left-btn img {
+    width: 100%;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+}
+
+.title h3 {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.weui-tab {
+    text-align: center;
+    margin-top: 12%;
+}
+
+.weui-navbar {
+    width: 45%;
+    position: inherit;
+    margin: 10% auto 0 auto;
+}
+
+.weui-navbar__item {
+    padding: 8px 0;
+    font-size: 12px;
+    color: #999999;
+    background: #fff;
+    border: solid 1px #A0A0A0;
+}
+
+.weui-navbar__item01 {
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+}
+
+.weui-navbar__item02 {
+    border-radius: 0 3px 3px 0;
+    border-left: none;
+}
+
+.weui-navbar__item.weui-bar__item--on {
+    background: linear-gradient(to left, #4388FF, #886AFC);
+    color: #fff;
+}
+
+.weui-cells_radio .weui-check:checked + .weui-icon-checked:before {
+    content: '';
+    background: #ff7200;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 3px 0 0 3px;
+}
+
+.weui-icon {
+    background: #E5E5E5;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+}
+
+.weui-cells:after, .weui-cells:before, .weui-cell:before {
+    border: none;
+}
+
+.weui-check__label {
+    width: 70%;
+    height: 60px;
+    margin: 10px auto 20px auto;
+    box-shadow: 1px 1px 13px #ccc;
+}
+
+.weui-cell__bd {
+    display: flex;
+    align-items: center;
+}
+
+.weui-cell__bd img, .weui-btn_primary img {
+    width: 25px;
+    margin-right: 10px;
+}
+
+.weui-btn_primary {
+    width: 78%;
+    font-size: 14px;
+    height: 80px;
+    text-align: left;
+    align-items: center;
+    display: flex;
+    line-height: 80px;
+    background: linear-gradient(to left, #ff8300, #ff3f1e);
+}
+
+.active {
+    border: solid 1px #cdc5ea;
+}
+
+.btn-add {
+    margin-top: 10px;
+}
+
+/*填写用户信息*/
+.form {
+    text-align: center;
+    margin-top: 18%;
+}
+
+.userInput {
+    width: 74%;
+    height: 45px;
+    border-radius: 3px;
+    border: none;
+    border: solid 1px #ccc;
+    text-align: center;
+}
+
+.form-input {
+    margin-bottom: 28px;
+}
+
+.form-input p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.nextBtn {
+    width: 74%;
+    height: 40px;
+    margin: auto;
+    justify-content: center;
+    color: #fff;
+    border-radius: 3px;
+    margin-top: 10%;
+}
+
+/*填写新卡信息*/
+.form-bank {
+    margin-top: 6%;
+}
+
+/*支付成功失败页*/
+.payBox {
+    text-align: center;
+    font-size: 15px;
+    color: #999999;
+    margin: 20% auto;
+}
+
+.payBox img {
+    width: 254px;
+    margin-bottom: 10px;
+}
+
+#rate {
+    width: 74%;
+    height: 45px;
+    border-radius: 3px;
+    border: none;
+    border: solid 1px #ccc;
+    text-align: center;
+    text-align-last: center;
+}
+
+.form-select p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.content {
+    margin-top: 6%;
+}
+
+.card {
+    background: url("/static/home/pay/img/card.png") no-repeat;
+    background-size: 100% 100%;
+    width: 80%;
+    height: 70px;
+    margin: 0 auto;
+    margin-bottom: 5%;
+}
+
+.card h3 {
+    color: #fff;
+    margin-left: 6%;
+}
+
+.card p {
+    color: #fff;
+    margin-left: 6%;
+    padding-top: 4%;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-size: 14px;
+    font-family: "微软雅黑";
+    /*text-align: center;*/
+}
+
+span {
+    display: inline-block;
+}
+
+ul, li {
+    list-style: none;
+}
+
+/*支付成功失败页*/
+.payBox {
+    font-size: 15px;
+    color: #999999;
+    margin: 20% auto 12% auto;
+}
+
+.payBox img {
+    width: 254px;
+}
+
+.payBox h3 {
+    font-weight: 500;
+    color: #000;
+    font-size: 18px;
+    margin-top: 5%;
+}
+
+.payBox b {
+    font-weight: 500;
+    color: #000;
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.list {
+    width: 90%;
+    margin: 7% auto;
+}
+
+.list li {
+    margin: 15px 0;
+}
+
+.list span {
+    text-align: left;
+}
+
+.list span:first-child {
+    color: #999999;
+    width: 30%;
+}
+
+.list span:nth-child(2) {
+    color: #333333;
+    width: 60%;
+}
+
+.deleteCard {
+    width: 74%;
+    height: 40px;
+    border-radius: 3px;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: #f8f8f8;
+    color: #000;
+    line-height: 40px;
+    border: 1px solid rgba(0, 0, 0, .2);
+}

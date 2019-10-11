@@ -1,0 +1,37 @@
+<style>
+    .notice-content {
+        padding: 15px;
+    }
+    .notice-content img{
+       width: 90%;
+    }
+    .notice-content h3 {
+        margin-top: 30px;
+        font-size: 17px;
+    }
+
+    .notice-content h6 {
+        font-size: 15px;
+        line-height: 4.5;
+    }
+
+    .notice-content p {
+        text-indent: 2em;
+        font-size: 14px;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+</style>
+<div class="notice-content">
+    <h3 class="text-center">{$vo.title}</h3>
+    <br>
+
+    <div class="content">
+        <h6 class="text-right text-info">发布时间: {$vo.created_at|format_date}</h6>
+        {$vo.content|htmlspecialchars_decode|raw}
+        <div class="hr-line-dashed"></div>
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-danger" type='button' data-close>关闭通知</button>
+        </div>
+    </div>
+</div>

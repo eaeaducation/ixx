@@ -1,0 +1,78 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20' id="form_data">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-even lay-skin="line">
+        <thead>
+        <tr style="background-color: #F2F2F2;">
+            <th class="text-center">
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center">学员ID</th>
+            <th class="text-center">学生姓名</th>
+            <th class="text-center">性别</th>
+            <th class="text-center">学生成绩</th>
+            <th class="text-center">家长联系电话</th>
+            <th class="text-center">家长姓名</th>
+            <th class="text-center">备注</th>
+            <th class="text-center">爱学学关注</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $item}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" name="id[]" value='{$item.id}' type='checkbox'>
+            </td>
+            <td class="text-center nowrap">{$item.student_id}</td>
+            <td class="text-center nowrap"><a data-open="{:url('marketing/premarketing/customerview')}?id={$item.id}">{$item.name}</a>
+            </td>
+            <td class="text-center nowrap">{$item.gender|convert_category=3|raw}</td>
+            <td class="text-center nowrap">{$item.score|default=''}</td>
+            <td class="text-center nowrap">{$item.parent_tel}</td>
+            <td class="text-center nowrap">{$item.parent_name}</td>
+            <td class="text-center nowrap">{$item.remark}</td>
+            <th class="text-center nowrap">
+                <a class="layui-btn layui-btn-primary layui-btn-xs
+                            {notempty name='$item.wxopenid'}layui-bg-green border-none" data-tips-text="已关注" {else /}"
+                data-tips-text="未关注"{/notempty}
+                data-area="['50%','50%']" data-title="爱学学二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
+                <i class="fa fa-qrcode"></i>
+                </a>
+            </th>
+            <td class="text-center nowrap">
+                {if auth("$classuri/del_student")}
+                <span class="text-explode">|</span>
+                <a data-update="{$item.id}" data-field='delete'
+                   data-action='{:url("$classuri/del_student")}?id={$item.id}&class_id={$item.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <input type="text" name="class_id" value="{$item.class_id}" hidden>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='button' id="submit">发送成绩</button>
+    </div>
+    <!--{/empty}-->
+</form>
+<script>
+    $("#submit").on('click', function () {
+        layer.open({
+            title: "发送微信推送",
+            type: 1,
+            area: ['300px', '150px'],
+            content: '<div style="text-align: center;margin:auto;position:relative;top: 20px;">确认发送微信推送吗？</div>',
+            btn: ['发送','取消'],
+            yes: function () {
+                $("#form_data").submit();
+                layer.closeAll();
+            }
+        });
+
+    })
+</script>

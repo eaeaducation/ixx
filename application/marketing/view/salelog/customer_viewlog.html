@@ -1,0 +1,169 @@
+{extend name="admin@public/content"}
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+
+    <table id="basic" class="layui-table" lay-skin="line">
+        <thead>
+        <tr style="background-color: honeydew">
+            <th class="text-center" colspan="6">基本信息
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>客户姓名</th>
+            <td>{$customer->name}</td>
+            <th>性别</th>
+            <td>{$customer->gender|convert_category=3|raw}</td>
+            <th>监护人电话</th>
+            <td>{$customer->parent_tel}</td>
+        </tr>
+        <tr>
+            <th>监护人姓名</th>
+            <td>{$customer->parent_name}</td>
+            <th>亲属关系</th>
+            <td>{$customer->relation|convert_category=9|raw}</td>
+            <th>微信</th>
+            <td>{$customer->wechat}</td>
+        </tr>
+        <tr>
+            <th>QQ</th>
+            <td>{$customer->qq}</td>
+            <th>公立学校</th>
+            <td>{$customer->school}</td>
+            <th>公立学校班级</th>
+            <td>{$customer->class}</td>
+        </tr>
+        <tr>
+            <th>标签</th>
+            <td>{$customer->tags}</td>
+            <th>居住区域</th>
+            <td colspan="3">{$customer->address}</td>
+        </tr>
+        <tr>
+            <th>其他信息</th>
+            <td colspan="5">{$customer->other_info}</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="layui-tab layui-tab-card layui-box">
+        <ul class="layui-tab-title">
+            <li class="layui-this">咨询记录</li>
+            <li>沟通时间轴</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                {php}
+                $follows = $customer->follows;
+                {/php}
+                <!--{empty name='follows'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th>意向度</th>
+                        <th>咨询方式</th>
+                        <th>跟进状态</th>
+                        <th>下次跟进时间</th>
+                        <th>沟通内容</th>
+                        <th>关键词</th>
+                        <th>创建时间</th>
+                        <th>下次跟进时间</th>
+                        <th>跟进人</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $follows as $item}
+                    <tr>
+                        <td class="text-left nowrap">
+                            <div id="interest-{$item.id}" data-path="static/plugs/jquery-raty/images"></div>
+                            <script>
+                                require(['jquery.raty'], function () {
+                                    $('div#interest-{$item.id}').raty({
+                                        readOnly: true,
+                                        number: 5,
+                                        half: true,
+                                        score: '{$item.interest}',
+                                        path: function () {
+                                            return this.getAttribute('data-path');
+                                        }
+                                    });
+                                })
+                            </script>
+                        </td>
+                        <td>{$item.type|convert_category=4|raw}</td>
+                        <td>{$item.follow_status|convert_category=7|raw}</td>
+                        <td>{$item.remind_time|format_date}</td>
+                        <td>{$item.content}</td>
+                        <td>{$item.keyword}</td>
+                        <td>{$item.created_at|format_time}</td>
+                        <td>{$item.remind_time|format_date}</td>
+                        <td>{$item.user_id|get_user_realname}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+
+            <div class="layui-tab-item">
+                {php}
+                $follows = $customer->follows;
+                {/php}
+                <!--{empty name='follows'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+
+                <ul class="layui-timeline">
+                    {volist name='follows' id='vo' key='k'}
+                    {if $k == '1'}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">{$vo.created_at|format_time}，【{$vo.user_id|get_user_branch|default="未知校区"}】<b>“{$vo.user_id|get_user_realname|default="未知用户"}”</b>　沟通了该客户。状态： {$vo.follow_status|convert_category=7|raw}<br>内容：<i class="text-info">{$vo.content|default="未记录"}</i></div>
+                        </div>
+                    </li>
+                    {elseif $k == count($follows) /}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">{$vo.created_at|format_time}，【{$vo.user_id|get_user_branch|default="未知校区"}】<b>“{$vo.user_id|get_user_realname|default="未知用户"}”</b>　沟通了该客户。状态： {$vo.follow_status|convert_category=7|raw}<br>内容：<i class="text-info">{$vo.content|default="未记录"}</i></div>
+                        </div>
+                    </li>
+                    {else /}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">{$vo.created_at|format_time}，【{$vo.user_id|get_user_branch|default="未知校区"}】<b>“{$vo.user_id|get_user_realname|default="未知用户"}”</b>　沟通了该客户。状态： {$vo.follow_status|convert_category=7|raw}<br>内容：<i class="text-info">{$vo.content|default="未记录"}</i></div>
+                        </div>
+                    </li>
+                    {/if}
+                    {/volist}
+                </ul>
+                <!--{/empty}-->
+            </div>
+        </div>
+
+    </div>
+</form>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}

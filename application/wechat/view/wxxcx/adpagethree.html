@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>免费体验</title>
+    <link rel="stylesheet" type="text/css" href="/static/temp/wxxcx/css/tplthree.css"/>
+</head>
+<body>
+<div class="img_box">
+    <img src="/static/temp/wxxcx/images/ad3/image_01.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_02.jpg"/>
+    <div class="form_img">
+        <form>
+            <input type="text" name="mobile" value="" placeholder="请输入手机号" />
+            <input type="hidden" name="xcx" value="1">
+        </form>
+        <a id="submit">领取免费体验课</a>
+        <!--<p>点击上面领取按钮表示您已同意《用户协议》和《隐私声明》</p>-->
+    </div>
+    <img src="/static/temp/wxxcx/images/ad3/image_04.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_05.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_06.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_07.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_08.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_09.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_10.jpg"/>
+    <img src="/static/temp/wxxcx/images/ad3/image_11.jpg"/>
+</div>
+<div style="height: 50px;"></div>
+<script src="/static/plugs/jquery/jquery.min.js"></script>
+<script src="/static/plugs/layer_mobile/layer.js"></script>
+<script>
+    $("#submit").on('click',function () {
+        var mobile = $("input[name='mobile']").val();
+        var xcx = $("input[name='xcx']").val();
+        if (!/^1[34578]\d{9}$/.test(mobile)) {
+            layer.open({
+                content: '请输入正确的手机号'
+                , btn: '知道了'
+            });
+            return false;
+        }
+        $.post('/api/v1/Shows/collect', {
+            mobile: mobile,
+            xcx: xcx
+        }, function (res) {
+            console.log(res);
+            if (res.code == 1) {
+                layer.open({
+                    content: '感谢参与调查，我们将尽快与您联系，送上豪华大礼！'
+                    ,btn: '知道了'
+                })
+            } else {
+                layer.open({
+                    content: res.msg
+                    , btn: '知道了'
+                })
+            }
+        })
+    })
+</script>
+</body>
+</html>

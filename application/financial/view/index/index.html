@@ -1,0 +1,105 @@
+{extend name='admin@public/content'}
+
+{block name='content'}
+<form class="layui-form layui-form-pane form-search" action="{:url('financial/index/index')}" onsubmit="return false" method="get">
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">销售员(cc)</label>
+                <div class="layui-input-inline">
+                    {:get_sellers_select('cc','cc', $Think.get.cc, 'input-sm form-control', [],false)}
+                </div>
+            </div>
+
+            {if isset($myauth)}
+            {if in_array($myauth,[3,4])}
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">校区</label>
+                <div class="layui-input-inline">
+                    {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+                </div>
+            </div>
+            {/if}
+            {else /}
+            <div class="layui-form-item layui-inline text-left" >
+                <label class="layui-form-label">校区</label>
+                <div class="layui-input-inline">
+                    {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+                </div>
+            </div>
+            {/if}
+
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">选择时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                           placeholder="选择时间" class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <button class="layui-btn layui-btn-primary"><i class="layui-icon"></i> 搜 索</button>
+            </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+        })
+    })
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <h3 class="text-center margin-top-10 margin-bottom-10">{$start} _ {$end} 财务收入</h3>
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">学员姓名</th>
+            <th class="text-center">订单收入</th>
+            <th class="text-center">校区</th>
+            <th class="text-center">销售员</th>
+            <th class="text-center">类型</th>
+            <th class="text-center">经办人</th>
+            <th class="text-center">创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.name}</td>
+            <td class="text-center">￥{$vo.price}元</td>
+            <td class="text-center">{$vo.branch|convert_branch}</td>
+            <td class="text-center">{$vo.sales_id|get_employee_name2}</td>
+            {if $vo.type == 1}
+            <td class="text-center">报名</td>
+            {elseif $vo.type == 2 /}
+            <td class="text-center">续费</td>
+            {elseif $vo.type == 3 /}
+            <td class="text-center">退费</td>
+            {elseif $vo.type == 4 /}
+            <td class="text-center">购买商品</td>
+            {elseif $vo.type == 5 /}
+            <td class="text-center">活动秀</td>
+            {elseif $vo.type == 6 /}
+            <td class="text-center">易宝</td>
+            {elseif $vo.type == 7 /}
+            <td class="text-center">库分期</td>
+            {/if}
+            <td class="text-center">{$vo.userid|get_employee_name2}</td>
+            <td class="text-center">{$vo.created_at|format_time}</td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <div class="text-nowrap text-right margin-top-10" style="color: #000;font-size: 14px; font-weight: bold ;padding-right: 2%"><p>净收入：￥<span style="color: #FF5722;font-size: 18px;">{$sum}</span>元</p></div>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

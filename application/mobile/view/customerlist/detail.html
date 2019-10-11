@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>客户详情</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css" />
+    <style type="text/css">
+        body{background:#FFF;}
+        .line{height:20px;}
+        .list{width:250px; text-align: center;}
+        a span{color: #2494f2;}
+        a{color: #2494f2;}
+        select{width:200px; margin-bottom: 5px;}
+        .hui-form-items-title {width: 26%;}
+    </style>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>客户详情</h1>
+</header>
+<div class="hui-wrap">
+    <form style="padding:0px 10px;" class="hui-form" id="form1">
+        <div class="hui-form-items" style="border-top: 1px solid #F3F4F5;">
+            <div class="hui-form-items-title">学员姓名:</div>
+            <input type="text" class="hui-input hui-text-center hui-input-clear" name="name" value="{$customer->name}" />
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">学员性别:</div>
+            <div class="hui-form-radios hui-text-center" >
+                <input type="radio" value="0" name="gender" {if $customer->gender == 0}checked{/if} id="g2"  /><label for="g2">女</label>
+                <input type="radio" value="1" name="gender" {if $customer->gender == 1}checked{/if} id="g3"   /><label for="g3">男</label>
+                <input type="radio" value="2" name="gender" {if $customer->gender == null}checked{/if} id="g4"  /><label for="g4">其他</label>
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">出生日期:</div>
+            <input type="date" class="hui-button hui-button-large hui-date-picker" name="birthday" value="{$customer->birthday|date='Y-m-d'}"/>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">监护人姓名:</div>
+            <input type="text" class="hui-input hui-text-center hui-input-clear" name="parent_name" value="{$customer->parent_name}" />
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">亲属关系:</div>
+            <div class="hui-form-radios hui-text-center" >
+                <input type="radio" value="1" name="relation" {if $customer->relation == 1}checked{/if} id="g5"  /><label for="g5">父亲</label>
+                <input type="radio" value="2" name="relation" {if $customer->relation == 2}checked{/if} id="g6"   /><label for="g6">母亲</label>
+                <input type="radio" value="3" name="relation" {if $customer->relation == 3}checked{/if} id="g7"  /><label for="g7">其他监护人 </label>
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">监护人电话:</div>
+            <input type="text" class="hui-input hui-text-center hui-input-clear" name="parent_tel" value="{$customer->parent_tel}" checkType="phone" checkMsg="手机号码格式错误"/>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">所在校区:</div>
+            <div class="hui-form-select" style="margin-left: 19px;">
+            {:get_branches_select('branch', $customer->branch, '', [],false)}
+            </div>
+        </div>
+        <div class="hui-accordion">
+            {php}
+            $follows = json_encode($customer->follows);
+            $follows = json_decode($follows,true);
+            {/php}
+            <div class="hui-accordion-title"><b>咨询列表</b></div>
+            {if empty($follows)}
+            <div class="hui-accordion-content hui-list">
+                <ul>
+                    <li><div class="hui-list-text" style="color: #9f191f; display: block; text-align: center;">没 有 记 录 哦！</div></li>
+                </ul>
+            </div>
+            {else /}
+            <div class="hui-accordion-content hui-list">
+                <ul>
+                    {foreach $follows as $item}
+                    <li>
+                        <div class="hui-list-text">
+                            <a href='{:url("$classuri/consultation")}?id={$item.id}'>{$item.follow_status|convert_category=7|raw|default='······'}</a>
+                            {$item.created_at|date='Y-m-d H:m:s'}
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            {/if}
+        </div>
+        <div class="hui-form-items">
+            <a style="margin: 0 auto;" href='{:url("$classuri/createConsultation")}?id={$customer->id}' type="button" class="hui-button hui-button-small hui-primary hui-fl">新建咨詢</a>
+            <button style="margin: 0 auto;" id="sub" type="button" class="hui-button hui-button-small hui-primary hui-fl">保存数据</button>
+        </div>
+        <input type="hidden" class="hui-input hui-text-center hui-input-clear" name="id" value="{$customer->id}" />
+    </form>
+</div>
+<script src="/static/extend_res/mobile/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/extend_res/mobile/js/hui-accordion.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui-form.js"></script>
+<script type="text/javascript" src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    hui.accordion(true, true);
+    hui.datePicker();
+    hui('#sub').click(function () {
+        var res = huiFormCheck('#form1');
+        if (res) {
+            hui.loading('提交中...');
+            var data = hui.getFormData('#form1');
+            var birthday = hui('[name="birthday"]').val();
+            data.birthday = birthday;
+            $.post('{:url("$classuri/detail")}', {data: data}, function (e) {
+                hui.closeLoading();
+                if (e.code > 0) {
+                    hui.iconToast(e.msg);
+                    setTimeout(function(){
+                        window.location.href = '/mobile/customerlist/index';
+                    }, 2000);
+                } else {
+                    hui.toast(e.msg);
+                }
+            })
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<button data-open='{:url("$classuri/noticelist")}' data-title="返回列表" class='layui-btn layui-btn-sm layui-btn-primary'>
+    返回列表
+</button>
+{/block}
+{block name="content"}
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请输入通知标题"
+                   placeholder="请输入通知标题" class="layui-input" maxlength="128">
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            查看人
+        </label>
+        {if isset($type) && $type==1}
+        <div class="layui-input-inline">
+            <input type="hidden" name="type" value="1">
+            {:get_employeeId_select('','to_user','',isset($vo.from_user)?$vo.from_user:'','',[],'')}
+        </div>
+        {else/}
+        <div class="layui-input-block">
+            <input type="hidden" name="type" value="2">
+            {:html_checkbox($employee, 'to_user', '', '', [])}
+        </div>
+        {/if}
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
+        <div class='layui-input-block'>
+            <textarea name="content"></textarea>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="from_user" value="{:session('user.employee.id')}">
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {/if}
+        <button class="layui-btn" type='submit'>保存</button>
+        {if sysconf('mailuser') != '' && $type == 1}
+        <button class="layui-btn" type='submit' id="send">保存并发送邮件</button>
+        {/if}
+    </div>
+    <script>
+        window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
+        /*! 实例富文本编辑器  */
+        require(['ckeditor'], function () {
+            window.createEditor('[name="content"]', {height: 300});
+        });
+        window.form.render();
+        $("#send").on('click',function () {
+            $("#send").append('<input type="hidden" name="sendmail" value="1">')
+        })
+    </script>
+</form>
+{/block}

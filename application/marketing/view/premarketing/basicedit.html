@@ -1,0 +1,129 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='layui-form layui-box modal-form-box'>
+    <div data-consultation-type="basic" class="form-item">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="name" value="{$vo.name|default=''}" title="请输入客户姓名"
+                       placeholder="请输入客户姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="nickname" value="{$vo.nickname|default=''}" title="请输入昵称"
+                       placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                {:get_category_radio(3, 'gender', $vo.gender)}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">监护人姓名</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="parent_name" required="required" value="{$vo.parent_name|default=''}"
+                       title="请输入联系人姓名" placeholder="请输入联系人姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">亲属关系</label>
+            <div class="layui-input-block">
+                {:get_category_radio(9, 'relation', $vo.relation)}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">监护人电话</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="parent_tel" required="required" value="{$vo.parent_tel|default=''}"
+                       title="电话号码必须输入手机号码" placeholder="请输入联系人电话" class="layui-input" pattern="^1\d{10}$">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">微信号码</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="wechat" value="{$vo.wechat|default=''}"
+                       title="请输入微信号码" placeholder="请输入微信号码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="birthday" value="{$vo.birthday|date='Y-m-d'}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                居住地址
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="address" value="{$vo.address|default=''}" class="layui-input"
+                       placeholder="请输入居住地址">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">校区</label>
+            <div class="layui-input-block padding-right-20">
+                {:get_branches_select('branch', $vo.branch, '', [],false)}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                学员卡号
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="icard" value="{$vo.icard|default=''}" class="layui-input"
+                       placeholder="请输入学校信息">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                公立学校
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="school" value="{$vo.school|default=''}" class="layui-input"
+                       placeholder="请输入学校信息">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                公立班级
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="class" value="{$vo.class|default=''}" class="layui-input"
+                       placeholder="请输入班级信息">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                其他信息
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="other_info" value="{$vo.other_info|default=''}" class="layui-input"
+                       placeholder="请输入其他信息">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                标签
+            </label>
+            <div class="layui-input-block padding-right-20">
+                <input type="text" name="tags" value="{$vo.tags|default=''}" class="layui-input" placeholder="请输入标签">
+                <div class="help-block">
+                    <p class="text-info">请以半角 <code>,</code> 分隔每个标签</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item text-center">
+            {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+            <button class="layui-btn" type='submit'>保存数据</button>
+            <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+        </div>
+    </div>
+    <script>
+        window.laydate.render({range: false, elem: 'input[name="birthday"]', max: '{:date("Y-m-d")}'});
+        window.form.render();
+    </script>
+</form>

@@ -1,0 +1,125 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<a href="{:request()->url()}&action=down"
+   class='layui-btn layui-btn-sm '>导出记录
+</a>
+
+{/block}
+{block name='content'}
+<form class="layui-form layui-form-pane form-search" action="{:url('financial/orderpay/payList')}" onsubmit="return false" method="get">
+    <div class="row">
+        <div style="margin-left:1%;float: left">
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="请输入姓名" class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">订单号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="order_no" value="{$Think.get.order_no|default=''}" placeholder="请输入订单号" class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">支付状态</label>
+                <div class="layui-input-inline">
+                    {:pay_status('status', $Think.get.status)}
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline text-left">
+                <label class="layui-form-label">支付渠道</label>
+                <div class="layui-input-inline">
+                    {:pay_channel('type', $Think.get.type)}
+                </div>
+            </div>
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">选择支付时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                           placeholder="选择支付时间" class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <button class="layui-btn layui-btn-primary"><i class="layui-icon"></i> 搜 索</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+        })
+    })
+</script>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">姓名</th>
+            <th class="text-center">联系方式</th>
+            <th class="text-center">订单号</th>
+            <th class="text-center">订单金额</th>
+            <th class="text-center">支付渠道</th>
+            <th class="text-center">支付时间</th>
+            <th class="text-center">到账时间</th>
+            <th class="text-center">支付状态</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.id}</td>
+            <td class="text-center text-nowrap">{$vo.name}</td>
+            <td class="text-center">{$vo.mobile}</td>
+            <td class="text-center">{$vo.order_no}</td>
+            <td class="text-center">￥{$vo.money}元</td>
+            {if $vo.type == 1}
+            <td class="text-center text-blue">分期</td>
+            {elseif $vo.type == 2 /}
+            <td class="text-center text-danger">全额</td>
+            {/if}
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-center">{$vo.paytime|format_time}</td>
+            {if $vo.status == 2}
+            <td class="text-center text-red">未支付</td>
+            {elseif $vo.status == 1/}
+            <td class="text-center text-error">支付失败</td>
+            {elseif $vo.status == 99 /}
+            <td class="text-center text-green">支付成功</td>
+            {elseif $vo.status == 300 /}
+            <td class="text-center text-danger">退款处理中</td>
+            {/if}
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/refund")}
+                {if $vo.status == 99}
+                <span class="text-explode">|</span>
+                <a data-title="退款" data-modal='{:url("$classuri/refund")}?id={$vo.id}'>退款</a>
+                {/if}
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <div class="text-nowrap text-right margin-top-10" style="color: #000;font-size: 14px; font-weight: bold ;padding-right: 2%"><p>统计：￥<span style="color: #FF5722;font-size: 18px;">{$sum}</span>元</p></div>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

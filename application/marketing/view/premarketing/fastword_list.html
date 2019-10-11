@@ -1,0 +1,80 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add_fastword")}-->
+<button data-modal='{:url("$classuri/add_fastword")}' data-title="添加模板" class='layui-btn layui-btn-sm layui-btn-primary'>添加模板
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del_fastword")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del_fastword")}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除模板
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-inline">
+            {:get_authorizes_select_tree('', 'authorize_id', $Think.get.authorize_id,'',[],false)}
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center nowrap">ID</th>
+            <th class="text-center nowrap">适用角色</th>
+            <th class="text-center nowrap">短信内容</th>
+            <th class="text-center nowrap">创建时间</th>
+            <th class="text-center nowrap">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center nowrap">{$vo.id}</td>
+            <td class="text-center nowrap">{$vo.authorize_id|get_authorize_name|raw}</td>
+            <td class="text-center nowrap" title="{$vo.content}">{$vo.content|cn_substr}</td>
+            <td class="text-center nowrap">{$vo.addtime|format_time}</td>
+            <td class="text-center text-right">
+                {if auth("$classuri/edit_fastword")}
+                <span class="text-explode">|</span>
+                <a data-title="编辑"
+                   data-modal='{:url("$classuri/edit_fastword")}?id={$vo.id}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del_fastword")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del_fastword")}?id={$vo.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

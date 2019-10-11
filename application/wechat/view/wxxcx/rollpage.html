@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>参与名单</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/temp/wxxcx/css/rollstyle.css">
+
+    <script type="text/javascript" src="/static/plugs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/temp/wxxcx/js/scroll.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.list_lh li:even').addClass('lieven');
+    });
+    $(function () {
+        $("div.list_lh").myScroll({
+            speed: 10, //数值越大，速度越慢
+            rowHeight: 75 //li的高度
+        });
+    });
+</script>
+
+<div class="content">
+    <div class="bcon">
+        <h1><b>参与者名单</b></h1>
+        <div class="list_lh">
+            <ul>
+                {if !empty($cus)}
+                {foreach $cus as $item}
+                <li>
+                    <p style="margin-left: 15%;">{$item.parent_tel|mobile_mask} 客户参与成功</p>
+                </li>
+                {/foreach}
+                {else/}
+                <span>暂时没有人中奖哟</span>
+                {/if}
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

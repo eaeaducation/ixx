@@ -1,0 +1,66 @@
+img{display: block; /*width:100%;*/}
+header{width:100%; height:50px; padding:0 10px; box-sizing:border-box; background-color: #fff; display: box; display: -webkit-box; position: fixed; top:0; left: 0; z-index: 10; border-bottom:1px solid #ddd;}
+header div{box-flex:1; -webkit-box-flex:1; -moz-box-flex:1;}
+.logo a{display: block; width:183px; height:50px;}
+.category,.close{text-align: right; position: relative;}
+.category a,.close a{display: inline-block; width:25px; height:20px; background: url(../images/sprit.png) 0 -165px no-repeat; -webkit-background-size: 135px; background-size: 135px; position: absolute; top:15px; right:0; /*transform:translate(0,-50%); -webkit-transform:translate(0,-50%); -moz-transform:translate(0,-50%);*/}
+.close a{width:20px; height:20px; background-position: 0 -190px;}
+footer{width:100%; font-size:14px; background-color: #f9f9f9; position: fixed; bottom:0; left: 0; z-index: 10; border-top:1px solid #ddd;}
+footer ul{width:100%; line-height: 40px; height:40px; }
+footer ul li{float: left; width:25%; text-align: center;color:#858585; box-sizing:border-box; height:53px;}
+/*footer ul li.active{background-color: #2097da;}*/
+footer li.last{border:none;}
+footer li a{    display: inline-block;color: #828282; font-size: 12px; line-height: 13px; text-decoration:none;}
+footer li a:link,footer li a:visited{color: #828282;}
+footer li span{    display: block; height: 35px; width:100%; overflow:hidden;}
+footer li .bg1{ background:url(../images/pngbg09.gif) center center no-repeat;background-size: 23px auto;}
+footer li .bg3{background:url(../images/pngbg11.png) center center no-repeat;background-size: 26px auto;}
+footer li .bg4{background:url(../images/pngbg12.png) center center no-repeat;background-size: 23px auto;}
+footer li .bg5{background:url(../images/pngbg13.png) center center no-repeat;background-size: 15px auto;}
+
+.content{padding-bottom:50px; padding-top:50px; width:100%; overflow-x: hidden;}
+
+.mt0{margin-top:0;}
+.btNone{border-top:none;}
+
+/*срио╫гап╠М*/
+.nav{width:100%; height:100%; background-color: rgba(0,0,0,.3); position: fixed; top:0; left:0; z-index: 99; display: none;}
+nav{background-color: #fff; padding-top:1rem;}
+nav ul{padding: 0 .5rem;}
+nav ul li a{width:100%; height:1rem; line-height: 1rem; border-bottom:1px solid #ddd; display: block;}
+nav ul li:last-child a{border-bottom:0;}
+nav ul li a{color:#666;}
+
+
+@keyframes arrowDown
+{
+    from {transform:translate(0, -100%); -webkit-transform:translate(0, -100%); -moz-transform:translate(0, -100%); opacity: 1;}
+    to {transform:translate(0, 0); -webkit-transform:translate(0, 0); -moz-transform:translate(-50%, 0); opacity: 0.3;}
+}
+
+@-webkit-keyframes arrowDown
+{
+    from {transform:translate(0, -100%); -webkit-transform:translate(0, -100%); -moz-transform:translate(0, -100%); opacity: 1;}
+    to {transform:translate(0, 0); -webkit-transform:translate(0, 0); -moz-transform:translate(0, 0); opacity: 0.3;}
+}
+
+@-moz-keyframes arrowDown
+{
+    from {transform:translate(0, -100%); -webkit-transform:translate(0, -100%); -moz-transform:translate(0, -100%); opacity: 1;}
+    to {transform:translate(-50%, 0); -webkit-transform:translate(-50%, 0); -moz-transform:translate(-50%, 0); opacity: 0.3;}
+}
+
+@-o-keyframes arrowDown
+{
+    from {transform:translate(0, -100%); -webkit-transform:translate(0, -100%); -moz-transform:translate(0, -100%); opacity: 1;}
+    to {transform:translate(0, 0); -webkit-transform:translate(0, 0); -moz-transform:translate(0, 0); opacity: 0.3;}
+}
+
+
+
+
+
+
+
+
+

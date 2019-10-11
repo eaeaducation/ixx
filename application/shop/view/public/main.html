@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>EA国际教育</title>
+    <link rel="stylesheet" href="/static/extend_res/mobile/css/hui.css">
+    <link rel="stylesheet" href="/static/home/shop/css/product/common.css">
+    <link rel="stylesheet" href="/static/home/shop/css/product/cart_v3.css">
+    <link rel="stylesheet" href="/static/home/shop/css/product/product.css">
+    <link rel="stylesheet" href="/static/home/shop/css/product/app.css">
+    <link rel="stylesheet" href="/static/home/shop/css/index.css">
+    {block name="style"}{/block}
+    <script>
+        function parseURL(url) {
+            var a = document.createElement('a');
+            a.href = url;
+            return {
+                source: url,
+                protocol: a.protocol.replace(':', ''),
+                host: a.hostname,
+                port: a.port,
+                query: a.search,
+                params: (function () {
+                    var ret = {},
+                        seg = a.search.replace(/^\?/, '').split('&'),
+                        len = seg.length,
+                        i = 0,
+                        s;
+                    for (; i < len; i++) {
+                        if (!seg[i]) {
+                            continue;
+                        }
+                        s = seg[i].split('=');
+                        ret[s[0]] = s[1];
+                    }
+                    return ret;
+                })(),
+                file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ''])[1],
+                hash: a.hash.replace('#', ''),
+                path: a.pathname.replace(/^([^\/])/, '/$1'),
+                relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
+                segments: a.pathname.replace(/^\//, '').split('/')
+            };
+        }
+
+        function error_img(img) {
+            var url = parseURL(img.src);
+            var new_url = 'http://store.qqdkj.net' + url.relative;
+            img.src = new_url;
+            img.onerror = null;
+        }
+    </script>
+</head>
+<body style="background: #fff">
+{block name="body"}{/block}
+{block name="script"}{/block}
+</body>
+</html>

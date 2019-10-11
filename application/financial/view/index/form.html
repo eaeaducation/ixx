@@ -1,0 +1,76 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            {if isset($vo.user_id)}
+            {:get_employee_select('','user_id', session('user')['employee']['department'], $vo.user_id, 'input-sm form-control', [],false)}
+            {else /}
+            {:get_employee_select('','user_id', session('user')['employee']['department'], '', 'input-sm form-control', [],false)}
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">基本工资</label>
+        <div class="layui-input-block">
+            <input type="text" name="basic" value='{$vo.basic|default=""}' required="required"
+                   title="请输入基本工资" autocomplete="off" placeholder="请输入基本工资" class="layui-input" maxlength="20">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">绩效</label>
+        <div class="layui-input-block">
+            <input type="text" name="performance" value='{$vo.performance|default=""}' required="required"
+                   title="请输入绩效工资" autocomplete="off" placeholder="请输入绩效工资" class="layui-input" maxlength="20">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">奖金</label>
+        <div class="layui-input-block">
+            <input type="text" name="bonus" value='{$vo.bonus|default=""}' required="required"
+                   title="请输入奖金" autocomplete="off" placeholder="请输入奖金" class="layui-input" maxlength="20">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">扣除杂费</label>
+        <div class="layui-input-block">
+            <input type="text" name="deduction" value='{$vo.deduction|default=""}' required="required"
+                   title="请输入扣除杂费" autocomplete="off" placeholder="请输入扣除杂费" class="layui-input" maxlength="20">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发薪月份</label>
+        <div class="layui-input-block">
+            {if isset($vo.month)}
+            <input type="text" autocomplete="off" class="layui-input" name="month" value='{$vo.month|date="Y-m"}'
+                   id="date" placeholder="yyyy-MM" required="required">
+            {else /}
+            <input type="text" autocomplete="off" class="layui-input" name="month" value=''
+                   id="date" placeholder="yyyy-MM" required="required">
+            {/if}
+        </div>
+    </div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit' id="submit">保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#date'
+            ,type: 'month'
+        });
+    })
+</script>

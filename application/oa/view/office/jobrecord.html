@@ -1,0 +1,119 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/add")}' data-title="添加日志" class='layui-btn layui-btn-sm layui-btn-primary' data-area="['50%','80%']">添加工作日志
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除工作日志
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <a class="layui-btn layui-btn-success layui-btn-small" data-open="{$classuri}/jobrecord">
+            全部
+        </a>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <a class="layui-btn {eq name='Think.get.from' value='get'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+           data-open="{$classuri}/jobrecord?from=get">
+            收到的
+        </a>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <a class="layui-btn {eq name='Think.get.from' value='send'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+           data-open="{$classuri}/jobrecord?from=send">
+            发出的
+        </a>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">日志标题</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title}" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">创建时间</label>
+        <div class="layui-input-inline">
+            <input name="created_at" id="created_at" value="{$Think.get.created_at}" placeholder="请选择发布时间" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<!-- 表单搜索 结束 -->
+<script>
+    window.form.render();
+    window.laydate.render({range: true, elem: '#created_at'});
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>标题</th>
+            <th class='text-center' width="25%">内容</th>
+            <th class='text-center'>发件人</th>
+            <th class='text-center'>收件人</th>
+            <th class='text-center'>创建时间</th>
+            <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">
+                <a data-title="日志内容" data-modal='{:url("$classuri/recordview")}?id={$vo.id}'>
+                    {$vo.title}
+                </a>
+            </td>
+            <td class="text-center">{$vo.content|raw}</td>
+            <td class="text-center">{$vo.from_user|get_user_name}</td>
+            <td class="text-center">{$vo.to_user|get_user_name}</td>
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                {if session('user.employee.id') == $vo.from_user}
+                <a data-title="查看" data-modal='{:url("$classuri/recordview")}?id={$vo.id}'>查看</a>
+                {else/}
+                <a data-title="回复" data-modal='{:url("$classuri/replay")}?id={$vo.id}' data-area="['50%','80%']">回复</a>
+                {/if}
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

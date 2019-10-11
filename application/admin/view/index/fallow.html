@@ -1,0 +1,46 @@
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" lay-even="" lay-skin="nob">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>监护人电话</th>
+                    <th>家长姓名</th>
+                    <th>销售员</th>
+                    <th>上次跟进时间</th>
+                    <th>本次跟进时间</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name='fallow' id='vo'}
+                <tr>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.parent_tel|mobile_mask}</td>
+                    <td>{$vo.parent_name}</td>
+                    <td>{$vo.collect_id|get_employee_name2}</td>
+                    <td>{$vo.created_at|date="y-m-d H:i:s"}</td>
+                    <td>{$vo.remind_time|date="y-m-d"}</td>
+                    <td><a  onclick='goCustomer("{$vo.id}")'>去跟进</a></td>
+                </tr>
+                {/volist}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function goCustomer(id) {
+        var url = "admin.html#{:url('marketing/premarketing/customerview')}?id=" + id;
+        window.layer.closeAll();
+        window.location.href = url;
+    }
+</script>

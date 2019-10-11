@@ -1,0 +1,73 @@
+<div class="padding-15">
+    <!-- 表单搜索 开始 -->
+    <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false"
+          method="get">
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">课程类别</label>
+            <div class="layui-input-inline">
+                {:get_category_select(6, 'category', $Think.get.type, '', [],false)}
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">科目</label>
+            <div class="layui-input-inline">
+                {:get_subjects_select('subject', $Think.get.subject,'',[],false)}
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">课程名称</label>
+            <div class="layui-input-inline">
+                <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </form>
+    <script>
+        window.form.render();
+    </script>
+    <!-- 表单搜索 结束 -->
+
+    <form onsubmit="return false;" data-auto="true" method="post">
+        <!--{empty name='list'}-->
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+        <!--{else}-->
+        <input type="hidden" value="resort" name="action">
+        <table id="test" class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th class='list-table-check-td'>
+                </th>
+                <th class="text-center">编号</th>
+                <th class='text-center'>课程名称</th>
+                <th class="text-center">类别</th>
+                <th class="text-center">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$vo}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    <input class="list-check-box" value='{$Think.get.index},{$vo.id},{$vo.title}' type='radio'
+                           name="ids">
+                </td>
+                <td class="text-center">{$vo.no}</td>
+                <td class="text-center">{$vo.title}
+                </td>
+                <td class="text-center">{$vo.category| convert_category=6|raw}</td>
+                <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+        {if isset($page)}<p>{$page|raw}</p>{/if}
+        <hr class="hr-line-solid">
+        <div class="layui-form-item text-center">
+            <a data-push-ids data-callback="choose_course"
+               class="layui-btn">
+                确定 </a>
+        </div>
+        <!--{/empty}-->
+    </form>
+</div>

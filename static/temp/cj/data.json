@@ -1,0 +1,28 @@
+{
+  "tplname": "test1",
+  "cishu": 4,
+  "logo":"http",
+  "data":[
+    {
+      "background":{"name":"","value":"","type":"pic"},
+      "title":{"name":"","value":"","type":"text"},
+      "0":{"name":"奖项一","value":"","type":"text","id":1, "prize" : "一等奖", "v": 1},
+      "1":{"name":"奖项二","value":"","type":"text","id" :2, "prize" : "二等奖", "v" : 2},
+      "2":{"name":"奖项三","value":"","type":"text","id" :3, "prize" : "三等奖", "v" : 5},
+      "3":{"name":"奖项四","value":"","type":"text","id" :4, "prize" : "四等奖", "v" : 7},
+      "4":{"name":"奖项五","value":"","type":"text","id" :5, "prize" : "五等奖", "v" : 8},
+      "5":{"name":"奖项六","value":"","type":"text","id" :6, "prize" : "六等奖", "v" : 15},
+      "6":{"name":"奖项七","value":"","type":"text","id" :7, "prize" : "七等奖", "v" : 27},
+      "7":{"name":"奖项八","value":"","type":"text","id" :8, "prize" : "八等奖", "v" : 35},
+      "looat-pic1":{"name":"底盘","value":"./img/dipan.png","type":"pic"},
+      "looat-pic2":{"name":"指针","value":"./img/zhizhen.png","type":"pic"},
+      "looat-pic3":{"name":"无次数弹框","value":"./img/wcs-tk.png","type":"pic"},
+      "looat-pic4":{"name":"关闭","value":"./img/close.png","type":"pic"},
+      "looat-pic5":{"name":"确认","value":"./img/ok-img.png","type":"pic"},
+      "looat-pic6":{"name":"转盘规则","value":"./img/zpgz.png","type":"pic"},
+      "looat-pic7":{"name":"转盘规则","value":"./img/zjjl-img.png","type":"pic"},
+      "looat-pic8":{"name":"转盘规则","value":"./img/zj-tk.png","type":"pic"},
+      "looat-pic9":{"name":"转盘规则","value":"./img/tz-tk.png","type":"pic"}
+    }
+  ]
+}

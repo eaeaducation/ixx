@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>消费金额</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/weui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/jquery-weui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body>
+<div class="head">
+    <div class="head-top">
+        <div class="left-btn">
+            <img src="/static/home/pay/img/left-btn.png"/>
+        </div>
+        <div class="title">
+            <h4>请填写您的个人信息</h4>
+        </div>
+    </div>
+</div>
+<div id="first" style="display: block;">
+    <form class="form" style="margin-top: 2%;">
+        <div class="form-input">
+            <p>姓 名</p>
+            <input type="text" name="name" placeholder="请输入真实姓名" class="userInput" value="" required/>
+        </div>
+        <div class="form-input">
+            <p>电 话</p>
+            <input type="number" name="mobile" placeholder="请输入电话号码" value="" class="userInput" required/>
+        </div>
+        <div class="form-input">
+            <p>付款金额</p>
+            <input type="number" name="total_money" placeholder="请输入消费金额 /元" value="" class="userInput" required/>
+        </div>
+    </form>
+    <a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next" style="font-size: 18px;">
+        立 即 付 款
+    </a>
+</div>
+<script type="text/javascript" src="/static/plugs/jquery-weui/lib/fastclick.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-weui.min.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+    $('.left-btn').click(function () {
+        window.history.back(-1);
+    });
+    var url = '{:url("order/pay/createOrder", ["type" => $type,"openid" => $openid])}';
+    var paySuccessUrl = '{:url("order/pay/paySuccess")}';
+    var payFailUrl = '{:url("order/pay/payFail")}';
+</script>
+{if $type == 'WECHAT'}
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script src="/static/home/pay/js/wechat.js?_={:time()}"></script>
+{/if}
+{if $type == 'ALIPAY'}
+<script src="/static/home/pay/js/alipay.js?_={:time()}"></script>
+{/if}
+
+</body>
+</html>

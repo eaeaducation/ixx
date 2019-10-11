@@ -1,0 +1,35 @@
+{extend name='shop@public/main'}
+{block name="style"}
+<style>
+    #title {text-align: center; font-size: 16px; height: 50px;line-height: 50px}
+    #address {width: 80%; margin: 0 auto;}
+    ul li {margin-bottom: 25px;}
+    ul li p{margin-top: 5px; font-size: 13px;margin-left: 35px;}
+</style>
+{/block}
+{block name="body"}
+<header class="header" style="background-color: #002458">
+    <a href="javascript:history.back();" class="back c_back">返回</a>
+    <div class="h_label" style="color:#fff;">咨询</div>
+</header>
+<div id="container">
+    <p id="title">EA公馆门店地址</p>
+    <div id="address">
+        {if (empty($list))}
+        <p>暂无咨询地址</p>
+        {else /}
+        <ul>
+            {foreach $list as $k => $vo}
+            <li>
+                <!--<input type="radio" name="check" class="fl c_checkbox" value="{$vo.id}">-->
+                <p>[{$vo.title}]</p>
+                <p>{$vo.address}</p>
+                <p>电话：{$vo.mobile}</p>
+            </li>
+            {/foreach}
+        </ul>
+        {/if}
+    </div>
+</div>
+{include file='public:footer'}
+{/block}

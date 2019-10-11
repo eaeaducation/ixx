@@ -1,0 +1,16 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post" id="form_data">
+    <div class="layui-form-item">
+        <label class="layui-form-label">学生状态：</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="正常上课" {if $student.status != 0}checked{/if} style="display: none !important;">
+            <input type="radio" name="status" value="0" title="停课" {if $student.status == 0}checked{/if} style="display: none !important;">
+        </div>
+    </div>
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>

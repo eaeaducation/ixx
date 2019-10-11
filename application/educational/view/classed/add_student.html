@@ -1,0 +1,36 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true"  method="post"
+      class='layui-form layui-box modal-form-box padding-left-20 padding-right-20'>
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center nowrap">学生姓名</th>
+            <th class="text-center nowrap">监护人电话</th>
+            <th class="text-center nowrap">监护人姓名</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input name="id" class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center nowrap">{$vo.name}【{$vo.gender|convert_category=3|raw}】</td>
+            <td class="text-center nowrap">{$vo.parent_tel}</td>
+            <td class="text-center nowrap">{$vo.parent_name}</td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <div class="layui-form-item text-center margin-top-20">
+        <button class="layui-btn" data-callback="class_detail"
+                data-action='{:url("educational/Classed/add_student")}?class_id={$classid}' data-update="" type='button'>添加学员</button>
+    </div>
+    <!--{/empty}-->
+</form>

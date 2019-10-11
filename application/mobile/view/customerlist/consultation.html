@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>咨詢详情</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css" />
+    <script src="__STATIC__/extend_res/jquery/jquery-3.3.1.js"></script>
+    <script src="__STATIC__/plugs/require/require.js"></script>
+    <script src="__STATIC__/app.js"></script>
+    <style type="text/css">
+        body{background:#FFF;}
+        .line{height:20px;}
+        .list{width:250px; text-align: center;}
+        a {color: #2494f2;}
+        .hui-form-items:last-child{border-bottom: 1px solid #F3F4F5;}
+        .hui-form-items-title {width: 26%;}
+    </style>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>咨詢详情</h1>
+</header>
+<div class="hui-wrap">
+    <form style="padding:20px 10px;" class="hui-form" id="form1">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">意向度:</div>
+            <div id="interest-{$follow.id}" data-path="/static/plugs/jquery-raty/images" style="padding-left: 76px"></div>
+            <script>
+                require(['jquery.raty'], function () {
+                    $('#interest-{$follow.id}').raty({
+                        readOnly: true,
+                        number: 5,
+                        half: true,
+                        score: '{$follow.interest}',
+                        path: function () {
+                            return this.getAttribute('data-path');
+                        }
+                    });
+                })
+            </script>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">跟进状态:</div>
+            <div class="list">{$follow.follow_status|convert_category=7|raw}</div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">下次跟进时间:</div>
+            <div class="list">{$follow.remind_time|format_date}</div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">咨询方式:</div>
+            <div class="list">{$follow.type|convert_category=4|raw}</div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">创建时间:</div>
+            <div class="list">{$follow.created_at|format_time}</div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">沟通内容:</div>
+            <div class="hui-form-textarea">
+                <textarea  name="content">{$follow.content}</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/extend_res/mobile/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/extend_res/mobile/js/hui-accordion.js" type="text/javascript"></script>
+<script type="text/javascript">
+    hui.accordion(true, true);
+</script>
+</body>
+</html>

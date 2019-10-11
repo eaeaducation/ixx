@@ -1,0 +1,84 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='layui-form layui-box modal-form-box'>
+    <div class="layui-form-item">
+        <label class="layui-form-label">意向度</label>
+        <div class="layui-input-block padding-top-10">
+            <div id="interest" data-path="static/plugs/jquery-raty/images"></div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">咨询方式</label>
+        <div class="layui-input-block padding-right-20">
+            {:get_category_radio(4, 'type', 1, '', ['required'=>'required'])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            意向课程
+        </label>
+        <div class="layui-input-block padding-right-20">
+            <div class='col-sm-3 padding-left-0'>
+                {:get_category_select(6, 'interest_course_1', '', '', [], false)}
+            </div>
+            <div class='col-sm-3'>
+                {:get_category_select(6, 'interest_course_2', '', '', [], false)}
+            </div>
+            <div class='col-sm-3'>
+                {:get_category_select(6, 'interest_course_3', '', '', [], false)}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">跟进状态</label>
+        <div class="layui-input-block padding-right-20">
+            {:get_category_select(7, 'follow_status', 2, '', ['required'=>'required'])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">沟通内容</label>
+        <div class="layui-input-block padding-right-20">
+            <textarea name="content" id="" class="layui-textarea" required></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">下次跟进时间</label>
+        <div class="layui-input-block padding-right-20">
+            <input type="text" name="remind_time" value="" class="layui-input" required="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">关键词</label>
+        <div class="layui-input-block padding-right-20">
+            <input type="text" name="keyword" value="" class="layui-input" placeholder="请输入关键词">
+            <div class="help-block">
+                <p class="text-info">请以半角 <code>,</code> 分隔每个关键词</p>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="created_at" value="{:time()}">
+    <input type="hidden" name="customer_id" value="{$Think.get.id}">
+    <input type="hidden" name="user_id" value="{:session('user.id')}">
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.laydate.render({range: false, elem: 'input[name="birthday"]', max: '{:date("Y-m-d")}'});
+    window.laydate.render({
+        range: false, elem: 'input[name="remind_time"]', value: '{:date("Y-m-d", strtotime("+7 days"))}'
+    });
+    window.form.render();
+
+    require(['jquery.raty'], function () {
+        $('div#interest').raty({
+            number: 5,
+            half: true,
+            scoreName: 'interest',
+            score: 0,
+            path: function () {
+                return this.getAttribute('data-path');
+            }
+        });
+    })
+</script>

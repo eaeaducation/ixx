@@ -1,0 +1,26 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        .header{background: #002458;}
+        .header h1{color: #fff;padding: 0 1rem; font-size: 17px;line-height: 3.rem;}
+        #system {width: 100%;}
+    </style>
+{/block}
+{block name="body"}
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em style="color: #fff;">达人秀</em></h1>
+</header>
+<div class="hui-swipe common" id="system">
+    <div class="hui-swipe-items">
+        {foreach $row.brand_cover as $key => $vo}
+        <div class="hui-swipe-item"><img onerror="error_img(this)" src="{$vo}"/></div>
+        {/foreach}
+    </div>
+</div>
+<section class="review_area" style="width: 80%; margin-top: 7%; margin-bottom: 18%;">
+    {$row.brand_detail|raw}
+</section>
+
+{include file='public:footer'}
+{/block}

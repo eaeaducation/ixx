@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>家庭作业</title>
+    <style>
+        .homework {
+            width: 100%;
+            height: 100%;
+            min-height: 32rem;
+            margin: 0.2rem 0.5rem 0 0.5rem;
+        }
+
+        .text {
+            width: 85%;
+            margin-left: 6%;
+        }
+
+        h1 {
+            font-size: 1rem;
+            text-align: center;
+            line-height: 4.5;
+        }
+
+        img {
+            margin-left: 10%;
+            width: 80%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" onsubmit="return false" method="post">
+    <div class="homework">
+        <h1>{$homework.class_name|default=""}&nbsp;</h1>
+        <!--{empty name='homework'}-->
+        <p style="text-align: center">暂无作业！</p>
+        <!--{else}-->
+        <div class="text">
+            作业题目：
+            {$homework.title}
+        </div>
+        <div class="text">
+            作业内容：
+            {:htmlspecialchars_decode($homework.content)}
+        </div>
+        <div class="text">
+            作业图片：<br>
+            <img src="{$homework.homework_pic}" alt="">
+        </div>
+        <!--{/empty}-->
+    </div>
+</form>
+</body>
+</html>

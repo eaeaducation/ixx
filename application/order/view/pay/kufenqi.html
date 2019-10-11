@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>消费金额</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/weui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/jquery-weui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body style="background: none;">
+<div class="head">
+    <div class="head-top">
+        <div class="left-btn">
+            <img src="/static/home/pay/img/left-btn.png"/>
+        </div>
+    </div>
+    <div class="title" style="margin-top: unset">
+        <h3 style="color: #fff">{:sysconf('app_name')}</h3>
+    </div>
+</div>
+<div id="first" style="display: block;">
+    <div class="form" style="margin-top: 2%;">
+        <div class="form-input">
+            <p>您的姓名</p>
+            <input type="text" name="name" placeholder="请输入真实姓名" class="userInput" value=""/>
+        </div>
+        <div class="form-input">
+            <p>您的电话</p>
+            <input type="number" name="mobile" placeholder="请输入电话号码" value="" class="userInput"/>
+        </div>
+        <div class="form-input">
+            <p>分期金额</p>
+            <input type="number" id="price" name="price" placeholder="请输入分期金额 600-50000/元" value="" class="userInput"/>
+        </div>
+        <div class="form-select">
+            <p>分期期数</p>
+            <!--<input type="text" placeholder="请输入身份证号" class="userInput"/>-->
+            <select name="rate" id="rate">
+                <option value="3">3</option>
+                <option value="6">6</option>
+                <option value="12" selected>12</option>
+            </select>
+            <div id="tip" style="display: none; margin-top: 2%">
+                <span style="display: block">月供：<span id="supply" style="color: #886AFC"></span>
+                    {if sysconf('kfq_discount') == 2}
+                    <span style="color: #886AFC">（免息）</span>
+                    {else /}
+                    <span style="color: #886AFC">（含手续费）</span>
+                    {/if}
+                </span>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next" style="margin-top: 5%">
+        下一步
+    </a>
+</div>
+<div id="second" style="display: none">
+    <div class="content">
+        <div class="weui-tab__bd">
+            <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+                <div class="weui-cells weui-cells_radio" id="banklbl">
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:;" style="display: block; text-align: center; margin: auto;">
+        <img id="addcard" src="/static/home/pay/img/addbankcard.jpg" width="86%"/>
+    </a>
+    <a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next1">
+        下 一 步
+    </a>
+    <a href="javascript:;" class="deleteCard">
+        解 除 绑 定
+    </a>
+</div>
+<input type="hidden" id="rate1" name="rate" value="">
+<input type="hidden" name="stageNum" value="">
+<input type="hidden" name="uid" value="">
+<input type="hidden" name="oid" value="">
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-weui.min.js"></script>
+<script>
+    $('.deleteCard').click(function () {
+        var bank = $('[name="card"]:checked');
+        if (bank.length === 0) {
+            $.toast('请选择银行卡', 'text');
+            return false;
+        }
+        var bankInfo = bank.attr('data-id').split(',');
+        $.showLoading();
+        $.post('{:url("api2/kufenqi/untied")}', {bankId: bankInfo[0], uid: bankInfo[1]}, function (e) {
+            $.hideLoading();
+            var res = JSON.parse(e);
+            if (res.result == 200) {
+                $.toast('解绑成功', 'text');
+            } else {
+                $.toast(res.errMsg, 'text');
+            }
+        });
+    });
+
+    $(function () {
+        $('.next').click(function () {
+            var money = $('[name="price"]').val();
+            var name = $('[name="name"]').val();
+            var mobile = $('[name="mobile"]').val();
+            var rate = $('#rate1').val();
+            var stageNum = $('#rate option:selected').val();
+            var url = '{:url("api2/kufenqi/cardCx")}';
+
+            if (name == '') {
+                $.toast('姓名不能为空', "text");
+                return false;
+            }
+            var pre = /^\d{11}$/;
+            if (!pre.test(mobile)) {
+                $.toast('请输入正确的电话号码', "text");
+                return false;
+            }
+            if (money == '') {
+                $.toast('分期金额不能为空', "text");
+                return false;
+            } else if (money < 600) {
+                $.toast('分期金额不得少于600', "text");
+                return false;
+            } else if (money > 50000) {
+                $.toast('分期金额不得大于50000', "text");
+                return false;
+            }
+            $.showLoading();
+            $.post(url, {price: money, name: name, mobile: mobile}, function (e) {
+                $.hideLoading();
+                if (e.result == 200 && e.data.length == 0) {
+                    window.location.href = 'tieCard?price=' + money + '&rate=' + rate + '&stageNum=' + stageNum + '&uid=' + e.uid + '&oid=' + e.oid;
+                } else if (e.result == 200 && e.data.length > 0) {
+                    $('[name="stageNum"]').val(stageNum);
+                    $('[name="uid"]').val(e.uid);
+                    $('[name="oid"]').val(e.oid);
+                    $("#first").fadeOut(300, function () {
+                        $("#second").fadeIn();
+                    });
+
+                    var html = '';
+                    for (var i = 0; i < e.data.length; i++) {
+                        html += '<div class="weui-cell weui-check__label card" onclick="$(\'[name=card]\').removeAttr(\'checked\');$(\'#x1' + i + '\').attr(\'checked\', true);">\n' +
+                            '                        <div class="weui-cell__bd" style="display: unset;">\n' +
+                            '                            <h3>' + e.data[i].codename + '</h3>\n' +
+                            '                            <p>' + e.data[i].bankmask + '</p>\n' +
+                            '                        </div>\n' +
+                            '                        <div class="weui-cell__ft">\n' +
+                            '                            <input type="radio" class="weui-check" name="card" value="' + e.data[i].bankcard + '" id="x1' + i + '" data-id=\'' + e.data[i].bankcardId + ',' + e.uid + '\'>\n' +
+                            '                            <span class="weui-icon-checked weui-icon"></span>\n' +
+                            '                        </div>\n' +
+                            '                    </div>';
+                    }
+                    $('#banklbl').html(html);
+                } else {
+                    window.location.href = 'tieCard?price=' + money + '&rate=' + rate + '&stageNum=' + stageNum + '&uid=' + e.uid + '&oid=' + e.oid;
+                }
+            })
+        });
+
+        $('.left-btn').click(function () {
+            history.back(-1);
+        });
+
+        //绑卡
+        $('#addcard').click(function () {
+            var uid = $('[name="uid"]').val(),
+                oid = $('[name="oid"]').val(),
+                rate = $('#rate1').val(),
+                stageNum = $('[name="stageNum"]').val(),
+                money = $('[name="price"]').val();
+            window.location.href = 'tieCard?price=' + money + '&rate=' + rate + '&stageNum=' + stageNum + '&uid=' + uid + '&oid=' + oid;
+        });
+
+        $('.next1').click(function () {
+            var bank = $('[name="card"]:checked');
+            if (bank.length === 0) {
+                $.toast('请选择银行卡', 'text');
+                return false;
+            }
+            var bankno = bank.val();
+            var uid = $('[name="uid"]').val();
+            var money = $('[name="price"]').val(),
+                oid = $('[name="oid"]').val(),
+                rate = $('#rate1').val(),
+                stageNum = $('[name="stageNum"]').val();
+            $.showLoading();
+            $.post('{:url("api2/kufenqi/pay")}', {
+                bankno: bankno,
+                uid: uid,
+                price: money,
+                oid: oid,
+                rate: rate,
+                stageNum: stageNum
+            }, function (e) {
+                $.hideLoading();
+                if (e.result == 200) {
+                    window.location.href = 'verif?bankno=' + bankno + '&uid=' + uid + '&oid=' + oid + '&price=' + money + '&payid=' + e.data.payId + '&applyid=';
+                }
+            })
+        });
+
+        $('#rate').change(function () {
+            var money = $('[name="price"]').val();
+            if (money < 600) {
+                return false;
+            } else if (money > 50000) {
+                return false;
+            }
+            $.showLoading();
+            getRate();
+        });
+
+        $('#price').blur(function () {
+            var money = $(this).val();
+            if (money < 600) {
+                return false;
+            } else if (money > 50000) {
+                return false;
+            }
+            $.showLoading();
+            getRate();
+        });
+        var count = 0;
+
+        function getRate() {
+            if (count >= 5) {
+                $.alert('未能获取到费率信息, 请重新输入', '提示', function () {
+                    $.hideLoading();
+                    window.location.reload();
+                });
+                return;
+            }
+            var money = $('[name="price"]').val();
+            var num = $('#rate option:selected').val();
+            var url = '{:url("api2/kufenqi/rateCx")}';
+            $.post(url, {price: money, stageNum: num}, function (e) {
+                if (e.result == 200) {
+                    $.hideLoading();
+                    var supply = e.supply + ' 元  *  ' + num + ' 期 ';
+                    $('#supply').html(supply);
+                    $('#tip').css('display', 'block');
+                    $('#rate1').val(e.data.rates[0].rate);
+                    $('[name="stageNum"]').val(num);
+                } else {
+                    setTimeout(getRate, 600);
+                    return false;
+                }
+            });
+            count++;
+        }
+    });
+</script>
+</body>
+</html>

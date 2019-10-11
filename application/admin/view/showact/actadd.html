@@ -1,0 +1,274 @@
+{extend name='admin@public/content'}
+{block name="style"}
+
+{js href="/static/admin/show/js/analytics.js"/}
+{css href="/static/admin/show/css/index.min.css"/}
+<script>
+    document.documentElement.setAttribute('data-useragent', navigator.userAgent);
+</script>
+{/block}
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+    <!--表单start-->
+    <div style="padding: 15px;">
+
+        <form onsubmit="return false;" data-auto="true" method="post" id="ProductForm"
+              class='form-horizontal layui-form padding-top-20'>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">活动主题</label>
+                <div class='col-sm-10'>
+                    <input name="title" required value="" class="layui-input" title="请输入活动主题"
+                           placeholder="请输入活动主题">
+                    <input type="hidden" name="tplid" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">活动时间</label>
+                <div class='col-sm-10'>
+                    <input name="time" class="layui-input" required id="test10" title="请选择活动时间" placeholder="请选择活动时间">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">活动类型</label>
+                <div class='col-sm-10'>
+                    {:get_category_select(2,'type', '', '', ['required' => ''])}
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <!--表单end-->
+    <div class='col-sm-12'>
+        <ul class="layui-tab-title">
+            <li class="layui-this">宣传海报类</li>
+            <li>幸运转盘类</li>
+            <li>节日活动类</li>
+            <li>其他类型类</li>
+        </ul>
+    </div>
+
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <!--展示模板开始-->
+            <div class="entry-panel ng-scope">
+                <nav class="container" style="width: 1200px;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 text-center">
+                            {volist name="tpllist" id="vo"}
+                            {eq name="$vo.cate_id" value="1"}
+                            <div class="thumbnail" style="margin-right: 25px;">
+                                <a class="no-decoration" onclick='show("{$vo.tpl_name}")'>
+                                    <img class="cover" src="{$vo.demo_pic1}"> </a>
+                                <div class="caption text-center">{$vo.tpl_name}</div>
+                                <a class="layui-btn layui-btn-normal layui-btn-radius" id="{$vo.tpl_name}"
+                                   onclick='chage("{$vo.tpl_name}","{$vo.id}")'>选择此模板</a>
+                            </div>
+                            {/eq}
+                            {/volist}
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <!--展示模板结束-->
+        </div>
+        <div class="layui-tab-item">
+            <!--展示模板开始-->
+
+            <div class="entry-panel ng-scope">
+                <nav class="container">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 text-center">
+                            {volist name="tpllist" id="vo"}
+                            {eq name="$vo.cate_id" value="2"}
+                            <div class="thumbnail" style="margin-right: 25px;">
+                                <a class="no-decoration" onclick='show("{$vo.tpl_name}")'>
+                                    <img class="cover" src="{$vo.demo_pic1}"> </a>
+                                <div class="caption text-center">{$vo.tpl_name}</div>
+                                <a class="layui-btn layui-btn-normal layui-btn-radius" id="{$vo.tpl_name}"
+                                   onclick='chage("{$vo.tpl_name}","{$vo.id}")'>选择此模板</a>
+                            </div>
+                            {/eq}
+                            {/volist}
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <!--展示模板结束-->
+        </div>
+
+        <div class="layui-tab-item">
+            <!--展示模板开始-->
+
+            <div class="entry-panel ng-scope">
+                <nav class="container">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 text-center">
+                            {volist name="tpllist" id="vo"}
+                            {eq name="$vo.cate_id" value="3"}
+                            <div class="thumbnail" style="margin-right: 25px;">
+                                <a class="no-decoration" onclick='show("{$vo.tpl_name}")'>
+                                    <img class="cover" src="{$vo.demo_pic1}"> </a>
+                                <div class="caption text-center">{$vo.tpl_name}</div>
+                                <a class="layui-btn layui-btn-normal layui-btn-radius" id="{$vo.tpl_name}"
+                                   onclick='chage("{$vo.tpl_name}","{$vo.id}")'>选择此模板</a>
+                            </div>
+                            {/eq}
+                            {/volist}
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <!--展示模板结束-->
+        </div>
+
+        <div class="layui-tab-item">
+            <!--展示模板开始-->
+
+            <div class="entry-panel ng-scope">
+                <nav class="container">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 text-center">
+                            {volist name="tpllist" id="vo"}
+                            {eq name="$vo.cate_id" value="4"}
+                            <div class="thumbnail" style="margin-right: 25px;">
+                                <a class="no-decoration" onclick='show("{$vo.tpl_name}")'>
+                                    <img class="cover" src="{$vo.demo_pic1}"> </a>
+                                <div class="caption text-center">{$vo.tpl_name}</div>
+                                <a class="layui-btn layui-btn-normal layui-btn-radius" id="{$vo.tpl_name}"
+                                   onclick='chage("{$vo.tpl_name}","{$vo.id}")'>选择此模板</a>
+                            </div>
+                            {/eq}
+                            {/volist}
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <!--展示模板结束-->
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block" style="margin-left: 46%;">
+            <button type="button" class="layui-btn" id="sub">提交活动</button>
+        </div>
+    </div>
+</div>
+
+<div id="show" hidden>
+    <iframe src="" id="iframe" style="width: 360px;height: 640px;"></iframe>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    layui.use('form', function () {
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        form.render();
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 3) {
+                    return '标题至少得3个字符';
+                }
+            }
+        });
+        $("#sub").click(function () {
+            var title = $('[name="title"]').val();
+            var time = $('[name="time"]').val();
+            var type = $('[name="type"]').val();
+            var tplid = $('[name="tplid"]').val();
+            if (title == '') {
+                layer.msg('请输入活动主题', {icon: 5});
+                return false;
+            }
+            if (time == '') {
+                layer.msg('请选择活动时间', {icon: 5});
+                return false;
+            }
+            if (tplid == '') {
+                layer.msg('请选择模板', {icon: 5});
+                return false;
+            }
+            $.post('/admin/showact/actadd', {
+                title: title,
+                time: time,
+                type: type,
+                tplid: tplid
+            }, function (res) {
+                var url = '/admin.html#/admin/showact/actlist.html';
+                if (res.success) {
+                    var index = layer.alert("活动添加成功,是否前去配置模板?", {
+                        icon: 6,
+                        skin: 'layer-ext-moon',
+                        btn: ['去配置', "算了吧"],
+                        cancel: function () {
+                            location.href = url
+                        },
+                        yes: function () {
+                            perContent = layer.open({
+                                type: 2,
+                                title: res.cattitle + '-' + res.tplname + "-模板设置",
+                                shadeClose: false,
+                                shade: false,
+                                // maxmin: true, //开启最大化最小化按钮
+                                area: ['80%', '90%'],
+                                shade: [0.8, '#393D49'],//遮罩层
+                                content: '{:url("showactb/updatetpl")}?act_id=' + res.actid,
+                                cancel: function () {
+                                    location.href = url
+                                },
+                                success: function () {
+                                    layer.close(index)
+                                }
+                            });
+                        }
+                        , 'btn2': function () {
+                            location.href = url
+                        }
+
+                    })
+                } else {
+                    layer.msg('活动添加失败', {icon: 5});
+                }
+            })
+
+
+        });
+    });
+    laydate.render({
+        elem: '#test10'
+        , type: 'datetime'
+        , range: true
+    });
+
+    function chage(code, tplid) {
+        $('[name="tplid"]').val(tplid);
+        $(".thumbnail").attr('style', "border:");
+        $("#" + code).parent().attr('style', 'border:5px solid #2494f2');
+
+    }
+
+    function show(tpl_name) {
+        var url = "/static/temp/" + tpl_name + "/index.html";
+        $("#iframe").attr("src", url);
+        layui.use('layer', function () { //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+            var index = layer.open({
+                title: "模板预览",
+                type: 1,
+                //  area: ['890px', '800px'],
+                shade: 0.5,//遮罩层
+                shadeClose: true,
+                skin: 'layui-layer-rim', //加上边框
+                content: $('#show').html()//弹出form的html
+            })
+        })
+    }
+</script>
+{/block}

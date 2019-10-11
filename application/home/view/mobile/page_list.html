@@ -1,0 +1,50 @@
+{extend name='home@public/mobile_content'}
+{block name="content"}
+<!--顶部 end-->
+<!--正文begin-->
+<section class="content">
+    <!--成功案例begin-->
+    <div class="i_title2" style=" border-top:0;">
+        <h2>经典案例</h2>
+        <img src="/static/home/mobile/images/txt2.png" alt="">
+    </div>
+    <div class="i_case2">
+        <ul class="clearfix">
+            {volist name="content" id="vo"}
+            <li>
+                <a href="{:url('home/mobile/innerPage')}?id={$vo.id}">
+                    <img src="{$vo.thumb}" alt=""></a>
+                <h4>
+                    <a >
+                        <b>{$vo.title}</b>
+                    </a>
+                </h4>
+                <p>
+                    <a ></a>
+                </p>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="yahoo">
+
+        <div class="busreg-page">
+            <div class="dede_pages">
+                <ul class="pagelist">
+                    <!--<li><span class="pageinfo">共 <strong>1</strong>页<strong>4</strong>条记录</span></li>-->
+                </ul>
+            </div>
+
+
+        </div>
+
+        <a href="http://m.eaeducation.net/lianxiwomen/" title="点击免费领取598元大礼包" class="i_tel_a"><img
+                src="/static/home/mobile/images/i_pic5.png"><span>点击免费领取598元大礼包</span></a>
+        <div style="height:6px;"></div>
+
+    </div>
+
+    <!--成功案例end-->
+
+</section>
+{/block}

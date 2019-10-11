@@ -1,0 +1,87 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<div class="padding-15">
+    <form onsubmit="return false;" data-auto="true" method="post" action="{:request()->url()}">
+        <!--{empty name='list'}-->
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+        <!--{else}-->
+        <input type="hidden" value="resort" name="action">
+        <table class="layui-table" lay-skin="line" id="testReload">
+            <thead>
+            <tr>
+                <th class="text-center">序号</th>
+                <th class="text-center">班级</th>
+                <th class="text-center">课程</th>
+                <th class="text-center">上课时间</th>
+                <th class="text-center">类型</th>
+                <th class="text-center">增加课时</th>
+                <th class="text-center">备注</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$vo}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    {$key+1}
+                </td>
+                <td class="text-center text-nowrap">
+                    {$vo.title|default=''}
+                </td>
+                {if $vo.status == 3}
+                <td class="text-center text-nowrap">{$vo.course_id|get_courses_title}</td>
+                {else}
+                <td class="text-center text-nowrap">{$vo.ctitle}</td>
+                {/if}
+
+                <td class="text-center text-nowrap">{$vo.created_at|format_time}</td>
+
+                {if $vo.status == 1}
+                <td class="text-center text-nowrap">正常</td>
+                {elseif $vo.status == 2}
+                <td class="text-center text-nowrap color-blue">补课</td>
+                {elseif $vo.status==3}
+                <td class="text-center text-nowrap color-green">体验课</td>
+                {/if}
+                <td class="text-center nowrap">{$vo.course_hour|default=''}</td>
+                <td class="text-center nowrap" title="{$vo.remark}">{$vo.remark|default=''|cn_substr}</td>
+                <td class="text-center nowrap">
+                    <span class="text-explode">|</span>
+                    <a data-title="上课学员" data-modal='{:url("$classuri/courseStudent")}?id={$vo.id}'>上课学员</a>
+
+                    {if auth("$classuri/edit")}
+                    <span class="text-explode">|</span>
+                    <a data-title="编辑课时明细" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                    {/if}
+                    {if auth("$classuri/del")}
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='delete'
+                       data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                    {/if}
+                </td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+        {if isset($page)}<p>{$page|raw}</p>{/if}
+        <div class="hr-line-dashed"></div>
+        <!--{/empty}-->
+    </form>
+
+</div>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~'
+        })
+    })
+</script>
+{/block}

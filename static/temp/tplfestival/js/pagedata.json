@@ -1,0 +1,30 @@
+{
+  "tplname": "tplfestival",
+  "data":[
+    {
+      "title":{"name":"标题","value":"端午节","type":"input"},
+      "content": {"name":"第一句","value":"愿您羊年运旺福单身快乐京东和是快乐就好就放假渴望和人口看链接哈水电费看链接啊哈而已看链接大恒科技阿道夫旺","type":"input"},
+      "background" : {"name":"背景图","value":"./images/bg.jpg","type":"pic"}
+    },
+    {
+      "title":{"name":"标题","value":"元宵节","type":"input"},
+      "content":{"name":"奖项","value":"吃元宵是一个古老的中国传统节日习俗，多在元宵节吃，也有当点心吃，一般有多种馅料，其中黑芝麻馅的最为多，元宵除了一般的，还有酒酿小圆子等种类。","type":"text"},
+      "bottompic": {"name":"底部图片","value":"images/s2-i5.png","type":"pic"},
+      "background" : {"name":"背景图","value":"./images/bg.jpg","type":"pic"}
+    },
+    {
+      "title":{"name":"标题","value":"吃汤圆","type":"input"},
+      "content":{"name":"内容","value":"送花灯是传统民俗文化。即是在元宵节前，娘家送花灯给新嫁女儿家，或一般亲友送给新婚不育之家，以求添丁吉兆，因为“灯”与“丁”谐音。这一习俗许多地方都有，陕西西安一带是正月初八到十五期间送灯，头年送大宫灯一对、有彩画的玻璃灯一对，希望女儿婚后吉星高照、早生麟子；如女儿怀孕，则除大宫灯外，还要送一两对小灯笼，祝愿女儿孕期平安。","type":"text"},
+      "bottompic": {"name":"底部图片","value":"images/s3-i5.png","type":"pic"},
+      "background" : {"name":"背景图","value":"./images/bg.jpg","type":"pic"}
+    },
+    {
+      "title": {"name":"标题","value":"端午节","type":"input"},
+      "text1": {"name":"第一句","value":"愿您羊年运旺福旺","type":"input"},
+      "text2": {"name":"第一句","value":"美丽花灯传递吉祥","type":"input"},
+      "text3": {"name":"第一句","value":"条条祝福给您送上","type":"input"},
+      "text4": {"name":"第一句","value":"圆圆汤圆味道芬芳","type":"input"},
+      "background" : {"name":"背景图","value":"./images/bg.jpg","type":"pic"}
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+/* CSS Document */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+input, button, select, textarea {
+    outline: none;
+}
+
+ul, li, dl, ol {
+    list-style: none;
+}
+
+.content{
+    min-height: 110rem;
+    background-image: url("/static/temp/wxxcx/images/rolling.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.bcon {
+    width: 70%;
+    height: 500px;
+    border: 30px solid #f9e187;
+    position: absolute;
+    top: 35%;
+    left: 12%;
+    border-radius: 20px;
+}
+
+.bcon h1 {
+    border-bottom: 1px solid #eee;
+    padding: 0 10px;
+    background: #f9e187;
+}
+
+.bcon h1 b {
+    font: bold 14px/40px '宋体';
+    padding: 0 20px;
+    display: inline-block;
+    color: #000;
+    font-size: 40px;
+}
+
+.list_lh {
+    height: 460px;
+    overflow: hidden;
+}
+
+.list_lh li {
+    padding: 10px;
+    font-size: 40px;
+    background: #e5e5e5;
+    border-bottom: 1px solid #fff;
+}

@@ -1,0 +1,138 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="{:request()->url()}" data-auto="true"
+      method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">班级</label>
+        <div class="layui-input-block">
+            {:get_class_select('class_id',
+            isset($vo.class_id)?$vo.class_id:'','',['required'=>'',"lay-filter"=>"campus"],'')}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">课程</label>
+        <div class="layui-input-block">
+            <select name="courses_id" id="courses_add">
+                <option value="">-请选择-</option>
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室</label>
+        <div class="layui-input-block">
+            <select name="room_id" id="room_add">
+                <option value="">-请选择-</option>
+
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教师</label>
+        <div class="layui-input-block">
+            <select name="teacher_id" id="teacher_add">
+                <option value="">-请选择-</option>
+
+            </select>
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">助教</label>
+        <div class="layui-input-block">
+            <select name="ta_id" id="ta_add">
+                <option value="">-请选择-</option>
+
+            </select>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">上课时间</label>
+        <div class="layui-input-block">
+            {:get_Courses_Time_select('class_time', isset($vo.class_time)?$vo.class_time:'', '',['required'=>''],false)}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">课程周期</label>
+        <div class="layui-input-block">
+            {:get_category_select(13, 'cycle', isset($vo.cycle)?$vo.cycle:'',
+            '',['required'=>'',"lay-filter"=>"cycle_select"],false)}
+        </div>
+    </div>
+    <div class="layui-form-item" id="week_checkbox">
+        <label class="layui-form-label">星期</label>
+        <div class="layui-input-block active">
+            <input type='checkbox' name="week[]" value="1" style="display: none!important" title="星期一">
+            <input type='checkbox' name="week[]" value="2" style="display: none!important" title="星期二">
+            <input type='checkbox' name="week[]" value="3" style="display: none!important" title="星期三">
+            <input type='checkbox' name="week[]" value="4" style="display: none!important" title="星期四">
+            <input type='checkbox' name="week[]" value="5" style="display: none!important" title="星期五">
+            <input type='checkbox' name="week[]" value="6" style="display: none!important" title="星期六">
+            <input type='checkbox' name="week[]" value="0" style="display: none!important" title="星期日">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">课程状态</label>
+        <div class="layui-input-block active">
+            {:get_category_select(8, 'status', isset($vo.status)?$vo.status:'', '',['required'=>''])}
+        </div>
+    </div>
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+
+<script>
+    window.laydate.render({elem: '#test9', type: 'time', range: true});
+    window.laydate.render({elem: '#test6', range: true});
+
+    window.form.render();
+
+    form.on('select(campus)', function (data) {
+        $.post('{:url("$classuri/getCourse")}', {"class_id": data.value}, function (info) {
+            //选择班级下的课程
+            var courses_html = '<option value="">-请选择课程-</option>';
+            for (var i = 0; i < info.courses.length; i++) {
+                courses_html += '<option value="' + info.courses[i].id + '">' + info.courses[i].no + '-' + info.courses[i].title + '</option>'
+            }
+            $("#courses_add").html(courses_html);
+
+            //选择班级所对应校区下的教室
+            var room_html = '<option value="">-请选择教室-</option>';
+            for (var i = 0; i < info.room.length; i++) {
+                room_html += '<option value="' + info.room[i].id + '">' + info.room[i].code + '</option>'
+            }
+            $("#room_add").html(room_html);
+
+            //选择班级所对应校区下的老师
+            var teacher_html = '<option value="">-请选择教师-</option>';
+            for (var i = 0; i < info.teacher.length; i++) {
+                teacher_html += '<option value="' + info.teacher[i].id + '">' + info.teacher[i].name + '</option>'
+            }
+            $("#teacher_add").html(teacher_html);
+            //选择班级所对应校区下的助教
+            var ta_html = '<option value="">-请选择教师-</option>';
+            for (var i = 0; i < info.ta.length; i++) {
+                ta_html += '<option value="' + info.ta[i].id + '">' + info.ta[i].name + '</option>'
+            }
+            $("#ta_add").html(ta_html);
+            window.form.render();
+        })
+    });
+
+    form.on('select(cycle_select)', function (data) {
+        if (data.value == 5) {
+            $('#week_checkbox').css('display', 'none')
+        } else {
+            $('#week_checkbox').css('display', 'block')
+        }
+        window.form.render();
+    })
+
+</script>

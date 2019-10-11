@@ -1,0 +1,127 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        .header{background: #002458;}
+        .header h1{color: #fff;padding: 0 1rem;}
+        .header h1 .sign{margin-left: 29px;color: #fff;}
+        .header h1 .reg{float: right; font-size: 13px; color: #fff;}
+        .header .back{background: url("/static/home/shop/images/product/back1.png") no-repeat .75rem center; background-size: auto 16px;}
+        form {text-align: center; margin-top: 45px;position: relative}
+        form input {
+            width: 73%;
+            height: 45px;
+            color: #0C2958;
+            outline: none;
+            font-size: 15px;
+            padding-left: 8px;
+            margin-bottom: 25px;
+            border-bottom: 2px #bfbfbf solid;
+        }
+        button {
+            margin-top: 10px;
+            width: 76%;
+            height: 45px;
+            font-size: 15px;
+            border: none;
+            background-color: #a0a0a0;
+            color: #fff;
+        }
+        #code {border: 1px solid #949494; background: #efefef;padding: 2% 3%;display: block;width: 22%;
+            position: absolute; left: 59%; bottom: 44%;font-weight: bold;}
+        #text{color: #022358; text-align: right;margin-top: 2%; padding-right: 15%;font-weight: bold;}
+        #protocol img{width: 100%; margin-bottom: 30%;}
+    </style>
+{/block}
+{block name="body"}
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1>
+        <span class="sign">短信快捷登录</span>
+    </h1>
+</header>
+<div id="protocol">
+    <a href="{:url('login/protocol')}"><img src="/static/home/shop/20181225/protocol.jpg"></a>
+</div>
+<div>
+    <form method="post">
+        <input type="number" name="mobile" placeholder="输入手机号" autocomplete="off">
+        <input type="number" name="code" placeholder="请输验证码" autocomplete="off">
+        <span id="code">获取验证码</span>
+        <button type="button">登录</button>
+    </form>
+    <p id="text">收不到验证码</p>
+</div>
+<script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+<script src="/static/extend_res/mobile/js/hui.js"></script>
+<script>
+    $(function () {
+        var send = false;
+        var codeSecond = 120;
+        var dcodeSecond = 120;
+        var countDown = null;
+        var countDownF = function() {
+          if (codeSecond == 0) {
+              $('#code').html('重新发送');
+              codeSecond = dcodeSecond;
+              send = false;
+              clearInterval(countDown);
+          } else {
+              $('#code').html('(' + codeSecond + 's)');
+              codeSecond--;
+          }
+        };
+        $('#code').click(function () {
+            if (send == true) {
+                return false;
+            }
+            var mobile = $('[name="mobile"]').val(),
+                pre = /^\d{11}$/;
+            if (!pre.test(mobile)) {
+                hui.alert('请输入正确的电话号码');
+                return false;
+            }
+            hui.loading();
+            $.post('{:url("login/send_code")}', {mobile: mobile}, function (e) {
+                hui.closeLoading();
+                if (e.code == 1) {
+                    hui.alert('验证码发送成功，请注意查收');
+                    send = true;
+                    countDown = setInterval(countDownF, 1000);
+                }
+            });
+        });
+        $('button').click(function () {
+            var mobile = $('[name="mobile"]').val(),
+                pre = /^\d{11}$/;
+            var url = "{:url('index')}";
+            if (!pre.test(mobile)) {
+                hui.alert('请输入正确的电话号码');
+                return false;
+            }
+            var code = $('[name="code"]').val();
+            if(code.length != 6) {
+                hui.alert('请输入正确的验证码');
+                return false;
+            }
+            $.post(url, {mobile: mobile, code: code}, function (e) {
+                if (e.code == 1) {
+                    hui.iconToast(e.msg, 'success');
+                    setTimeout(function () {
+                        window.location.href = e.data
+                    }, 2000);
+                } else {
+                    hui.alert(e.msg, 'close');
+                }
+            })
+        });
+
+        $('#text').click(function () {
+            hui.confirm('若您的手机号无法收取验证码，请致电客服：400-6692620', ['取消','呼叫'], function(){
+                window.location.href = 'tel://400-6692620';
+            },function(){
+                console.log('1111');
+            });
+        })
+    })
+</script>
+{/block}

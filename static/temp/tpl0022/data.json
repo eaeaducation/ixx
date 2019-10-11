@@ -1,0 +1,37 @@
+{
+  "tplname": "test1",
+  "pages": 4,
+  "logo":"http",
+  "data":[
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl0022/image/01_2.png","type":"pic"},
+      "p1":{"name":"文本一","value":"欢迎参加黑格伯爵公开课","type":"text"},
+      "p2":{"name":"文本2","value":"开课时间：2018年6月30日","type":"text"},
+      "looat-pic2":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/01_3.png","type":"pic"},
+      "looat-pic":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/01_1.png","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl0022/image/02_1.png","type":"pic"},
+      "p3":{"name":"内容","value":"《学习指南》是一本书。该书由电子工业出版社于2008年出版。该书是CCNA应试必备的学习指南，由Cisco技术知名权威编写。CCNA考试的内容已几度变化，本书编写的考试目标是最新的","type":"text"},
+      "looat-pic4":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/02_2.png","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl0022/image/03_1.png","type":"pic"},
+      "background2":{"name":"背景图","value":"/static/temp/tpl0022/image/03_2.png","type":"pic"},
+      "title":{"name":"标题","value":"印度阿三球迷","type":"text"},
+      "p4":{"name":"文本一","value":"在印度西孟加拉邦的北部的帕尔加纳斯地区,有这样一位狂热的球迷，他本人是一个小吃摊老板,该名球迷是一位阿根廷国家队的铁杆粉丝，他最为热爱的球员，是梅西。","type":"text"},
+      "p3_2":{"name":"title","value":"东方巨人","type":"input"},
+      "looat-pic5":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/03_2.png","type":"pic"},
+      "looat-pic6":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/03_3.png","type":"pic"},
+      "looat-pic7":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/03_4.png","type":"pic"},
+      "looat-pic8":{"name":"底部LOGO","value":"/static/temp/tpl0022/image/03_5.png","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl0022/image/04_1.png","type":"pic"},
+      "title":{"name":"标题","value":"黑哥伯爵","type":"text"},
+      "looat-pic10":{"name":"图片二","value":"/static/temp/tpl0022/image/04_2.png","type":"pic"},
+      "isShow":{"name":"是否显示表单","value":"2","type":"radio"},
+      "ewm":{"name":"二维码","value":"/static/temp/tpl0022/image/ewm.png","type":"pic"}
+    }
+  ]
+}

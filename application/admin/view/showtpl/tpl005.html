@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>免费体验</title>
+    <link rel="stylesheet" type="text/css" href="/static/temp/tpl005/css/tplthree.css"/>
+</head>
+<body>
+<div class="img_box">
+
+    <img id="p1"/>
+    <img id="p2"/>
+    <div class="form_img">
+        <form>
+            <input type="text" name="mobile" value="" placeholder="请输入手机号" />
+            <input type="hidden" name="xcx" value="1">
+            {if isset($actid)}
+            <input type="hidden" name="actid" value="{$actid}">
+            <input type="hidden" name="userid" value="{$userid}">
+            <a id="submit">领取免费体验课</a>
+            {else/}
+            <a href="#">领取免费体验课</a>
+            {/if}
+        </form>
+        <!--<p>点击上面领取按钮表示您已同意《用户协议》和《隐私声明》</p>-->
+    </div>
+
+    <img id="p4"/>
+    <img id="p5"/>
+    <img id="p6"/>
+    <img id="p7"/>
+    <img id="p8"/>
+    <img id="p9"/>
+    <img id="p10"/>
+</div>
+<div style="height: 50px;"></div>
+<input type="hidden" name="act_name" value="{$acttitle|default=''}">
+<div>
+    <p style="text-align: center;background: #c9cccf">技术支持 By <a href="javascript:void(0)"> 爱学学 </a></p>
+</div>
+<script src="/static/plugs/jquery/jquery.min.js"></script>
+<script src="/static/plugs/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script>
+    var price = 0;
+    $(function () {
+
+//使用getJSON方法读取json数据,
+//注意：info.json可以是不同类型文件，只要其中的数据为json类型即可
+            {if isset($myid)}
+            var url = "{:url('showtpl/get_json_res')}?myid={$myid}";
+            {elseif isset($actid)}
+            var url = "{:url('showtpl/get_json_release')}?actid={$actid}";
+            {else/}
+            var url = "{:url('showtpl/get_json_res_tplmgmt')}?tplid={$tplid}";
+            {/if}
+
+            $.getJSON(url, function (data) {
+                $('#p1').attr("src", data.data[0].p1.value);
+                $('#p2').attr('src', data.data[0].p2.value);
+                $('#p3').attr("src", data.data[0].p3.value);
+                $('#p4').attr("src", data.data[0].p4.value);
+                $('#p5').attr("src", data.data[0].p5.value);
+                $('#p6').attr("src", data.data[0].p6.value);
+                $('#p7').attr("src", data.data[0].p7.value);
+                $('#p8').attr("src", data.data[0].p8.value);
+                $('#p9').attr("src", data.data[0].p9.value);
+                $('title').text(data.public.title.value);
+                price = data.public.price.value;
+            })
+        }
+    );
+    var small_wx = window.__wxjs_environment === 'miniprogram' ||
+        wx.miniProgram.getEnv(function(res) {
+            small_wx = res.miniprogram;
+        });
+    $("#submit").on('click',function () {
+        var mobile = $("input[name='mobile']").val();
+        var xcx = $("input[name='xcx']").val();
+        var actid = $("input[name='actid']").val();
+        var userid = $("input[name='userid']").val();
+        var act_name = $("input[name='act_name']").val();
+        if (!/^1[34578]\d{9}$/.test(mobile)) {
+            layer.open({
+                content: '请输入正确的手机号'
+                , btn: '知道了'
+            });
+            return false;
+        }
+        $.post('/api/v1/Shows/collect', {
+            mobile: mobile,
+            actid: actid,
+            userid:userid,
+            xcx: xcx
+        }, function (res) {
+            if (res.success) {
+                var return_url = '{:url("showtpl/activeBack")}?actid='+actid+'&uid='+res.data.id+'&userid='+res.data.userid;
+                if (price > 0){
+                    //判断是否是在wx小程序环境
+                    if(small_wx){
+                        $.post('/api2/xiaochengxu/wechatPay',
+                            {
+                                total_fee: price,
+                                openid: getQueryVariable('id'),
+                                mobile:mobile,
+                                body:act_name,
+                                actid:actid
+                            },
+                            function (response) {
+                                var data = JSON.parse(response)
+                                if (data.success){
+                                    //点击微信支付后，调取统一下单接口生成微信小程序支付需要的支付参数
+                                    var params = '?timestamp='+ data.data.timeStamp +'&nonceStr='+data.data.nonceStr+'&'+data.data.package+'&signType='+data.data.signType+'&paySign='+data.data.paySign;
+                                    //定义path 与小程序的支付页面的路径相对应
+                                    var path = new Object();
+                                    path.url = "../wxpay/wxpay"+params;
+                                    //通过JSSDK的api使小程序跳转到指定的小程序页面
+                                    wx.miniProgram.navigateTo(path);
+                                }
+                            });
+                    }else{
+                        setTimeout(function () {
+                            var title = $('title').html();
+                            window.location.href = '/wechat/pay.show/index.html?' + 'aid=' + actid + '&cid=' + res.data.id + '&title=' + title
+                                + "&body=" + title + '&price='+price+'&return_url='+ encodeURIComponent(return_url);
+                        }, 3000)
+                    }
+                } else {
+                    layer.open({
+                        content: '感谢参与调查，我们将尽快与您联系，送上豪华大礼！'
+                        ,btn: '知道了'
+                        ,yes: function(index){
+                            layer.close(index);
+                        }
+                    });
+                }
+            } else {
+                layer.open({
+                    content: res.msg
+                    , btn: '知道了'
+                })
+            }
+        });
+    });
+    // 获取urlget到的值
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+</script>
+</body>
+</html>

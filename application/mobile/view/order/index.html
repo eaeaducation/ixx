@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="/static/plugs/aui/aui-master/css/aui.2.0.css" />
+</head>
+<body>
+<div class="aui-searchbar" id="search">
+    <div class="aui-searchbar-input aui-border-radius" tapmode onclick="doSearch()">
+        <i class="aui-iconfont aui-icon-search"></i>
+        <form action="javascript:search();">
+            <input type="search" placeholder="请输入搜索内容" id="search-input">
+        </form>
+    </div>
+    <div class="aui-searchbar-cancel" tapmod>取消</div>
+</div>
+<div class="aui-content aui-margin-b-15">
+    <ul class="aui-list aui-list-in">
+        <li class="aui-list-header">
+            简单的列表布局
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner aui-list-item-arrow">
+                <div class="aui-list-item-title">Item1</div>
+                <div class="aui-dot" style="position:relative;top:0; right:0"></div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">Item2</div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">Item3</div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header">
+            卡片布局头部区域
+        </div>
+        <div class="aui-card-list-content">
+            <a href="http://www.baidu.com"><img src="/static/img/card.png" /></a>
+        </div>
+        <div class="aui-card-list-footer">
+            2016年7月12日
+        </div>
+        <div class="aui-card-list-footer">
+        <div><i class="aui-iconfont aui-icon-star"></i></div>
+        <div><i class="aui-iconfont aui-icon-laud"></i></div>
+        <div><i class="aui-iconfont aui-icon-note"></i></div>
+        </div>
+    </div>
+
+    <section class="aui-content-padded">
+        <div class="aui-btn aui-btn-primary" aui-popup-for="top-left">左上角</div>
+        <div class="aui-btn aui-btn-primary" aui-popup-for="top">顶部中间</div>
+        <div class="aui-btn aui-btn-primary" aui-popup-for="top-right">右上角</div>
+    </section>
+
+    <div class="aui-popup aui-popup-top-right" id="top-right">
+        <div class="aui-popup-arrow"></div>
+        <div class="aui-popup-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my aui-text-warning"></i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-middle">
+                        会员中心
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-mail aui-text-info"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        会话消息
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-star aui-text-danger"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        我的收藏
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="aui-popup aui-popup-top-left" id="top-left">
+        <div class="aui-popup-arrow"></div>
+        <div class="aui-popup-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my aui-text-warning"></i>
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-middle">
+                        会员中心
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-mail aui-text-info"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        会话消息
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-star aui-text-danger"></i>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        我的收藏
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+    <footer class="aui-bar aui-bar-tab" id="footer">
+        <div class="aui-bar-tab-item aui-active" tapmode>
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <i class="aui-iconfont aui-icon-star"></i>
+            <div class="aui-bar-tab-label">收藏</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <div class="aui-badge">99</div>
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">购物车</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <div class="aui-dot"></div>
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
+
+<script type="text/javascript" src="/static/plugs/aui/aui-master/script/aui-popup.js" ></script>
+<script type="text/javascript">
+    var popup = new auiPopup();
+    function showPopup(){
+        popup.show(document.getElementById("top-right"))
+    }
+</script>
+
+</body>
+</html>

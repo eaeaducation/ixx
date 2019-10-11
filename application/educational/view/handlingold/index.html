@@ -1,0 +1,93 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<button data-modal='{:url("$classuri/importxiaobao_form")}' data-title="导入客户"
+        class='layui-btn layui-btn-sm layui-btn-primary'>导入客户
+</button>
+{/block}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false"
+      method="get">
+
+    {if in_array(session('user.authorize'),[1,3,4])}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" value="{$Think.get.name|default=''}" name="name">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">监护人电话</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" value="{$Think.get.parent_tel|default=''}" name="parent_tel">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" value="{$Think.get.nickname|default=''}" name="nickname">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">姓名</th>
+            <th class="text-center">昵称</th>
+            <th class="text-center">监护人电话</th>
+            <th class="text-center">校区</th>
+            <th class="text-center">报名时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">
+                <a data-open='{:url("marketing/premarketing/customerview")}?id={$vo.customer_id}'>
+                    {$vo.name}【{$vo.gender|convert_category=3|raw}】
+                </a>
+            </td>
+            <td class="text-center">{$vo.nickname}</td>
+            <td class="text-center">{$vo.parent_tel}</td>
+            <td class="text-center nowrap">{$vo.branch|convert_branch}</td>
+            <td class="text-center">{$vo.created_at|format_date}</td>
+            <td class="text-center nowrap">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="分配班级"
+                   data-modal='{:url("$classuri/edit")}?id={$vo.id}'>分配班级</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

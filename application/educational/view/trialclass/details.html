@@ -1,0 +1,38 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='text-center'>参与者姓名</th>
+            <th class="text-center">监护人电话</th>
+            <th class="text-center">监护人姓名</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center">{$vo.student_id|get_customer_name}</td>
+            <td class="text-center">{$vo.student_id|get_customer_tel}</td>
+            <td class="text-center">{$vo.parent_name|default='--'}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/del_student")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del_student")}?id={$Think.get.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

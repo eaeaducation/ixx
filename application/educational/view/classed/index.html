@@ -1,0 +1,138 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-open='{:url("$classuri/add")}'
+        data-title="添加班级"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加班级
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除班级
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" style="height: 60px;">
+    <div class="row" style="margin-left:0.4%;float: left">
+        {if in_array(session('user.authorize'),[1,3,4,22])}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">校区</label>
+            <div class="layui-input-inline">
+                {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">招生状态</label>
+            <div class="layui-input-inline">
+                {:get_category_select(31,'status', $Think.get.status, '', [],false)}
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-inline">
+                <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </div>
+    <div class="row" style="margin-right:0.4%;float: right">
+        <div>
+            <div class="layui-btn-group">
+                <a class="layui-btn {eq name='Think.get.status' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/index">
+                    开课班
+                </a>
+                <a class="layui-btn {eq name='Think.get.status' value='4'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/index?status=4">
+                    停课班
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>ID</th>
+            <th class='text-center'>班主任ID</th>
+            <th class="text-center">名称</th>
+            <th class="text-center">开课校区</th>
+            <th class="text-center">开班时间</th>
+            <th class="text-center">预招人数</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">备注</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">{$vo.id}</td>
+            <td class="text-center">{$vo.teacher_id |get_employee_name |raw}</td>
+            <td class="text-center">
+                <a data-open='{:url("$classuri/class_detail")}?id={$vo.id}'>
+                {$vo.title}
+                </a>
+            </td>
+            <td class="text-center">{$vo.branch|convert_branch|raw}</td>
+            <td class="text-center">{$vo.begin_time|format_date}</td>
+            <td class="text-center">{$vo.student_count}</td>
+            <td class="text-center">{$vo.status| convert_category=31|raw}</td>
+            <td class="text-center">{$vo.remark}</td>
+            <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="编辑"
+                   data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                {/if}
+                {if auth("$classuri/stop") && $vo.status != 4}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status'
+                   data-action='{:url("$classuri/stop")}?id={$vo.id}'>停课</a>
+                {/if}
+                {if auth("$classuri/renew") && $vo.status == 4}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status'
+                   data-action='{:url("$classuri/renew")}?id={$vo.id}'>还原</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,64 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post" id="class-form" style="min-height: 500px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">学员姓名</label>
+        <div class="layui-input-block">
+            <input readonly="readonly" disabled="disabled" value="{$vo.name}" title="请输入用户名称"
+                   placeholder="请输入用户名称" class="layui-input layui-bg-gray">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择班级</label>
+        <div class="layui-input-block">
+            <select name="classid" id="">
+                {foreach $class as $key=>$value}
+                <option value="{$value.id}">{$value.title}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <input type='hidden' value='{$vo.customer_id}' name='id'>
+        <input type='hidden' value='{$import_id}' name='import_id'>
+        <input type="hidden" value="{$vo.price}" name="price">
+        <input type="hidden" value="{$vo.created_at}" name="created_at">
+        <button class="layui-btn" type='button' id="submit">保存数据</button>
+    </div>
+    <script>window.form.render();</script>
+</form>
+<script>
+    // 提交
+    $("#submit").click(function () {
+        $("#submit").css('display','none');
+        var data = $("#class-form").serialize();
+        var url = '{:url("handlingold/edit")}';
+        $.post(url, data, function (res) {
+            if (res.code == 1) {
+                layer.msg(res.msg);
+                layer.open({
+                    title: "订单详情",
+                    type: 2,
+                    area: ['1000px', '800px'],
+                    content: "/order/detail/detail.html?id=" + res.data,
+                    btn: ['查看列表'],
+                    yes: function () {
+                        window.location.href = 'admin.html#/educational/order/orderview.html?id='+res.data;
+                        layer.closeAll();
+                    },
+                    cancel:function () {
+                        layer.closeAll();
+                        $.form.reload();
+                    }
+                });
+            } else {
+                console.log(res);
+                layer.msg(res.msg)
+            }
+        });
+    });
+</script>

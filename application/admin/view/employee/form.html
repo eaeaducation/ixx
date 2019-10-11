@@ -1,0 +1,23 @@
+<form class='layui-form layui-box modal-form-box' action='{:url("admin/employee/card")}'
+      id="read_form" data-auto="true" onsubmit="return false;" method="post">
+    <div class="layui-form-item layui-inline">
+        <div class="layui-input-inline">
+            <input id="hidCardNo" name="cardNo" autocomplete="off" value="" class="layui-input"
+                   style="position: absolute; left: 250px;  z-index: -99;">
+            <input type="hidden" name="id" value="{$id}">
+        </div>
+    </div>
+    <img src="/static/img/card.png" style="width: 420px; height: 280px;">
+</form>
+<script>
+    function readCard() {
+        $("#hidCardNo").focus();
+        var cardNo = $("#hidCardNo").val();
+        if (cardNo != null && cardNo.length >= 10) {
+            $("#read_form").submit();
+            clearInterval(i);
+        }
+    }
+
+    var i = setInterval(readCard, 1000);
+</script>

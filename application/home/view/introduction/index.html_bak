@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)http://www.17sucai.com/preview/1268063/2018-10-11/Coupon/index.html -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>转介绍好友拿大奖</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <link href="/static/home/introduction/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<section class="aui-flexView">
+    <header class="aui-navBar aui-navBar-fixed b-line">
+        <!--<a href="javascript:;" class="aui-navBar-item">-->
+        <!--<i class="icon icon-return"></i>-->
+        <!--</a>-->
+
+            <div class="aui-center">
+                <span class="aui-center-title">{$title}<a href='{:url("$classuri/myact")}?cid={$customer_id}'
+                        style="color: #7ca7d2;border:1px solid #7ca7d2;border-radius:10px;font-size:12px;padding: 0 0.8rem;line-height:16px;margin-left: 1.5rem">我的活动</a></span>
+            </div>
+
+        <a href="javascript:;" class="aui-navBar-item">
+            <i class="icon icon-sys"></i>
+        </a>
+    </header>
+    <section class="aui-scrollView">
+
+        <div class="aui-coupon-one">
+            {volist name="introductions" id="vo"}
+            <div class="aui-coupon-two">
+                <div class="aui-coupon-three">
+                    <div class="aui-coupon-four">
+                        <div class="aui-flex">
+                            <div class="aui-flex-title">
+                                <h5>{$vo.title}</h5>
+                            </div>
+                            <div class="aui-flex-box" style="text-align: right">
+                                <a href='{:url("$classuri/add")}?customer_id={$customer_id}&actid={$vo.id}&title="{$vo.title}"'>
+                                    <button style="width: 5rem;height:2rem;border:1px solid #a3c1df; border-radius: 2rem; background: #fff;">
+                                        去参加
+                                    </button>
+                                </a>
+                                <!--   <p>有效期至2018-09-29</p> -->
+                            </div>
+                        </div>
+                        <div class="aui-box-content" style="display:block">
+                            <p>{$vo.content}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </section>
+</section>
+</body>
+</html>

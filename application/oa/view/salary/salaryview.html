@@ -1,0 +1,63 @@
+<!--startprint1-->
+<table border="1" align="center" class="print-table" style="margin-top: 3%; min-width: 700px; max-width: 800px">
+    <tbody>
+    <tr>
+        <td colspan="20" style="text-align: center;" height="30px">
+            <b><span style="text-align: center;">工资条</span></b>
+        </td>
+    </tr>
+
+    <tr>
+        <th height="30px" style="text-align: center;">员工姓名</th>
+        <th style="text-align: center;">合同状态</th>
+        <th style="text-align: center;">应发工资</th>
+        <th colspan="{$salary.num}" rowspan="2" style="text-align: center;">工资项</th>
+        {foreach $salary.res as $item}
+        <th style="text-align: center;">
+            <b><span class="count_num">&nbsp;{:convert_category($item.category,38)}&nbsp;</span></b>
+        </th>
+        {/foreach}
+    </tr>
+    <tr>
+        <td height="30px" style="text-align: center;">
+            <b>{$salary.name}</b>
+        </td>
+        <td style="text-align: center;">
+            <b>&nbsp; <span class="count_num">{:convert_category($salary.contract_status,21)}</span>&nbsp; </b>
+        </td>
+        <td style="text-align: center;">
+            <b>&nbsp; {$salary.salary}</b>
+        </td>
+        {foreach $salary.res as $item}
+        <td style="text-align: center;">
+            <b><span class="count_num">&nbsp;{$item.salary}&nbsp;</span></b>
+        </td>
+        {/foreach}
+    </tr>
+    </tbody>
+</table>
+<!--endprint1-->
+
+<div class="table-b-a" style="text-align: center;margin-top: 1% ;margin-bottom: 3%">
+    <input class="layui-btn" id="btnPrint" type="button" value="打印预览" onclick="preview(1);"/>
+    <input class="layui-btn layui-btn-danger" id="btnPrint1" type="button" value="取消打印" onclick=closebtn() />
+</div>
+<script>
+    function closebtn() {
+        layer.closeAll();
+    }
+    function preview(oper) {
+        if (oper < 10) {
+            bdhtml = window.document.body.innerHTML;//获取当前页的html代码
+            sprnstr = "<!--startprint" + oper + "-->";//设置打印开始区域
+            eprnstr = "<!--endprint" + oper + "-->";//设置打印结束区域
+            prnhtml = bdhtml.substring(bdhtml.indexOf(sprnstr) + 18); //从开始代码向后取html
+            prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr));//从结束代码向前取html
+            window.document.body.innerHTML = prnhtml;
+            window.print();
+            window.document.body.innerHTML = bdhtml;
+        } else {
+            window.print();
+        }
+    }
+</script>

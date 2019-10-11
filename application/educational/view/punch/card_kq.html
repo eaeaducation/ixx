@@ -1,0 +1,429 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+    <ul id="my_ul" class="layui-tab-title">
+        {notempty name="types"}
+        {volist name="types" id="type"}
+        {eq name="key" value="1"}
+        <li class="layui-this" data_type="{$key}" >{$type}</li>
+        {else}
+        <li data_type="{$key}">{$type}</li>
+        {/eq}
+        {/volist}
+        {/notempty}
+    </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show text-center">
+                <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">校区</label>
+                        <div class="layui-input-inline text-left">
+                            {if session('user.id') == 10000}
+                            {:get_branches_select('branch', '', '', ["lay-filter"=>"campus"], false)}
+                            {else /}
+                            {:get_branches_select('branch', session('user.employee.department'), '', ["lay-filter"=>"campus", 'disabled' => 'disabled'], false)}
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline text-left">
+                        <label class="layui-form-label">班级</label>
+                        <div class="layui-input-inline" id="class_add">
+                            {:get_class_select('class', '', '', ["lay-filter" => "class"], false)}
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline text-left">
+                        <label class="layui-form-label">课程</label>
+                        <div class="layui-input-inline" id="course_add">
+                            {:get_courses_select('course', '', '', ["lay-filter" => "course"], false)}
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline text-left">
+                        <label class="layui-form-label">上课时间</label>
+                        <div class="layui-input-inline">
+                            <select name="time" lay-filter="hour" id="hour">
+                                <option value="">-请选择-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-inline text-left">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="status" lay-filter="status">
+                                <option value="1">正常</option>
+                                <option value="2">补课</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline text-right">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger text-center dk1" style="width: 60px; padding: 0;" target="_blank"
+                           href="/admin.html#/educational/punch/more.html?spm=m-58-87-98">批量打卡</a>
+                    </div>
+
+                    <div class="layui-form-item layui-inline text-right">
+                         <a class="layui-btn layui-btn-xs layui-btn-danger text-center dk" style="width: 60px; padding: 0;" target="_blank"
+                            href="/admin.html#/educational/punch/index.html?spm=m-58-87-98">忘带磁卡</a>
+                    </div>
+
+                </form>
+                <script>
+                    window.form.render();
+                    form.on('select(campus)', function (data) {
+                        $.post('{:url("$classuri/get_class")}', {branch: data.value}, function (res) {
+                            var class_html = '<select name="class" lay-filter="class"><option value="">-请选择班级-</option>';
+                            for (var i = 0; i < res.class.length; i++) {
+                                class_html += '<option value="' + res.class[i].id + '">' + res.class[i].title + '</option>'
+                            }
+                            class_html += '</seclect>';
+                            $("#class_add").html(class_html);
+                            window.form.render();
+                        })
+                    })
+                </script>
+                <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+                <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">学员姓名</th>
+                            <th class="text-center">总课时</th>
+                            <th class="text-center">消耗课时</th>
+                            <th class="text-center">剩余课时</th>
+                            <th class="text-center">当前消耗课时</th>
+                        </tr>
+                        </thead>
+                        <tbody class="course">
+
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="layui-tab-item text-center">
+                <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+                <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">学员姓名</th>
+                            <th class="text-center">监护人电话</th>
+                            <th class="text-center">经办员</th>
+                            <th class="text-center">CC</th>
+                            <th class="text-center">公立学校</th>
+                            <th class="text-center">居住地址</th>
+                            <th class="text-center">校区</th>
+                            <th class="text-center">渠道</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="student"></tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="layui-tab-item text-center">
+                <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+                <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+            </div>
+            <div class="layui-tab-item tab6">
+                <div class="layui-form-item layui-inline margin-bottom-0 margin-right-20 pull-right">
+                    <ul>
+                        <li style="color: #2F4056; font-size: 18px; text-align: center;">星期{$date|get_week}</li>
+                        <li style="color: #393D49; font-size: 20px">{$date|date='Y/m/d'}</li>
+                    </ul>
+                </div>
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <!--{empty name='list'}-->
+                    <p class="help-block text-center well">没 有 记 录 哦！</p >
+                    <!--{else}-->
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">员工卡号</th>
+                            <th class="text-center">员工姓名</th>
+                            <th class="text-center">打卡时间</th>
+                            <th class="text-center">打卡状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {php}$work_time = mktime(9, 0, 0);{/php}
+                        <!--{foreach $list as $key=>$vo}-->
+                        {notempty name="vo.employee_id"}
+                        <tr>
+                            <td class="text-center">{$vo.icard}</td>
+                            <td class="text-center text-nowrap">
+                                {$vo.e_name}【{$vo.e_gender|convert_category=3|raw}】
+                            </td>
+                            <td class="text-center">{$vo.created_at|date='H:m:s'}</td>
+                            {if $vo.created_at <= $work_time}
+                            <td class="text-center text-green">正常</td>
+                            {else /}
+                            <td class="text-center text-red">迟到</td>
+                            {/if}
+                        </tr>
+                        {/notempty}
+                        <!--{/foreach}-->
+                        </tbody>
+                    </table>
+                    <!--{/empty}-->
+                </form>
+            </div>
+            <div class="layui-tab-item text-center">
+                <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+                <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">姓名</th>
+                            <th class="text-center">电话</th>
+                            <th class="text-center">人事状态</th>
+                            <th class="text-center">合同状态</th>
+                            <th class="text-center">所属校区</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="employee"></tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    <input id="hidCardNo" name="card" autocomplete="off" value="" style="width: 1px;border:0px;position: absolute;left: -90%">
+    <input id="my_type" name="type"  type="hidden" value="1"/>
+
+    <script type="text/javascript">
+        function doTTS(){
+            var ttsDiv = document.getElementById('bdtts_div_id');
+            var ttsAudio = document.getElementById('tts_autio_id');
+            var ttsText = document.getElementById('ttsText').value;
+
+            // 这样为什么替换不了播放内容
+            /*var ssrcc = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=10&text='+ttsText;
+            document.getElementById('tts_source_id').src=ssrcc;*/
+
+            // 这样就可实现播放内容的替换了
+            ttsDiv.removeChild(ttsAudio);
+            var au1 = '<audio id="tts_autio_id" autoplay="autoplay">';
+            var sss = '<source id="tts_source_id" src="http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=15&text='+ttsText+'" type="audio/mpeg">';
+            var eee = '<embed id="tts_embed_id" height="0" width="0" src="">';
+            var au2 = '</audio>';
+            ttsDiv.innerHTML = au1 + sss + eee + au2;
+
+            ttsAudio = document.getElementById('tts_autio_id');
+
+            ttsAudio.play();
+        }
+    </script>
+
+    <div style="display: none">
+        <input type="text" id="ttsText" value="">
+        <input type="button" id="tts_btn" onclick="doTTS()" value="播放">
+    </div>
+    <div id="bdtts_div_id">
+        <audio id="tts_autio_id" autoplay="autoplay">
+            <source id="tts_source_id" src="http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=15&text=" type="audio/mpeg">
+            <embed id="tts_embed_id" height="0" width="0" src="">
+        </audio>
+    </div>
+</div>
+<script>
+    $("#my_ul").find("li").click(function(){
+        var li_type = $(this).attr("data_type");
+        $("#my_type").val(li_type);
+    })
+
+    var branch ='';
+    var class_id = '';
+    var course = '';
+    var hour = '';
+
+    form.on('select(class)', function (data) {
+        class_id = data.value;
+        branch = $('select[name="branch"] option:selected').val();
+        course = $('select[name="course"] option:selected').val();
+        if (branch == '') {
+            layer.msg('请先选择校区!', {icon: 5});
+            return false;
+        }
+        $.post('{:url("$classuri/get_class_course")}', {branch: branch, class: class_id}, function (res) {
+            var courses_html = '<select name="course" lay-filter="course"><option value="">-请选择课程-</option>';
+            for (var i = 0; i < res.course.length; i++) {
+                courses_html += '<option value="' + res.course[i].id + '">' + res.course[i].title + '</option>'
+            }
+            courses_html += '</seclect>';
+            $("#course_add").html(courses_html);
+            window.form.render();
+        })
+    });
+
+    form.on('select(course)', function (data) {
+        course = data.value;
+        class_id = $('select[name="class"] option:selected').val();
+        branch = $('select[name="branch"] option:selected').val();
+        if (branch == '') {
+            layer.msg('请先选择校区!', {icon: 5});
+            return false;
+        }
+        if (class_id == '') {
+            layer.msg('请选择班级!', {icon: 5});
+            return false;
+        }
+        tool();
+    });
+
+    form.on('select(hour)', function (data) {
+        hour = data.value;
+    });
+
+    var url = $('.dk').attr('href');
+
+    $('.dk').click(function (e) {
+
+        if (class_id == '') {
+            layer.msg('请选择班级!', {icon: 5});
+            return false;
+        }
+
+        if (course == '') {
+            layer.msg('请选择课程!', {icon: 5});
+            return false;
+        }
+
+        if (hour == '') {
+            layer.msg('请选择上课时间!', {icon: 5});
+            return false;
+        }
+
+        var status =  $('[name="status"] option:selected').val();
+
+        $('.dk').attr('href', url+'&class_id='+ class_id +'&course='+ course + '&hour=' + hour + '&status=' + status);
+
+    })
+
+
+    var url1 = $('.dk1').attr('href');
+
+    $('.dk1').click(function (e) {
+
+        if (class_id == '') {
+            layer.msg('请选择班级!', {icon: 5});
+            return false;
+        }
+
+        if (course == '') {
+            layer.msg('请选择课程!', {icon: 5});
+            return false;
+        }
+
+        if (hour == '') {
+            layer.msg('请选择上课时间!', {icon: 5});
+            return false;
+        }
+
+        var status =  $('[name="status"] option:selected').val();
+
+        $('.dk1').attr('href', url1+'&class_id='+ class_id +'&course='+ course + '&hour=' + hour + '&status=' + status);
+
+    });
+
+    function tool() {
+        $.post('{:url("educational/punch/get_course_time")}', {class_id: class_id, course: course}, function (res) {
+            var hour_html = '<option value="">-请选择时间-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    hour_html += '<option value="' + res.data[i].id + '~' + res.data[i].hour + '">' + res.data[i].begin + ' - ' + res.data[i].end + '</option>'
+                }
+                $("#hour").html(hour_html);
+            } else {
+                $("#hour").html(hour_html);
+            }
+            window.form.render();
+        })
+    }
+
+    function readCard() {
+        $("#hidCardNo").focus();
+        var status =  $('[name="status"] option:selected').val();
+        var cardNo = $("#hidCardNo").val();
+        var type = $("#my_type").val();
+        if (cardNo != null && cardNo.length >= 10) {
+            $.post('{:url("educational/punch/read_card")}', {card: cardNo, type: type, course: course, hour_id: hour, class_id: class_id, status: status}, function (res) {
+                if (type == 1) {
+                    var e = res.data;
+                    if (res.code == 1) {
+                        var str = '';
+                            str += '<tr><td class="text-center text-nowrap">' + e.name + '</td>' +
+                                '<td class="text-center text-green">' + e.goods_num + '</td>' +
+                                '<td class="text-center text-blue">' + e.consume_num + '</td>' +
+                                '<td class="text-center text-red">' + e.remain_num + '</td>'+
+                                '<td class="text-center text-blue">' + e.now_num + '</td></tr>';
+                        $('.course').append(str);
+                        layer.msg(res.msg, {icon: 6})
+                        $('#ttsText').val('打卡成功');
+                        $('#tts_btn').click();
+                    } else {
+                        if (e == '') {
+                            var str = '';
+                        } else {
+                            var str = '';
+                            str += '<tr><td class="text-center text-nowrap">' + e.name + '</td>' +
+                                '<td class="text-center text-green">' + e.goods_num + '</td>' +
+                                '<td class="text-center text-blue">' + e.consume_num + '</td>' +
+                                '<td class="text-center text-red">' + e.remain_num + '</td>'+
+                                '<td class="text-center text-blue">' + e.now_num + '</td></tr>';
+                        }
+                        $('.course').append(str);
+                        layer.msg(res.msg, {icon: 5});
+                        $('#ttsText').val(res.msg);
+                        $('#tts_btn').click();
+                    }
+                } else if (type == 2) {
+                    var e = res.data;
+                    console.log(e)
+                    var str = '';
+                    if (res.code == 1) {
+                        str = '<td class="text-center text-nowrap">' + e.name + '</td>' +
+                            '<td class="text-center">' + e.parent_tel+ '</td>' +
+                            '<td class="text-center">' + e.userid[1] + '</td>' +
+                            '<td class="text-center">' + e.collect_id[5] + '</td>' +
+                            '<td class="text-center nowrap">' + e.school + '</td>' +
+                            '<td class="text-center nowrap">' + e.address + '</td>' +
+                            '<td class="text-center nowrap">' + e.branch + '</td>' +
+                            '<td class="text-center nowrap">' + e.source + '</td>';
+                    } else {
+                        str = '<td colspan="9" class=\'list-table-check-td font-s18 text-red\'>' + e + '</td>';
+                    }
+                    $('.student').html(str);
+                    $('.st-p').attr('style', 'display:none');
+                } else if (type == 4) {
+                    if (res.code == 1) {
+                        layer.msg(res.msg, {icon: 6})
+                    } else {
+                        layer.msg(res.msg, {icon: 5})
+                    }
+                } else if (type == 6) {
+                    var e = res.data;
+                    var str = '';
+                    if (res.code == 1) {
+                        str = '<td class="text-center text-nowrap">' + e.name + '</td>' +
+                            '<td class="text-center">' + e.mobile+ '</td>' +
+                            '<td class="text-center nowrap">' + e.personnel + '</td>' +
+                            '<td class="text-center nowrap">' + e.contract + '</td>' +
+                            '<td class="text-center nowrap">' + e.department + '</td>';
+                    } else {
+                        str = '<td colspan="6" class=\'list-table-check-td font-s18 text-red\'>' + e + '</td>';
+                    }
+                    $('.employee').html(str);
+                    $(".em-p").attr('style', 'display:none');
+                }
+            })
+            $("#hidCardNo").val("");
+        }
+    }
+    var i = setInterval(readCard, 1000);
+
+</script>
+{/block}

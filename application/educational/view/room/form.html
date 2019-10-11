@@ -1,0 +1,80 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="code" value='{$vo.code|default=""}' required="required" title="请输入教室编号"
+                   placeholder="请输入教室编号" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class='layui-input-block'>
+            {if isset($vo.cycle)}
+            {:get_category_radio(24, 'type', $vo.type)}
+            {else}
+            {:get_category_radio(24, 'type', 1)}
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在校区</label>
+        <div class='layui-input-block'>
+                {if in_array(session('user.authorize'),[1,3,4,22]) }
+                {:get_branches_select('branch', isset($vo.branch)?$vo.branch:'', '', ['required' => 'required'], false)}
+                {else}
+                <input type="hidden" name="branch" value="{:session('user.employee.department')}" />
+                {:get_branches_select('branch', session('user.employee.department'), '', ['disabled' => 'disabled'],false)}
+                {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室地址</label>
+        <div class='layui-input-block'>
+            <input type="text" name="address" value='{$vo.address|default=""}' required="required" title="请输入教室地址"
+                   placeholder="请输入教室地址" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">最大容量</label>
+        <div class='layui-input-block'>
+            <input type="text" name="max_cap" value='{$vo.max_cap|default="50"}' required="required" title="请输入最大容量"
+                   placeholder="请输入最大容量" class="layui-input" max="1000">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class='layui-input-block'>
+            {if isset($vo.status)}
+            {:get_category_radio(8, 'status', $vo.status,'',['required' => ''])}
+            {else}
+            {:get_category_radio(8, 'status', 1,'',['required' => ''])}
+            {/if}
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class='layui-input-block'>
+            <input type="text" name="remark" value='{$vo.remark|default=""}' title="请输入备注" placeholder="请输入备注"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+<script>
+    window.form.render();
+</script>

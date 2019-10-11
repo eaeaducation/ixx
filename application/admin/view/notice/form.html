@@ -1,0 +1,97 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<button data-open='{:url("$classuri/noticelist")}' data-title="返回列表" class='layui-btn layui-btn-sm layui-btn-primary'>
+    返回列表
+</button>
+{/block}
+{block name="content"}
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请输入通知标题"
+                   placeholder="请输入通知标题" class="layui-input" maxlength="128">
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            选择分类
+        </label>
+        <div class='layui-input-block'>
+            {:get_category_select(16, 'category', isset($vo.category)?$vo.category:'', '',['required'=>''])}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">有效期</label>
+        <div class="layui-input-block">
+            <input name="notice_time" id="notice_time" required="required"
+                   value='{:isset($vo.begin_time)?date("Y-m-d",$vo.begin_time)." - ".date("Y-m-d",$vo.end_time):""}'
+                   placeholder="请选择通知有效期" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            通知状态
+        </label>
+        <div class='layui-input-block'>
+            {:get_category_select(8, 'status', isset($vo.status)?$vo.status:'', '',['required'=>''])}
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            通知级别
+        </label>
+        <div class='layui-input-block'>
+            {:get_category_select(14, 'level', isset($vo.level)?$vo.level:'', '',[], false)}
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            通知校区
+        </label>
+        <div class='layui-input-block'>
+            {if in_array(session('user.authorize'),[1,3,4])}
+            {:get_branches_checkbox('branch', isset($vo.branch)?$vo.branch:'', '',['required'=>''])}
+            {else/}
+            <input type="text" class="layui-input"  value="{:convert_branch(session('user.employee.department'))}" readonly>
+            <input type="hidden" name="branch" value="{:session('user.employee.department')}">
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item" data-storage-type="local">
+        <label class="layui-form-label">
+            通知分组
+        </label>
+        <div class='layui-input-block'>
+            {:get_authorizes_checkbox('', 'auth', isset($vo.auth)?$vo.auth:'', '',['required'=>''])}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">通知内容</label>
+        <div class='layui-input-block'>
+            <textarea name="content">{$vo.content|default=''|raw}</textarea>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="created_at" value="{:time()}">
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+    </div>
+    <script>
+        window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
+        /*! 实例富文本编辑器  */
+        require(['ckeditor'], function () {
+            window.createEditor('[name="content"]', {height: 300});
+        });
+        window.form.render();
+    </script>
+</form>
+{/block}

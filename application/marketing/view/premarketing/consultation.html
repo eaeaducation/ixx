@@ -1,0 +1,251 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<!--{if in_array(session('user.authorize'),[1,3,4])}-->
+<a   href= "{:request()->url()}&action=down"
+     class='layui-btn layui-btn-sm '>导出记录
+</a>
+<!--{/if}-->
+{/block}
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">关键字</label>
+        <div class="layui-input-inline">
+            <input type="text" name="keyword" value="{$Think.get.keyword|default=''}" placeholder="请输入关键字"
+                   class="input-sm form-control">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">渠道</label>
+        <div class="layui-input-inline">
+            {:get_channels_select('source', $Think.get.source,'',[],false)}
+        </div>
+    </div>
+
+    {if isset($myauth)}
+    {if in_array($myauth,[3,4])}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+    {else /}
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+    {/if}
+
+    <!--<div class="layui-form-item layui-inline">-->
+        <!--<label class="layui-form-label">意向度</label>-->
+        <!--<div class="layui-input-inline">-->
+            <!--<select name="interest" id="interest" class="text-center">-->
+                <!--<option value="">&#45;&#45; 请选择 &#45;&#45;</option>-->
+                <!--<option value="5">10</option>-->
+                <!--<option value="4.5">9</option>-->
+                <!--<option value="4">8</option>-->
+                <!--<option value="3.5">7</option>-->
+                <!--<option value="3">6</option>-->
+                <!--<option value="2.5">5</option>-->
+                <!--<option value="2">4</option>-->
+                <!--<option value="1.5">3</option>-->
+                <!--<option value="1">2</option>-->
+                <!--<option value="0.5">1</option>-->
+                <!--<option value="0">0</option>-->
+            <!--</select>-->
+            <!--<script>-->
+                <!--$(function () {-->
+                    <!--var interest = '{$Think.get.interest}';-->
+                    <!--$("select#interest option[value='" + interest + '\']').attr('selected', true)-->
+                <!--})-->
+            <!--</script>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">创建时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="请选择创建时间" class="input-sm form-control">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline text-left">
+        <label class="layui-form-label">跟进状态</label>
+        <div class="layui-input-inline">
+            {:get_category_select('7','follow_status', $Think.get.follow_status, '', [],false)}
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">跟进时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="follow_time" name="follow_time" value="{$Think.get.follow_time|default=''}"
+                   placeholder="请选择跟进时间" class="input-sm form-control">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+    <!--{if auth("$classuri/sms")}-->
+    <button class="layui-btn layui-btn-warm layui-btn-sm " type="button" data-multi-modal
+            data-action='{:url("$classuri/sms")}' data-title="拜访短信" data-area="['60%', '50%']">发送短信
+    </button>
+    <!--{/if}-->
+    <!--{if auth("$classuri/all_sms")}-->
+    <button class="layui-btn layui-btn-warm layui-btn-sm" type="button"
+            data-modal='{:url("$classuri/all_sms")}' data-title="拜访短信" data-area="['60%', '50%']">发送全部短信
+    </button>
+    <!--{/if}-->
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center nowrap">姓名</th>
+            <th class="text-center">监护人电话</th>
+            <th class="text-center">家长姓名</th>
+            <th class="text-center ">标签</th>
+            <th class="text-center ">采单员</th>
+            <th class="text-center ">销售员(CC)</th>
+            <th class="text-center ">意向度</th>
+            <th class="text-center ">意向课程</th>
+            <th class="text-center ">沟通记录</th>
+            <th class="text-center ">跟进状态</th>
+            <th class="text-center ">校区</th>
+            <th class="text-center ">渠道</th>
+            <th class="text-center ">跟进时间</th>
+            <th class="text-center ">下次跟进时间</th>
+            <th class="text-center ">创建时间</th>
+            <th class="text-center ">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center text-nowrap">
+                <a data-open='{:url("premarketing/customerview")}?id={$vo.id}'>
+                    {$vo.name}【{$vo.gender|convert_category=3|raw|default="未知"}】
+                </a>
+            </td>
+            {if($authorize == 1 || $authorize == 3 ||$authorize == 4)}
+            <td class="text-center">{:$vo.parent_tel}{$vo.parent_tel|make_call|raw}</td>
+            {else}
+            <td class="text-center">{:mobile_mask($vo.parent_tel)}{$vo.parent_tel|make_call|raw}</td>
+            {/if}
+            <td class="text-center">{$vo.parent_name}</td>
+            <td class="text-center ">{$vo.tags|default="--"|cn_substr}</td>
+            {if isset($vo.sales_id) && !empty($vo.sales_id)}
+            <td class="text-center">{:get_user_realname($vo.sales_id)}</td>
+            {else}
+            <td class="text-center" >--</td>
+            {/if}
+            {if isset($vo.collect_id) && !empty($vo.collect_id)}
+            <td class="text-center">{:get_user_realname($vo.collect_id)}</td>
+            {else}
+            <td class="text-center">--</td>
+            {/if}
+            <td class="text-center">
+                <div id="interest-{$vo.id}" data-path="static/plugs/jquery-raty/images"></div>
+                <script>
+                    require(['jquery.raty'], function () {
+                        $('div#interest-{$vo.id}').raty({
+                            readOnly: true,
+                            number: 5,
+                            half: true,
+                            score: '{$vo.interest}',
+                            path: function () {
+                                return this.getAttribute('data-path');
+                            }
+                        });
+                    })
+                </script>
+            </td>
+            <td class="text-center">
+                {if ($vo.interest_course_1 != '') }
+                {$vo.interest_course_1|convert_category=6|raw|cn_substr}
+                {else}
+                --
+                {/if}
+                {if ($vo.interest_course_2 != '') }
+                ,{$vo.interest_course_2|convert_category=6|raw|cn_substr}
+                {/if}
+                {if ($vo.interest_course_3 != '') }
+                ,{$vo.interest_course_3|convert_category=6|raw|cn_substr}
+                {/if}
+            </td>
+            <td class="text-center" title="{$vo.content}">{$vo.content|cn_substr}</td>
+            <td class="text-center">{$vo.follow_status|convert_category=7|raw}</td>
+            <td class="text-center">{$vo.branch|convert_branch}</td>
+            <td class="text-center">{$vo.source|convert_channel}</td>
+            <td class="text-center">{$vo.follow_time|format_time}</td>
+            <td class="text-center">{$vo.remind_time|format_date}</td>
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-nowrap text-right">
+                {if auth("$classuri/consultingRecord")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/consultingRecord")}?id={$vo.id}' data-title="咨询信息">新建咨询</a>
+                {/if}
+                {if auth("educational/student/add")}
+                <span class="text-explode">|</span>
+                <a data-open='{:url("educational/student/add")}?id={$vo.id}&spm=m-58-71-92' data-title="报名">报名</a>
+                {/if}
+                {if auth("educational/trial_class/fast_add")}
+                {if !isset($vo.trial_class_id)}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("educational/trial_class/fast_add")}?id={$vo.id}&spm=m-58-71-92' data-title="体验课报名">体验课报名</a>
+                {/if}
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    {if isset($pages)}<p>{$pages|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+            }
+        });
+        laydate.render({
+            elem: '#follow_time',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+           max: '<?= date("Y-m-d")?>',
+           done: function (value, date, endDate) {
+               var date = new Date(date.year + '-' + date.month + '-' + date.date)
+               var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+           }
+        })
+    })
+</script>
+{/block}

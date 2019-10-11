@@ -1,0 +1,16 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+
+    <div class="row">
+        <div class="col-sm-2 control-label">二维码</div>
+        <div class="col-sm-10">
+            <div class="pull-left padding-right-15 notselect">
+                <img id="ewm" data-tips-image src='data:image/png;base64,{$code}' title="我的二维码" style="width:200px;margin-left:-4px">
+            </div>
+        </div>
+    </div>
+</form>
+{/block}

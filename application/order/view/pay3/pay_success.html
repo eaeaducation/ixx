@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>支付成功</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body>
+<div class="payBox">
+    <img src="/static/home/pay/img/success_img.png"/>
+    <p>支付成功</p>
+    <h3>支付金额 <b>{$row.money}元</b></h3>
+</div>
+<hr style="height: 1px;border: none;border-top: solid 1px #D2D2D2;width: 80%;margin: auto;" />
+<ul class="list">
+   <!-- <li>
+        <span>当前状态 </span>
+        <span>{if $row.status == 99}支付成功{/if}</span>
+    </li>-->
+    <li>
+        <span>商户名 </span>
+        <span>{:sysconf('app_name')}</span>
+    </li>
+    <li>
+        <span>生成时间</span>
+        <span>{$row.created_at|format_datetime}</span>
+    </li>
+    <li>
+        <span>支付渠道</span>
+        <span>{if $row.type == 1}分期{elseif $row.type == 2/}全额{/if}</span>
+    </li>
+    <li>
+        <span>订单号</span>
+        <span>{$oid}</span>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="get"
+      class='layui-form layui-box modal-form-box'>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">客户电话</label>
+        <div class="layui-input-inline">
+            <input name="customer_tel" value="{$Think.get.customer_tel|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<!--{empty name='introduce'}-->
+<p class="help-block text-center well">没 有 记 录 哦！</p>
+<!--{else}-->
+<input type="hidden" value="resort" name="action">
+<table class="layui-table" lay-skin="line" id="testReload">
+    <thead>
+    <tr>
+        <th class="text-center">家长姓名</th>
+        <th class="text-center">电话</th>
+        <th class="text-center">转介绍人数</th>
+        <th class="text-center">状态</th>
+        <th class="text-center">达成时间</th>
+        <th class="text-center">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="introduce" id="vo"}
+    <tr>
+        <td class="text-center">{$vo.customer_id|get_parent_name}</td>
+        <td class="text-center">{$vo.customer_id|get_customer_tel}</td>
+        <td class="text-center nowrap">{$vo.introducer_num}</td>
+        <td class="text-center nowrap">{$vo.status|convert_category=39|raw}</td>
+        <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+        <td class="text-center">
+            {if($vo.status<>3)}
+            <a onclick='addprize("{$vo.customer_id}","{$vo.act_id}")'
+               data-title="完成名单">发放奖励</a></td>
+        {/if}
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<!--{/empty}-->
+
+<script>
+    window.form.render();
+    function addprize(customer_id, act_id) {
+        var url = '{:url("$classuri/addPrize")}?cid=' + customer_id + '&act_id=' + act_id;
+        $.get(url, function (e) {
+            console.log(e);
+            setTimeout(layer.msg(e.msg,{icon:6}), 5000);
+        });
+        window.location.reload();
+
+    }
+</script>

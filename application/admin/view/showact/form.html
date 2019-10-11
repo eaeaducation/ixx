@@ -1,0 +1,47 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="{:request()->url()}" data-auto="true"
+      method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value="{$vo.title|default=''}" autocomplete="off" placeholder="请输入活动名称"
+                   class="layui-input" required="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动类型</label>
+        <div class="layui-input-block">
+            {:get_category_select(2,'type', $vo.type)}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="time"
+                   value="{$vo.begin_time|date='Y-m-d H:i:s'} - {$vo.end_time|date='Y-m-d H:i:s'}" class="layui-input"
+                   id="test10" placeholder="请输入活动时间" required="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动状态</label>
+        <div class="layui-input-block active">
+            {:get_category_radio(8,'status', $vo.status)}
+        </div>
+    </div>
+
+    <input type="text" name="id" hidden>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+    <script>
+        window.laydate.render({elem: '#test10', type: 'datetime', range: true});
+        window.form.render();
+    </script>
+</form>

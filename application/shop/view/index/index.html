@@ -1,0 +1,119 @@
+{extend name='shop@public/main'}
+
+{block name="body"}
+<header class="hui-header">
+    <div id="hui-header-sreach">
+        <div id="hui-header-sreach-icon"></div>
+        <form style="width: 100%;" id="search" action="{:url('product/index')}" method="post">
+            <input style="width: 78%;" name="title" type="search" id="searchKey" onkeydown="if(event.keyCode==13)return false;" placeholder="请输入商品关键字" />
+          <div class="hui-header-sreach-txt" onclick="clearSearch();">搜索</div>
+        </form>
+    </div>
+<div>
+    <ul class="nav">
+        {foreach $nav as $k => $vo}
+            <li>
+                <a {if $_SERVER['REQUEST_URI'] == $vo.link}class="active" {/if} href="{$vo.link}">{$vo.content|strip_tags}</a>
+            </li>
+       {/foreach}
+    </ul>
+</div>
+
+</header>
+<div class="hui-wrap" style="margin-bottom: 12%; padding-top: 20%;">
+    <div style="margin:12% 0;">
+        <div class="hui-swipe" id="swipe">
+            <div class="hui-swipe-items">
+                {foreach $banner as $k => $v}
+                <div class="hui-swipe-item"><a href="{$v.link}"><img onerror="error_img(this)" src="{$v.thumb}"/></a></div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="hui-flex" id="courses">
+        {foreach $course1 as $key => $vo}
+        <div class="demo"><a href="{$vo.link}"><img onerror="error_img(this)" src="{$vo.thumb}"></a></div>
+        {/foreach}
+    </div>
+
+    <div class="hui-flex" id="courses">
+        {foreach $course2 as $key => $vo}
+        <div class="demo"><a href="{$vo.link}"><img onerror="error_img(this)" src="{$vo.thumb}"></a></div>
+        {/foreach}
+    </div>
+
+    <div class="hui-center-title" style="background: url('/static/home/shop/20181225/course1.png') 50% 50% no-repeat ; background-size: 120%;">
+    </div>
+
+    <div style="margin: 10px 6%;" id="demo1">
+        <div id="scroll">
+            {foreach $boutique as $key => $vo}
+            <a href="{$vo.link}"><img onerror="error_img(this)" src="{$vo.thumb}"/></a>
+            {/foreach}
+        </div>
+    </div>
+
+    <div class="hui-center-title" style="background: url('/static/home/shop/20181225/course2.png') 50% 50% no-repeat ; background-size: 120%;">
+    </div>
+
+    <div id="syscou">
+        <div class="hui-swipe common" id="system">
+            <div class="hui-swipe-items">
+                {foreach $sys as $key => $vo}
+                <div class="hui-swipe-item"><img onerror="error_img(this)" src="{$vo.thumb}"/></div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="hui-center-title" style="background: url('/static/home/shop/20181225/school.png') 50% 50% no-repeat ; background-size: 120%;"></div>
+
+    <div class="hui-img-list">
+        <ul>
+            <li style="padding: unset;">
+                <a>
+                    <img onerror="error_img(this)" src="{$school.thumb}" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="hui-black-mask" style="background: rgba(0,0,0,0.25);">
+    <!-- 演示消息内容 -->
+    <div id="hui-black-mask-content">
+        <div id="hui-black-action">
+            <div id="hui-black-close"></div>
+        </div>
+        <div style="text-align:center;"><img onerror="error_img(this)" id="activity" src="{$act.thumb}" width="350" height="350" /></div>
+    </div>
+</div>
+{include file='public:footer'}
+<script>
+    hui.blackMask();
+    hui('#demo1').scrollX(2, 'img', -6);
+
+    var swipe = new huiSwpie('#swipe');
+    swipe.autoPlay = true;
+    swipe.loop = true;
+    swipe.delay = 2000;
+    swipe.indicatorOn = true;
+    swipe.run();
+
+   var system = new huiSwpie('#system');
+    system.autoPlay = true;
+    system.loop = true;
+    system.delay = 3000;
+    system.indicatorOn = false;
+    system.run();
+
+    $('#activity').click(function () {
+        window.location.href = '/shop/activity/h5';
+    })
+
+    function clearSearch() {
+        $('#search').submit();
+    }
+</script>
+{/block}

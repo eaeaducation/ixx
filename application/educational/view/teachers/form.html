@@ -1,0 +1,37 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class='layui-input-block'>
+                <input type="radio"  {in name="$vo.status" value="1" } checked {/in} name="status" value="1" title="正常上课"  style="display: none !important;" required>
+                <input type="radio" name="status"  {in name="$vo.status" value="2" } checked {/in} value="2" title="补课" style="display: none !important;" required>
+                <input type="radio" {in name="$vo.status" value="3" } checked {/in} name="status" value="3" title="体验课" style="display: none !important;" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">课时</label>
+        <div class="layui-input-block">
+            <input type="text" name="course_hour" value='{$vo.course_hour|default=""}' required="required" title="请输入课时"
+                   placeholder="请输入课时" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="remark" value='{$vo.remark|default=""}' required="required" title="请输入备注"
+                   placeholder="请输入备注" class="layui-input">
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>

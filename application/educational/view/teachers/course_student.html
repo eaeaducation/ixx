@@ -1,0 +1,37 @@
+<div class="col-md-12">
+    <!--{empty name='courseStudent'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table notevent" lay-skin="line">
+        <thead>
+        <tr>
+            <!--<th class='list-table-check-td'>-->
+            <!--<input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
+            <!--</th>-->
+            <th class="text-center nowrap">学员名称</th>
+            <th class="text-center nowrap">课程</th>
+            <th class="text-center nowrap">消耗课时</th>
+            <th class="text-center nowrap">打卡时间</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <!--{volist name='courseStudent' id='vo'}-->
+        <tr>
+            <td class="text-center nowrap">
+                {$vo.student_id|get_customer_name}
+            </td>
+            <td class="text-center nowrap">{$vo.course_id|get_courses_title}</td>
+            <td class="text-center nowrap">
+                <span class="color-red">{$vo.course_hour}</span>
+            </td>
+            <td class="text-center nowrap">
+                {$vo.created_at|format_time}
+            </td>
+
+        </tr>
+        <!--{/volist}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</div>

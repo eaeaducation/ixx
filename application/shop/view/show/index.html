@@ -1,0 +1,48 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        #title{display: inline-block; background: #1b3864; width: 91%; text-align: center; height: 38px;
+            border: 1px #112852 solid;position: absolute;bottom: 14px;left: 7px;opacity: 0.9;padding: 3px 0;}
+        #title span {display: block; color: #fff;}
+        #title #sub{font-size: 12px; margin: 2px 0;}
+        .header{background: #002458;}
+        .header h1{color: #fff;padding: 0 1rem; font-size: 17px;line-height: 2.2rem;}
+    </style>
+{/block}
+{block name="body"}
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em style="color: #fff;">达人秀</em></h1>
+</header>
+<section class="_pre" style="margin-bottom: 12%;">
+    <!-- result -->
+    <section class="goods_list" id="goods_list" name="goods_list" dd_name="商品列表" style="">
+        <input type="hidden" value="0" id="scrolltop" name="scrolltop">
+        <div class="clearfix">
+            {if !empty($list)}
+            <ul class="clearfix p_left" style="width: 100%">
+                {foreach $list as $key=>$vo}
+                <li style="width: 50%;">
+                    <div>
+                        <a href="{:url('shop/show/detail')}?id={$vo.id}" name="product_item" dd_name="商品">
+                            <p class="img">
+                                <img onerror="error_img(this)" src="{$vo.brand_logo}" alt="" style="-webkit-transform-origin: 0px 0px; opacity: 1; -webkit-transform: scale(1, 1);">
+                            </p>
+                            <p id="title" style="line-height: 38px;">
+                                <span id="main">{$vo.brand_title}</span>
+                            </p>
+                        </a>
+                    </div>
+                </li>
+                {/foreach}
+            </ul>
+            {else /}
+            <p style="text-align: center; margin-top: 10px">--暂无列表--</p>
+            {/if}
+        </div>
+    </section>
+</section>
+
+{include file='public:footer'}
+{/block}
+

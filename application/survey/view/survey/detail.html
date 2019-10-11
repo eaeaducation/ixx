@@ -1,0 +1,68 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">关键字</label>
+        <div class="layui-input-inline">
+            <input name="keyword" value="{$Think.get.keyword}" placeholder="关键字" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{if empty($list)}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table notevent" lay-skin="line">
+        <thead>
+        <tr>
+            <!--<th class='list-table-check-td'>-->
+            <!--<input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
+            <!--</th>-->
+            <th class="text-center nowrap">监护人姓名</th>
+            <th class="text-center nowrap">联系电话</th>
+            <th class="text-center nowrap">来源渠道</th>
+            <th class="text-center nowrap">校区</th>
+            <th class="text-center nowrap">创建时间</th>
+            <th class="text-center nowrap">操作</th>
+        </tr>
+        </thead>
+        {php}$time = time(){/php}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <!--<td class='list-table-check-td text-top'>-->
+            <!--<input class="list-check-box" value='{$vo.id}' type='checkbox'>-->
+            <!--</td>-->
+            <td class="text-center nowrap">{$vo.parent_name}</td>
+            <td class="text-center nowrap">{$vo.parent_tel|default=''}</td>
+            <td class="text-center nowrap">{$vo.source|convert_channel|default="未知"}</td>
+            <td class="text-center nowrap">{$vo.branch|convert_branch|default="未知"}</td>
+            <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+            <td class="text-center nowrap">
+                <a data-field='answerList' data-open='{:url("$classuri/answerList")}?cid={$vo.id}&&qid={$qid}&&parent_name={$vo.parent_name}'>问卷回答详情</a>
+            </td>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/if}-->
+</form>
+<script>
+    (function () {
+        window.form.render();
+        window.laydate.render({range: '~', elem: '#create_at'});
+    })();
+</script>
+{/block}

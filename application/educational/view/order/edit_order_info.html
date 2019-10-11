@@ -1,0 +1,57 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" value='{eq name="$order_goods.goods_type" value="1"}{$order_goods.goods_id|get_courses_title|raw}{/eq}
+             {eq name="$order_goods.goods_type" value="2"}教材{/eq}
+              {eq name="$order_goods.goods_type" value="3"}杂费{/eq}' title="" placeholder="名称" class="layui-input" disabled="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">费用类型</label>
+        <div class='layui-input-block'>
+            {:get_category_select(34,'goods_type', $order_goods.goods_type, '', ["disabled"=>"","readonly"=>"readonly"],false)}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">原价</label>
+        <div class='layui-input-block'>
+            <input type="text" name="old_price" value="{$order_goods.old_price}" required="required" title="请输入原价"
+                   placeholder="请输入原价" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">现价</label>
+        <div class='layui-input-block'>
+            <input type="text" name="price" value="{$order_goods.price}" required="required" title="请输入现价"
+                   placeholder="请输入现价" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数量</label>
+        <div class='layui-input-block'>
+            <input type="text" name="goods_num" value="{$order_goods.goods_num}" required="required" title="请输入数量"
+                   placeholder="请输入数量" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">已用</label>
+        <div class='layui-input-block'>
+            <input type="text" name="consume_num" value="{$order_goods.consume_num}" required="required" title="请输入已用课时"
+                   placeholder="请输入已用课时" class="layui-input">
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item text-center">
+        <input type='hidden' value='{$order_goods.id}' name='id'>
+        <input type='hidden' value='{$order_goods.order_id}' name='order_id'>
+        <input type="hidden" name="created_at" value="{:time()}">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+<script>
+    window.form.render();
+</script>

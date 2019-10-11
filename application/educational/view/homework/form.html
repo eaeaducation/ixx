@@ -1,0 +1,129 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<button  data-title="返回列表" onclick="window.history.go(-1);" class='layui-btn layui-btn-sm layui-btn-primary'>
+    返回列表
+</button>
+{/block}
+{block name="content"}
+<style>
+    .background-item {
+        padding: 15px;
+        background: #efefef;
+    }
+</style>
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" id="form" method="post">
+
+    <div class="layui-col-xs10">
+        {if isset($students)}
+        <div class="layui-form-item" >
+            <label class="layui-form-label text-success">布置作业</label>
+            <div class="layui-input-block">
+                {volist name="students" id="v"}
+                {if isset($checks)}
+                {if in_array($v['customer_id'],$checks)}
+                <input {if $v.wxopenid==""} disabled {/if} checked  disabled type="checkbox" lay-filter="student_id" name="ids[]"
+                class="" value="{$v.customer_id}" title="{$v.name}" style="display: none !important;" >
+                <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin=""><span>{$v.name}</span><i class="layui-icon"></i></div>
+                {else /}
+                <input {if $v.wxopenid==""} disabled {/if} lay-filter="student_id" type="checkbox" name="ids[]"
+                class="" value="{$v.customer_id}" title="{$v.name}" style="display: none !important;" >
+                <div class="layui-unselect layui-form-checkbox" lay-skin=""><span>{$v.name}</span><i class="layui-icon"></i></div>
+                {/if}
+                {else /}
+                <input {if $v.wxopenid==""} disabled {/if} lay-filter="student_id" type="checkbox" name="ids[]"
+                class="" value="{$v.customer_id}" title="{$v.name}" style="display: none !important;" >
+                <div class="layui-unselect layui-form-checkbox" lay-skin=""><span>{$v.name}</span><i class="layui-icon"></i></div>
+                {/if}
+                {/volist}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item" >
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-block">
+                <input disabled type="text"  value='{$class}'  class="layui-input" maxlength="128">
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">作业标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" value='{$va.title|default=""}' required="required" title="作业标题"
+                       placeholder="请输入作业标题" class="layui-input" maxlength="128">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">作业内容</label>
+            <div class='layui-input-block'>
+                <textarea id="content" name="content" lay-filter="content">{$va.content|default=''|raw}</textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">添加图片</label>
+            <div class="layui-input-block">
+                <table class="layui-table background-item margin-none" lay-size="sm" lay-skin="nob">
+                    <thead>
+                    <tr>
+                        <td>添加作业图片</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-top" style="width:100px">
+                            <input type="hidden" name="homework_pic" value="{$va.homework_pic|default=''}" >
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <script>
+            window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
+            require(['ckeditor'], function () {
+                window.createEditor('[name="content"]', {height: 300});
+            });
+            window.form.render();
+        </script>
+    </div>
+    <div class="layui-col-xs10">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-warm" type='submit'>保存草稿</button>
+            <button class="layui-btn layui-btn-normal" id="sub" type='button'>发送作业</button>
+        </div>
+    </div>
+    {if isset($id)}
+    <input type="hidden" name="id" value="{$id}">
+    {/if}
+    <input type="hidden" name="class_id" value="{$class_id}">
+    <input type="hidden" name="operation" value="">
+</form>
+<script>
+    window.form.render();
+    $('input[name="homework_pic"]').uploadOneImage();
+
+    var ids = [];
+    form.on('checkbox(student_id)', function(data){
+        if(this.checked){
+            ids.push(data.value);
+        }else{
+            ids.splice(jQuery.inArray(data.value,ids),1);
+        }
+    });
+    $('#sub').click(function () {
+        if (ids.length < 1) {
+            layer.msg('没有要布置作业的学员！', {icon: 5});
+            return false;
+        }
+        $('[name=operation]').val('send');
+        $("#form").submit();
+    })
+
+</script>
+{/block}

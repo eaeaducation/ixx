@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html data-dpr="1" class="pixel-ratio-1" style="font-size: 106.667px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>学生成绩</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="/static/admin/student_score/css/weui.min.css">
+    <link rel="stylesheet" href="/static/admin/student_score/css/reset.css">
+    <link rel="stylesheet" href="/static/admin/student_score/css/style.css">
+    <script src="/static/admin/student_score/js/adaptive.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        adaPtive();
+        $(function () {
+            direction();
+        });
+        function adaPtive(max) {
+            window['adaptive'].desinWidth = 720;
+            window['adaptive'].baseFont = 24;
+            window['adaptive'].scaleType = 1;
+            window['adaptive'].maxWidth = max;
+            window['adaptive'].init();
+        }
+    </script>
+</head>
+<body style="font-size: 0.24rem;">
+
+<div class="weui-msg change-main clearfix">
+    <div class="weui-msg__icon-area wx_chang_img"><img
+            src="/static/admin/student_score/images/wx_change.png" alt=""></div>
+    <div class="weui-msg__text-area">
+        <p class="weui-msg__desc">{$info.score}分</p>
+
+    </div>
+    <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+            <span class="weui-btn weui-btn_default wx_btn">{$info.student_id|get_customer_name}</span>
+            <span class="weui-btn weui-btn_default wx_btn">{$info.class}</span>
+            <span class="weui-btn weui-btn_default wx_btn">{$info.course_id|get_courses_title}课</span>
+        </p>
+    </div>
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__text">本服务由爱学学提供</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

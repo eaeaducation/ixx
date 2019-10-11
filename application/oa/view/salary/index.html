@@ -1,0 +1,120 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/add")}' data-title="添加员工工资" class='layui-btn layui-btn-sm layui-btn-primary' data-area="['50%','60%']">添加员工工资
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除员工工资
+</button>
+<!--{/if}-->
+<button data-sss data-field='delete' data-action='{:url("$classuri/printsalary")}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>批量打印
+</button>
+{/block}
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <a class="layui-btn layui-btn-success layui-btn-small" data-open="{$classuri}/index">
+            全部
+        </a>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">校区</label>
+        <div class="layui-input-inline">
+            {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">创建时间</label>
+        <div class="layui-input-inline">
+            <input name="created_at" id="created_at" value="{$Think.get.created_at}" placeholder="请选择发布时间" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<!-- 表单搜索 结束 -->
+<script>
+    window.form.render();
+    window.laydate.render({range: true, elem: '#created_at'});
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>员工姓名</th>
+            <th class='text-center'>校区</th>
+            <th class='text-center'>工资总计</th>
+            <th class='text-center'>备注</th>
+            <th class='text-center'>创建时间</th>
+            <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center"><a data-area="['50%','40%']" data-modal='{:url("$classuri/salaryview")}?id={$vo.id}'>{$vo.name}</a></td>
+            <td class="text-center">{$vo.branch|convert_branch}</td>
+            <td class="text-center">{$vo.salary}</td>
+            <td class="text-center">{$vo.remarks}</td>
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="编辑" data-area="['50%','60%']"
+                   data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}
+{block name='script'}
+<script>
+    var $body = $('body');
+    $body.on('click', '[data-sss]', function () {
+        var id = $(this).attr('data-sss') || (function () {
+                var data = [];
+                return $($(this).attr('data-list-target') || 'input.list-check-box').map(function () {
+                    (this.checked) && data.push(this.value);
+                }), data.join(',');
+            }).call(this);
+        if (id.length < 1) {
+            return $.msg.tips('请选择需要操作的数据！');
+        }
+        var action = $(this).attr('data-action') || $(this).parents('[data-location]').attr('data-location');
+        var value = $(this).attr('data-value') || 0, field = $(this).attr('data-field') || 'status';
+        var msg = $(this).attr('data-title') || '确定要操作这些数据吗？';
+        $.msg.confirm(msg, function () {
+            layer.closeAll();
+            $.form.load(action, {field: field, value: value, id: id}, 'post');
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <link rel="stylesheet" type="text/css" href="./css/t2.css">
+    <title>抽奖测试</title>
+    <script src="./js/jquery.min.js"></script>
+    <script src="//captcha.luosimao.com/static/dist/api.js"></script>
+    <script type="text/javascript" src="./js/jquery.rotate.js"></script>
+    <script type="text/javascript" src="./js/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.jsonp.js"></script>
+    <script type="text/javascript">
+        //从数据源获取数据
+        $.getJSON("data.json", function (data) {
+            //底盘图片
+            var element1 = document.getElementById('pic1');
+            element1.src = data.data[0]['looat-pic1'].value;
+            //指针
+            var element2 = document.getElementById('pic2');
+            element2.src = data.data[0]['looat-pic2'].value;
+            //无次数提示框
+            var element2 = document.getElementById('wcs-img');
+            element2.src = data.data[0]['looat-pic3'].value;
+            //无次数关闭
+            var element2 = document.getElementById('cjgz-c');
+            element2.src = data.data[0]['looat-pic4'].value;
+            var element2 = document.getElementById('zj');
+            element2.src = data.data[0]['looat-pic4'].value;
+            //无次数确认
+            var element2 = document.getElementById('ok-img');
+            element2.src = data.data[0]['looat-pic5'].value;
+            //转盘规则
+            var element2 = document.getElementById('gb');
+            element2.src = data.data[0]['looat-pic4'].value;
+            var element2 = document.getElementById('cjgz-img1');
+            element2.src = data.data[0]['looat-pic6'].value;
+            var element2 = document.getElementById('cjgz-img');
+            element2.src = data.data[0]['looat-pic7'].value;
+            //中奖弹框
+            var element2 = document.getElementById('gb1');
+            element2.src = data.data[0]['looat-pic4'].value;
+            var element2 = document.getElementById('gb2');
+            element2.src = data.data[0]['looat-pic4'].value;
+            var element2 = document.getElementById('ok1');
+            element2.src = data.data[0]['looat-pic5'].value;
+            var element2 = document.getElementById('ok2');
+            element2.src = data.data[0]['looat-pic5'].value;
+            var element2 = document.getElementById('zj-tk');
+            element2.src = data.data[0]['looat-pic8'].value;
+            var element2 = document.getElementById('tz-img');
+            element2.src = data.data[0]['looat-pic9'].value;
+        });
+    </script>
+</head>
+<body>
+<div class="zp-box">
+    <div class="dp-box">
+        <img class="g-lottery-img" id="pic1">
+    </div>
+    <div class="zhizhen">
+        <img id="pic2">
+        <div id="cishu-text">点击开始<br><span id="cishu">0</span>次</div>
+    </div>
+</div>
+<div class="jl">
+    <p>
+        <span id="zjjl">中奖纪录》</span>|<span id="look-gz">查看规则》</span>
+    </p>
+</div>
+<div class="gdbox">
+    <strong>中奖用户</strong>
+    <p id="tit">
+        <span>手机号</span>
+        <span>获得奖励</span>
+    <div>
+    <ul style="text-align: center;">
+        <li><span>189****8989</span><span>双季丰满减红包</span></li>
+        <li><span>199****8989</span><span>双季丰满减红包</span></li>
+        <li><span>187****8989</span><span>双季丰满减红包</span></li>
+        <li><span>183****8989</span><span>双季丰满减红包</span></li>
+        <li><span>181****8989</span><span>双季丰满减红包</span></li>
+        <li><span>188****8989</span><span>双季丰满减红包</span></li>
+        <li><span>189****8989</span><span>双季丰满减红包</span></li>
+        <li><span>199****8989</span><span>双季丰满减红包</span></li>
+        <li><span>187****8989</span><span>双季丰满减红包</span></li>
+        <li><span>183****8989</span><span>双季丰满减红包</span></li>
+        <li><span>181****8989</span><span>双季丰满减红包</span></li>
+        <li><span>188****8989</span><span>双季丰满减红包</span></li>
+        <li><span>189****8989</span><span>双季丰满减红包</span></li>
+        <li><span>199****8989</span><span>双季丰满减红包</span></li>
+        <li><span>187****8989</span><span>双季丰满减红包</span></li>
+        <li><span>183****8989</span><span>双季丰满减红包</span></li>
+        <li><span>181****8989</span><span>双季丰满减红包</span></li>
+        <li><span>188****8989</span><span>双季丰满减红包</span></li>
+        <li><span>189****8989</span><span>双季丰满减红包</span></li>
+        <li><span>199****8989</span><span>双季丰满减红包</span></li>
+        <li><span>187****8989</span><span>双季丰满减红包</span></li>
+        <li><span>183****8989</span><span>双季丰满减红包</span></li>
+        <li><span>181****8989</span><span>双季丰满减红包</span></li>
+        <li><span>188****8989</span><span>双季丰满减红包</span></li>
+    </ul>
+</div>
+    </p>
+    <div class="zhongj-bbk">
+        <div class="zhongj-bb">
+            <div class="zhongj-bbl" id="colee" style="overflow:hidden;">
+                <div id="colee1"></div>
+                <div id="colee2"></div>
+            </div>
+            <div class="zhongj-bbr" id="coleer" style="overflow:hidden;">
+                <div id="coleer1"></div>
+                <div id="coleer2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--遮罩&弹框-->
+<div class="zz"></div>
+<!--转盘规则-->
+<div class="zpgz">
+    <img class="cjgz-c" id="gb">
+    <img id="cjgz-img1">
+</div>
+<!--中奖纪录-->
+<div class="zj">
+    <img class="cjgz-c" id="zj">
+    <img id="cjgz-img">
+    <div class="zj-content">
+        <p>
+            <span id="mytime">时间</span>
+            <span id="myjl">获得奖励</span>
+        </p>
+        <ul>
+            <li><span>2018.06.01</span><span>双季丰满减红包</span></li>
+            <li><span>2018.06.11</span><span>双季丰满减红包</span></li>
+            <li><span>2018.06.19</span><span>双季丰满减红包</span></li>
+            <li><span>2018.06.20</span><span>双季丰满减红包</span></li>
+            <li><span>2018.06.21</span><span>双季丰满减红包</span></li>
+            <li><span>2018.06.22</span><span>双季丰满减红包</span></li>
+        </ul>
+    </div>
+</div>
+<!-- 无次数提示弹框 -->
+<div class="wcs">
+    <img class="cjgz-c" id="cjgz-c">
+    <img class="wcs-img" id="wcs-img">
+    <img class="ok-img" id="ok-img">
+</div>
+<!-- 当日是否投资弹框 -->
+<div class="today">
+    <img class="cjgz-c" id="gb1">
+    <img class="tz-img" id="tz-img">
+    <img class="ok-img" id="ok2">
+</div>
+<!-- 抽到奖励弹框 -->
+<div class="jl-tk">
+    <img class="cjgz-c" id="gb2">
+    <img class="zj-img" id="zj-tk">
+    <img class="ok-img" id="ok1">
+    <!--登录弹框-->
+    <div style="display: none" class="login">
+        <div class="form">
+            <div class="form-item">
+                <input type="number" placeholder="请输入手机号码" name="mobile" style="border: 1px solid #00b7ee">
+            </div>
+            <div class="form-item">
+                <input type="password" placeholder="请输入密码 8-16位数字和字母组合" name="password"
+                       style="border: 1px solid #00b7ee">
+            </div>
+            <div class="form-item code" style="display: none">
+                <input type="number" placeholder="请输入验证码" name="code" style="border: 1px solid #00b7ee">
+                <span class="sendCode" style="color: #00b7ee">获取验证码</span>
+            </div>
+            <div class="form-item captcha">
+                <div class="l-captcha" data-site-key="6ed43f3ca345d55f1035e1424872b5a2" data-width="100%"
+                     data-callback="validate" style="border: 1px solid #00b7ee"></div>
+            </div>
+            <div class="form-item">
+                <button type="submit" class="disabled submit"
+                        style="color: white;border: 1px solid #00b7ee;  margin-bottom: 5px;background-color:#347cff ">
+                    立即注册
+                </button>
+                <button type="submit" class="reset"
+                        style="color: white;border: 1px solid #00b7ee;background-color: #347cff">
+                    重置验证
+                </button>
+            </div>
+        </div>
+    </div>
+    <p class="texts">恭喜您已获得<br>双季丰满减红包满1000可用50元</p>
+</div>
+<script src="./js/t1.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>

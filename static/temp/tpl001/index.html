@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>邀请页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="/static/extend_res/swiper/css/swiper-4.3.3.min.css">
+    <link rel="stylesheet" href="/static/extend_res/swiper/css/animate.min.css">
+
+    <!-- Demo styles -->
+    <style>
+        html, body {
+            position: relative;
+            height: 100%;
+        }
+
+        body {
+            background: #eee;
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .swiper-slide{
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size:cover;
+        }
+        .swiper-slide p{
+          font-size: 14px;
+        }
+
+        .swiper-slide div {
+            text-align: center;
+            margin: 2rem;
+            width: 100%;
+        }
+
+        .swiper-slide img {
+            width: 80%;
+        }
+
+        .swiper-slide #logo {
+            width: 8rem;
+            position: absolute;
+            left: 33%; /*左右位置*/
+            top: 90%; /*上下位置*/
+        }
+    </style>
+</head>
+<body>
+<!-- Swiper -->
+<div class="swiper-container">
+
+    <div class="swiper-wrapper">
+        <div class="swiper-slide bg1">
+            <div class="ani shouye" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s"
+                 swiper-animate-delay="0.1s">
+                <h1>邀请函</h1>
+                <h4>2018年世界杯开幕式邀请函</h4>
+                <p>时间:2018年6月13日</p>
+            </div>
+            <img id="logo">
+        </div>
+
+        <div class="swiper-slide bg2">
+            <div class="ani" swiper-animate-effect="wobble" swiper-animate-duration="0.5s" swiper-animate-delay="0.1s">
+                <h4>皮皮虾我们走</h4>
+                <p>这块是文章哪里看解放后你肯定会GV稍等酷狗你拉克丝的功能你的股份那两首歌呢流口水你反馈辽宁省内来上课呢看来你伴郎伴娘看是否能可能是凉快搬那块李旦那接口你呢绒</p>
+                <img src="./images/03.png">
+            </div>
+            <img id="logo">
+        </div>
+        <div class="swiper-slide bg3">
+            <div class="ani" swiper-animate-effect="wobble" swiper-animate-duration="0.5s" swiper-animate-delay="0.1s">
+                <h4>皮皮虾我们走</h4>
+                <p>这块是文章哪里看解放后你肯定会GV稍等酷狗你拉克丝的功能你的股份那两首歌呢流口水你反馈辽宁省内来上课呢看来你伴郎伴娘看是否能可能是凉快搬那块李旦那接口你呢绒</p>
+                <img src="./images/03.png">
+            </div>
+            <img id="logo">
+        </div>
+        <div class="swiper-slide bg4">
+            <div class="ani" swiper-animate-effect="wobble" swiper-animate-duration="0.5s" swiper-animate-delay="0.1s">
+                <h4>皮皮虾我们走</h4>
+                <p>这块是文章哪里看解放后你肯定会 GV稍等酷狗你拉克丝的功能你的股份那两首歌呢流口水你反馈辽宁省内来上课呢看来你伴郎伴娘看是否能可能是凉快搬那块李旦那接口你呢绒</p>
+                <img src="./images/03.png">
+            </div>
+            <img id="logo">
+        </div>
+        <!--<div class="swiper-slide">-->
+        <!--<iframe style="width: 100%;height: 100%;" src="luck.html"></iframe>-->
+        <!--</div>-->
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+
+<!-- Swiper JS -->
+<script src="/static/extend_res/swiper/js/swiper-4.3.3.min.js"></script>
+<script src="/static/extend_res/swiper/js/swiper.animate1.0.3.min.js"></script>
+<script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    $(function () {
+        //使用getJSON方法读取json数据,
+        //注意：info.json可以是不同类型文件，只要其中的数据为json类型即可
+        var url ='./js/pagedata.json';
+        $.getJSON(url, function (data) {
+            //给所有页面设置logo
+            $("[id='logo']").attr('src', data.logo);
+            //页面1的内容
+            $('.ani').eq(0).html("<h1>" + data.data[0].title.value + "<h1><h4>" + data.data[0].h4.value + "</h4><p>" + data.data[0].p.value + "</p>");
+            $('.bg1').css('background-image',"url("+data.data[0].background.value+")")
+            //页面2的内容
+            $('.ani').eq(1).html("<h2>" + data.data[1].h2.value + "<h2><p>" + data.data[1].p.value + "</p><img src="+data.data[1].image.value +">");
+            $('.bg2').css('background-image',"url("+data.data[1].background.value+")")
+            //页面3的内容
+            $('.bg3').css('background-image',"url("+data.data[2].background.value+")")
+            //页面4的内容
+            $('.bg4').css('background-image',"url("+data.data[3].background.value+")")
+        })
+    });
+    var swiper = new Swiper('.swiper-container', {
+        direction: 'vertical',
+        effect: 'fade',
+        mousewheel: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        on: {
+            init: function () {
+                swiperAnimateCache(this); //隐藏动画元素
+                swiperAnimate(this); //初始化完成开始动画
+            },
+            slideChangeTransitionEnd: function () {
+                swiperAnimate(this); //每个slide切换结束时也运行当前slide动画
+            }
+        }
+    });
+</script>
+</body>
+</html>

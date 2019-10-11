@@ -1,0 +1,31 @@
+{
+  "tplname": "test1",
+  "pages": 4,
+  "logo":"./images/logo.png",
+  "data":[
+    {
+      "background":{"name":"背景图","value":"./images/001.jpg","type":"pic"},
+      "title":{"name":"主标题","value":"邀请函dfffffd","type":"text"},
+      "h4":{"name":"主标题","value":"欢迎参加黑哥伯爵公开课试听","type":"text"},
+      "p":{"name":"背景图","value":"时间:2018年6月20日","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"./images/002.jpg","type":"pic"},
+      "h2":{"name":"主标题","value":"黑格伯爵","type":"text"},
+      "p":{"name":"主标题","value":"黑格伯爵品牌创立于2012年，由黑格伯爵青少年国际公馆、黑格伯爵国际贵族幼儿园、黑格伯爵国际英语贵族学校等组成，以“在生活中学习，在学习中生活”为教育理念，引进并整合以加拿大为代表的先进教育理念、教育资源、教育形式等，将加拿大先进的教学方式与中国孩子现状做结合，为孩子提供实用性、趣味性、贵族化、国际化的精英教育，旨在为社会培养国际化的高素质人才。","type":"text"},
+      "image":{"name":"背景图","value":"./images/hgbj.jpg","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"./images/003.jpg","type":"pic"},
+      "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+      "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+      "looat-pci":{"name":"背景图","value":"","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"./images/004.jpg","type":"pic"},
+      "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+      "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+      "looat-pci":{"name":"背景图","value":"","type":"pic"}
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>填写用户信息</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body>
+<div class="head">
+    <div class="head-top">
+        <div class="left-btn">
+            <img src="/static/home/pay/img/left-btn.png" />
+        </div>
+        <div class="title">
+            <h4>填写用户信息</h4>
+        </div>
+    </div>
+</div>
+<div class="form">
+    <div class="form-input">
+        <p>姓    名</p>
+        <input type="text" name="name" placeholder="请输入真实姓名" class="userInput"/>
+    </div>
+    <div class="form-input">
+        <p>身份证</p>
+        <input type="text" name="idCard" placeholder="请输入身份证号" class="userInput"/>
+    </div>
+</div>
+<a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next">
+    下一步
+</a>
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-weui.min.js"></script>
+<script>
+    $(function () {
+        $('.left-btn').click(function () {
+            history.back(-1);
+        })
+    });
+    $('.next').click(function () {
+        var name = $('[name="name"]').val(),
+            idcard = $('[name="idCard"]').val(),
+            url = '{:url("api2/kufenqi/cardCx")}';
+        $.post(url, {name: name, idcard: idcard}, function (e) {
+            console.log(e)
+        })
+    })
+</script>
+    </body>
+</html>

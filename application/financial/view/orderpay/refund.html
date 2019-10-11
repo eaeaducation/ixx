@@ -1,0 +1,18 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">退款理由</label>
+        <div class="layui-input-block">
+            <input type="text" name="reason" value='' required="required"
+                   title="请输入退款理由" autocomplete="off" placeholder="请输入退款理由" class="layui-input" maxlength="20">
+        </div>
+    </div>
+    <input type="hidden" name="id" value="{$id}">
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' id="submit">申请退款</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消退款</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>

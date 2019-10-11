@@ -1,0 +1,111 @@
+{extend name='admin@public/content'}
+
+{block name='content'}
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post" id="class-form">
+    <div class="layui-form-item">
+        <label class="col-sm-1 layui-form-label">员工校区</label>
+        <div class='col-sm-4'>
+            {if in_array(session('user.authorize'),[1,3,4]) && isset($vo.employee_id)}
+            <select name="branch" class="layui-input ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                <option selected="selected" value="{$vo.branch}">{:convert_branch($vo.branch)}</option>
+            </select>
+            <input type="hidden" name="id" value="{$vo.id}">
+            {elseif(in_array(session('user.authorize'),[1,3,4]))}
+            {:get_branches_select('branch', '', 'layui-input', ['lay-filter' => 'select-branch', 'ng-model' => 'branch','lay-ignore' => '', 'required'=>'true', 'ng-change' => 'selectBranch(this)'], false)}
+            {elseif(isset($vo.employee_id))}
+            <select name="branch" class="layui-input ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                <option selected="selected" value="{$vo.branch}">{:convert_branch($vo.branch)}</option>
+            </select>
+            {else /}
+            <select name="branch" class="layui-input ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" lay-filter="select-branch" ng-model="branch" lay-ignore="" required="true" ng-change="selectBranch(this)">
+                <option value="">-请先选择校区-</option>
+                <option value="{:session('user.employee.department')}">{:convert_branch(session('user.employee.department'))}</option>
+            </select>
+            {/if}
+            <div class="help-block">
+                <p class="text-danger">* 请先选择校区, 后选择员工</p>
+            </div>
+        </div>
+        <label class="col-sm-1 layui-form-label">员工姓名</label>
+        <div class="col-sm-4">
+            <select name="employee_id" id="headmaster">
+                {if isset($vo.employee_id)}
+                <option value="{$vo.employee_id}">{:get_user_name($vo.employee_id)}</option>
+                {else/}
+                <option value="">-请先选择校区-</option>
+                {/if}
+            </select>
+        </div>
+    </div>
+    {foreach $category as $key=>$value}
+    <div class="layui-form-item">
+        <label class="col-sm-1 layui-form-label">工资组成</label>
+        <div class="col-sm-2">
+            {:get_category_select(38, 'category['.$key.']', isset($value.category)?$value.category:'', '', [], false)}
+        </div>
+        <label class="col-sm-1 layui-form-label">工资</label>
+        <div class="col-sm-2">
+            <input type="text" name="salary[{$key}]" value="{$value.salary|default=''}" class="layui-input">
+        </div>
+        <label class="col-sm-1 layui-form-label">备注</label>
+        <div class="col-sm-2">
+            <input type="text" name="remark[{$key}]" value="{$value.remark|default=''}" class="layui-input">
+        </div>
+    </div>
+    {/foreach}
+
+    <div class="layui-form-item">
+        <label class="col-sm-1 layui-form-label">备注</label>
+        <div class="col-sm-9">
+            <input type="text" name="remarks" value="{$vo.remarks|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑
+        </button>
+    </div>
+</form>
+<script>
+    require(['angular'], function () {
+        // 应用创建与初始化
+        window.app = angular.module("ClassForm", []).run(callback);
+        angular.bootstrap(document.getElementById('class-form'), [app.name]);
+
+        function callback($rootScope) {
+            $rootScope.paramList = filterParamList(JSON.parse('{$vo.params|default="[]"|raw}') || []);
+            $rootScope.getBranchInfo = function (branch) {
+                $.post('{:url("salary/getBranchData")}', {"branch": branch}, function (info) {
+                    $rootScope.$apply(function () {
+                        $rootScope.optionTeacher = info.teacher;
+                        var headmaster= "{$vo.teacher_id|default=''}";
+                        var h_html="<option value=''>-请选择-</option>";
+                        for(var i=0;i<info.teacher.length;i++){
+                            h_html += "<option value=" + info.teacher[i].id + ">" + info.teacher[i].name + "</option>";
+                        }
+                        $('#headmaster').html(h_html);
+                        window.form.render();
+                    });
+                });
+            };
+            $rootScope.selectBranch = function (e) {
+                $rootScope.paramList = filterParamList([]);
+                $rootScope.getBranchInfo(e.branch)
+            };
+            window.form.render();
+        }
+        function filterParamList(list) {
+            return list.length < 1 ? [{
+                teacher_id: ''
+            }] : list;
+        }
+    });
+</script>
+
+{/block}

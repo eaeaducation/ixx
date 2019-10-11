@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>新建咨询</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css" />
+    <script src="__STATIC__/extend_res/jquery/jquery-3.3.1.js"></script>
+    <script src="__STATIC__/plugs/require/require.js"></script>
+    <script src="__STATIC__/app.js"></script>
+    <style type="text/css">
+        body{background:#FFF;}
+        .line{height:20px;}
+        .list{width:250px; text-align: center;}
+        a {color: #2494f2;}
+        .hui-form-items:last-child{border-bottom: 1px solid #F3F4F5;}
+        .hui-form-items-title {width: 26%;}
+        #interest img {width: 25px;}
+        select{width:200px; margin-bottom: 5px;}
+        .hui-form-radios input[type="radio"] + label{margin-right: 0px; padding-right: 0px;}
+    </style>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>新建咨询</h1>
+</header>
+<div class="hui-wrap">
+    <form style="padding:20px 10px;" class="hui-form" id="form1">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">意向度:</div>
+            <div id="interest" data-path="/static/plugs/jquery-raty/images" style="padding-left: 52px"></div>
+            <script>
+                require(['jquery.raty'], function () {
+                    $('#interest').raty({
+                        number: 5,
+                        half: true,
+                        scoreName: 'interest',
+                        score: 0,
+                        path: function () {
+                            return this.getAttribute('data-path');
+                        }
+                    });
+                })
+            </script>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">跟进状态:</div>
+            <div class="hui-form-select" style="margin-left: 19px;">
+                {:get_category_select(7, 'follow_status', '', '', ['required'=>'required'])}
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">意向课程:</div>
+            <div class="hui-form-select" style="margin-left: 19px;">
+            {:get_category_select(6, 'interest_course_1', '', '', [], false)}
+            {:get_category_select(6, 'interest_course_2', '', '', [], false)}
+            {:get_category_select(6, 'interest_course_3', '', '', [], false)}
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title" style="margin-top: 7px">咨询方式:</div>
+            <div class="hui-form-radios" style="line-height:38px;">
+            <input type="radio" value="1" name="type" id="g1" checked="checked"  /><label for="g1">来电</label>
+            <input type="radio" value="2" name="type" id="g2"  /><label for="g2">来访</label>
+            <input type="radio" value="3" name="type" id="g3"   /><label for="g3">网络</label>
+            <input type="radio" value="4" name="type" id="g4"  /><label for="g4">其他</label>
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">沟通内容:</div>
+            <div class="hui-form-textarea">
+                <textarea  name="content" required></textarea>
+            </div>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">下次跟进时间:</div>
+            <input type="date" class="hui-button hui-button-large hui-date-picker" name="remind_time" value="" required/>
+        </div>
+        <input type="hidden" class="hui-button hui-button-large hui-date-picker" name="customer_id" value="{$cid}"/>
+        <div style="padding:15px 8px;">
+            <button type="button" class="hui-button hui-primary" id="submitBtn" style="margin: 0 auto; display: block">提交数据</button>
+        </div>
+    </form>
+</div>
+<script src="/static/extend_res/mobile/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/extend_res/mobile/js/hui-accordion.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui-form.js"></script>
+<script type="text/javascript">
+    hui.accordion(true, true);
+    hui.datePicker();
+    hui('[name="remind_time"]').val('{:date("Y-m-d", strtotime("+7 days"))}');
+
+    hui('#submitBtn').click(function () {
+        var data = hui.getFormData('#form1');
+        var remind_time = hui('[name="remind_time"]').val();
+        data.remind_time = remind_time;
+        if (data.follow_status == '') {
+            hui.toast('请选择跟进状态！');
+            return false;
+        }
+        if (data.content == '') {
+            hui.toast('请填写沟通内容!');
+            return false;
+        }
+        hui.loading('提交中...');
+        $.post('{url("$classuri/createConsultation")}', {data: data}, function (res) {
+            hui.closeLoading();
+            if (res.code > 0) {
+                hui.iconToast(res.msg);
+                setTimeout(function(){
+                    window.location.href = '/mobile/customerlist/detail?id='+res.data;
+                }, 2000);
+            } else {
+                hui.toast(res.msg);
+            }
+        })
+
+    })
+</script>
+</body>
+</html>

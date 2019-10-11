@@ -1,0 +1,95 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post" class='form-horizontal'
+      style='padding-top:20px'>
+    <div class="row">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">话务系统服务商</label>
+            <div class='col-sm-8'>
+                <select class="layui-input" name="call_center_type" required="required">
+                    <!--{if sysconf('call_center_type') eq 'no'}-->
+                    <option value='no' selected>关闭</option>
+                    <option value='link'>Link+(上海九霄祥云)</option>
+                    <!--{else}-->
+                    <option value='no'>关闭</option>
+                    <option value='link' selected>Link+(上海九霄祥云)</option>
+                    <!--{/if}-->
+                </select>
+                <div class="help-block" call-center-type="link">
+                    还没有账号 <a href="http://crm.yilelink.com/?r=common/index/register">点击申请</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">网关地址</label>
+            <div class='col-sm-8'>
+                <input type="text" name="link_host" value="{:sysconf('link_host')}"
+                       placeholder="http://api.yilelink.com" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">api_key</label>
+            <div class='col-sm-8'>
+                <input type="text" name="link_api_key" value="{:sysconf('link_api_key')}"
+                       placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">api_secret</label>
+            <div class='col-sm-8'>
+                <input type="text" name="link_api_secret" value="{:sysconf('link_api_secret')}"
+                       placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">group_id</label>
+            <div class='col-sm-8'>
+                <input type="text" name="link_group_id" value="{:sysconf('link_group_id')}"
+                       placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">将录音下载到本地</label>
+            <div class='col-sm-8'>
+                <label>
+                    <input type="hidden" name="link_download" value="">
+                    <input type="checkbox" value="99"
+                           {if sysconf('link_download') == 99}
+                    checked="checked"
+                    {/if}
+                    name="link_download"
+                    />
+                    &nbsp;是
+                </label>
+            </div>
+        </div>
+        <div class="form-group" call-center-type="link">
+            <label class="col-sm-2 control-label">回调地址</label>
+            <div class='col-sm-8'>
+                <code>
+                    {$Request.domain}/marketing/call/notify
+                </code>
+                <div class="help-block">
+                    <p class="text-danger">请将上面的地址告知您的服务商, 否则将无法接收到消息通知</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">保存配置</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script>
+    $(function () {
+        $('[name="call_center_type"]').on('change', function () {
+            $("[call-center-type]").not($("[call-center-type='" + $(this).val() + "']").show()).hide();
+        }).trigger('change');
+    });
+</script>
+{/block}

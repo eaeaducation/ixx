@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>添加客户</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css"/>
+    <style>
+        ul{
+            padding-bottom: 2rem;
+        }
+        li{
+        border-bottom: 1px dotted #CCCCCC;
+        }
+        .hui-form-items-title{
+            margin-right: 2rem;
+        }
+    </style>
+</head>
+<body style="background:#FCFCFC;">
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>添加客户</h1>
+</header>
+<form style="padding:88px 10px;" class="hui-form" id="form1">
+    <div class="hui-wrap">
+        <div class="hui-accordion">
+
+            <div   class="hui-accordion-title" style="height:2.5rem;line-height:2.5rem;color:#fff;font-size: 18px;border: 1px solid #3388ff;background-color: #3388ff;border-radius:30px;">基本信息</div>
+            <div  class="hui-accordion-content ">
+                <ul>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">学生姓名</div>
+                            <input  type="text" class="hui-input hui-input-clear" name="name" placeholder="在此填写学生姓名"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">性别</div>
+                            <div class="hui-form-radios" style="line-height:38px;">
+                                <input type="radio" value="0" name="gender" id="g1" checked="checked"
+                                       onchange="showSelectRes(this);"/><label for="g1">女</label>
+                                <input type="radio" value="1" name="gender" id="g2"
+                                       onchange="showSelectRes(this);"/><label
+                                    for="g2">男</label>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">家长姓名</div>
+                            <input type="text" class="hui-input hui-input-clear" name="parent_name"
+                                   placeholder="在此填写家长姓名"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">家长手机<span style="color: red">*</span></div>
+                            <input type="number" class="hui-input" placeholder="在此填写家长手机号" checkType="phone"
+                                   checkMsg="手机号码格式错误" name="parent_tel"/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="hui-accordion">
+            <div class="hui-accordion-title" style="height:2.5rem;line-height:2.5rem;color:#fff;font-size: 18px;border: 1px solid #3388ff;background-color: #3388ff;border-radius:30px">更多信息</div>
+            <div class="hui-accordion-content">
+                <ul>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">关系</div>
+                            <div class="hui-form-radios" style="line-height:38px;">
+                                <input type="radio" value="1" name="relation" id="r1" checked="checked"
+                                       onchange="showSelectRes(this); "/><label for='r1'>母亲</label>
+                                <input type="radio" value="2" name="relation" id="r2"
+                                       onchange="showSelectRes(this);"/><label for='r2'>父亲</label>
+                                <input type="radio" value="3" name="relation" id="r3"
+                                       onchange="showSelectRes(this);"/><label
+                                    for='r3'>其他</label>
+
+
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">英文名</div>
+                            <input type="text" class="hui-input hui-input-clear" name="nickname" placeholder="在此填写英文名"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">QQ</div>
+                            <input type="number" class="hui-input" placeholder="在此填写QQ号" name="qq"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">微信</div>
+                            <input type="text" class="hui-input hui-input-clear" name="wechat" placeholder="在此填写微信"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">家庭地址</div>
+                            <div class="hui-form-textarea">
+                                <textarea placeholder="在此填写联系地址" name="address"></textarea>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">公立学校</div>
+                            <input type="text" class="hui-input hui-input-clear" name="school" placeholder="在此填写公立学校"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">渠道</div>
+                            <div class="hui-form-select">
+                                {:get_channels_select('source','','',[],'')}
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="hui-form-items">
+                            <div class="hui-form-items-title">备注</div>
+                            <div class="hui-form-textarea">
+                                <textarea placeholder="备注..." name="other_info"></textarea>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="padding:15px 8px;">
+        <button style="display: block;margin: 0 auto;" type="button" class="hui-button hui-primary " id="submitBtn">提交数据</button>
+    </div>
+</form>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui.js"></script>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui-form.js"></script>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui-accordion.js"></script>
+<script type="text/javascript" src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    hui.accordion(false, true);
+    //表单元素数据收集演示
+    hui.formInit();
+    //表单验证
+    hui('#submitBtn').click(function () {
+        var res = huiFormCheck('#form1');
+        //提交
+        if (res) {
+            hui.loading('提交中...');
+            var data = hui.getFormData('#form1');
+            console.log(JSON.stringify(data));
+            var formData = JSON.stringify(data);
+            var url = '{:url("$classuri/customer_add")}';
+            $.post(url, formData, function (e) {
+                hui.closeLoading();
+                if (e.code > 0) {
+                    hui.iconToast(e.msg);
+                    setTimeout(window.location.reload(), 3000);
+
+                } else {
+                    hui.toast(e.msg);
+                }
+
+            })
+
+        }
+    });
+    //获取复选框的值
+    function showCheckRes(_selfBtn) {
+        var vals = new Array();
+        hui(_selfBtn).parent().find('input').each(function (cObj) {
+            if (cObj.checked) {
+                vals.push(cObj.value);
+            }
+        });
+        console.log(vals);
+    }
+    //获取单选框的值
+    function showSelectRes(_selfBtn) {
+        var val;
+        hui(_selfBtn).parent().find('input').each(function (cObj) {
+            if (cObj.checked) {
+                val = cObj.value;
+            }
+        });
+        console.log(val);
+    }
+
+</script>
+</body>
+</html>

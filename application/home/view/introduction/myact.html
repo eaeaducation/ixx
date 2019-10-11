@@ -1,0 +1,60 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>我参与的活动</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/introduction/css/hui.css"/>
+    <style>
+        .hui-header {
+            display: flex;
+            width: 100%;
+            height: 44px;
+            text-align: center;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            z-index: 19;
+            background: #fff;
+        }
+
+        #hui-back:before {
+            content: "\e6a5";
+            font-size: 18px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1 style="background-color: #fff;color: #000">邀请详情</h1>
+</header>
+<div class="hui-wrap">
+    {volist name="act" id='vo'}
+    <div class="hui-accordion" style="margin: 0.5rem 0">
+        <div class="hui-accordion-title" style="color:#7ca7d2;">{$vo.title}</div>
+        <div class="hui-accordion-content hui-list">
+            <ul style="margin: 1px  5px ;border-radius: 10px;background-color:#7ca7d2;">
+                {volist name="customer" id="v1"}
+                {if $vo.id eq $v1.actid}
+                <li>
+                    <div class="hui-list-text" >
+                        <span style="color: #fff">{$v1.customer_id|get_parent_name}</span>
+                        <span style="margin-right: 0.5rem;color:  #fff;">{$v1.customer_id|get_customer_tel|mobile_mask}</span>
+                    </div>
+                </li>
+                {/if}
+                {/volist}
+            </ul>
+        </div>
+    </div>
+
+    {/volist}
+</div>
+<script type="text/javascript" src="/static/home/introduction/js/hui.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/home/introduction/js/hui-accordion.js"></script>
+<script type="text/javascript">
+    hui.accordion(false, false);
+</script>
+</body>
+</html>

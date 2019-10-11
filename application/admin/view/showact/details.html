@@ -1,0 +1,106 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">电话号码</label>
+        <div class="layui-input-inline">
+            <input name="parent_tel" value="{$Think.get.parent_tel}" placeholder="请输入电话号码" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">采单员</label>
+        <div class="layui-input-inline">
+            {:get_sellers_select('dxy','dxy', $Think.get.dxy, 'input-sm form-control', [],false)}
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">销售员(cc)</label>
+        <div class="layui-input-inline">
+            {:get_sellers_select('cc','cc', $Think.get.cc, 'input-sm form-control', [],false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">付款情况</label>
+        <div class="layui-input-inline">
+            <select name="status" lay-filter="status">
+                <option value="" >--请选择--</option>
+                <option value="0" {if  null != $Think.get.status && intval($Think.get.status) === 0}selected{/if}>未付款</option>
+                <option value="1" {if $Think.get.status eq 1}selected{/if} >已付款</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<script>
+    window.form.render();
+</script>
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{if empty($list)}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table notevent" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center nowrap">id</th>
+            <th class="text-center nowrap">活动名称</th>
+            <th class="text-center nowrap">活动内容</th>
+            <th class="text-center nowrap">姓名</th>
+            <th class="text-center nowrap">监护人姓名</th>
+            <th class="text-center nowrap">联系方式</th>
+            <th class="text-center nowrap">采单员</th>
+            <th class="text-center nowrap">销售员(cc)</th>
+            <th class="text-center nowrap">活动金额</th>
+            <th class="text-center nowrap">是否付款</th>
+            <th class="text-center nowrap">提交时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <td class="text-center nowrap">
+            {$vo.id}
+        </td>
+            <td class="text-center nowrap">
+                {$vo.title}
+            </td>
+            <td class="text-center nowrap">{$vo.body}</td>
+            <td class="text-center nowrap">{$vo.name}</td>
+            <td class="text-center nowrap">{$vo.parent_name}</td>
+            <td class="text-center nowrap">{$vo.parent_tel}</td>
+            <td class="text-center nowrap">{:get_user_realname($vo.sales_id)}</td>
+            <td class="text-center nowrap">{:get_user_realname($vo.collect_id)}</td>
+            <td class="text-center nowrap">{$vo.price}</td>
+            <td class="text-center nowrap">
+                {if $vo.status==1}
+                <span class="color-green">已付款</span>
+                {else}
+                <span class="color-red">未付款</span>
+                {/if}
+            </td>
+            <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/if}-->
+</form>
+
+{/block}

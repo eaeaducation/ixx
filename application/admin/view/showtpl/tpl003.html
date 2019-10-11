@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/temp/tpl003/css/new_file.css"/>
+    <script src="/static/layui/layui.all.js"></script>
+</head>
+<body>
+<div class="img_box">
+    <img id="p1"/>
+    <div class="form_img">
+        <form>
+            <input style="margin-bottom: 5px;" type="text" name="name" id="name" placeholder="请输入机构名"/>
+            <input type="text" name="mobile" id="tel" placeholder="请输入手机号"/>
+        </form>
+        {if isset($actid)}
+        <a id="subname" href="javascript:receive('{$actid}','{$userid}')">领取免费体验课</a>
+        {else /}
+        <a id="subname" href="javascript:void(0)">领取免费体验课</a>
+        {/if}
+        <p>点击上面领取按钮表示您已同意《用户协议》和《隐私声明》</p>
+    </div>
+    <img id="p3"/>
+
+</div>
+<div>
+    <p style="text-align: center;background: #c9cccf">技术支持 By <a href="javascript:void(0)"> 爱学学 </a></p>
+</div>
+<script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+<script>
+    var price = 0;
+    $(function () {
+
+//使用getJSON方法读取json数据,
+//注意：info.json可以是不同类型文件，只要其中的数据为json类型即可
+            {if isset($myid)}
+            var url = "{:url('showtpl/get_json_res')}?myid={$myid}";
+            {elseif isset($actid)}
+            var url = "{:url('showtpl/get_json_release')}?actid={$actid}";
+            {else/}
+            var url = "{:url('showtpl/get_json_res_tplmgmt')}?tplid={$tplid}";
+            {/if}
+
+            $.getJSON(url, function (data) {
+                console.log(data)
+                console.log(data.data[0].p2.value)
+                $("#subname").text(data.data[0].subname.value);
+                $("#name").attr('placeholder', data.data[0].name.value);
+                $("#tel").attr('placeholder', data.data[0].tel.value);
+                $('#p1').attr("src", data.data[0].p1.value);
+                $('.form_img').css('background-image', "url(" + data.data[0].p2.value + ")");
+                $('#p3').attr("src", data.data[0].p3.value);
+                $('title').text(data.public.title.value)
+                price = data.public.price.value;
+            })
+        }
+    );
+    function receive(actid,userid) {
+        var mobile = $('[name="mobile"]').val();
+        if (!/^1[34578]\d{9}$/.test(mobile)) {
+            layer.alert('请输入正确的手机号');
+            return false;
+        }
+        var title = $('#name').val();
+        if (title == '') {
+            layer.alert('请输入机构名称');
+            return false;
+        }
+        $.post('/marketing/advanced/resource', {mobile: mobile, title: title,userid:userid}, function (res) {
+            if (res.code) {
+                var return_url = '{:url("showtpl/activeBack")}?actid='+actid+'&uid='+res.data.id+'&userid='+res.data.userid;
+                if (price > 0){
+                    setTimeout(function () {
+                        var title = $('title').html();
+                        window.location.href = '/wechat/pay.show/index.html?' + 'aid=' + actid + '&cid=' + res.data.id + '&title=' + title
+                            + "&body=" + title + '&price='+price+'&return_url='+ encodeURIComponent(return_url);
+                    }, 3000)
+                } else {
+                    layer.alert(res.msg, {
+                        icon: 6,
+                        skin: 'layui-layer-lan' //样式类名
+                        , closeBtn: 0
+                    }, function (index) {
+                        layer.close(index);
+                        window.location.href = return_url;
+                    });
+                }
+            } else {
+                layer.msg(res.msg, {icon: 5})
+            }
+        })
+    }
+</script>
+</body>
+</html>

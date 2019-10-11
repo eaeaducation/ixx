@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <title>{block name="title"}{$title|default=''}{if !empty($title)} · {/if}{:sysconf('site_name')}{/block}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="{:sysconf('browser_icon')}" rel="shortcut icon">
+    <link href="{:sysconf('browser_icon')}" rel="apple-touch-icon-precomposed">
+    <link href="__STATIC__/plugs/awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="__STATIC__/plugs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/plugs/layui/css/layui.css" rel="stylesheet">
+    <link href="__STATIC__/theme/css/console.css" rel="stylesheet">
+    <link href="__STATIC__/theme/css/animate.css" rel="stylesheet">
+    <link href="__STATIC__/plugs/adminlte/css/AdminLTE.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0c0026;
+        }
+
+        .layui-card-body {
+            padding: 10px;
+            background-color: #0c0026;
+        }
+
+        .row {
+            background-color: #0c0026;
+        }
+
+        .col-md-3 {
+            background-color: #0c0026
+        }
+
+        .col-sm-6 {
+            background-color: #0c0026
+        }
+
+        .col-xs-12 {
+            background-color: #0c0026
+        }
+
+        .info-box {
+            background-color: #0c0026;
+            border: 1px solid #260c5a;
+            height: 35rem;
+            margin-top: 20px;
+            box-shadow: 0 0 0 0;
+            color: #fff;
+        }
+
+        .layui-card-header {
+            border-bottom: 0;
+            color: #fff;
+        }
+
+        #order {
+            padding-left: 8px;
+        }
+
+        #total {
+            font-size: 40px;
+            text-align: center;
+        }
+
+        #standard {
+            font-size: 10px;
+            float: right;
+            margin-right: 55px;
+        }
+
+        .box-sm {
+            width: 30%;
+            margin-left: 10%;
+            font-size: 16px;
+        }
+
+    </style>
+    <script>window.ROOT_URL = '__ROOT__';</script>
+    <script src="__STATIC__/plugs/jquery/pace.min.js"></script>
+    <script src="__STATIC__/plugs/layui/layui.all.js"></script>
+    <script src="__STATIC__/admin.js"></script>
+    <script src="__STATIC__/plugs/require/require.js"></script>
+    <script src="__STATIC__/app.js"></script>
+    <script language="javascript" type="text/javascript">
+        //时间走动
+        function TimeRun() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;//月份少1
+            var date = now.getDate();
+            var week = "星期" + "日一二三四五六".split(/(?!\b)/)[now.getDay()];
+            var hours = now.getHours();
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            var minutes = now.getMinutes();
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            var seconds = now.getSeconds();
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            var nowTime = year + "年" + month + "月" + date + "日  " + week + "   " + hours + ":" + minutes + ":" + seconds;
+            var div1 = document.getElementById("div1");
+            div1.innerHTML = "<h4  style=';font-family:collegiateHeavyOutline;'color='#fff';>" + nowTime + "</h4>";
+//setInterval("TimeRun()",1000);//不要放到函数中，否则就是个死循环
+        }
+        setInterval("TimeRun()", 1000);//每1000毫秒调用一次函数
+    </script>
+</head>
+<body class="framework mini">
+<div class="row">
+    <h2 style="color: #1295f3;font-size:40px;text-align: center;margin-top: 2%;font-weight: bold;">实时运营数据情况</h2>
+</div>
+<div class="row" onload="TimeRun()">
+    <h3 id="div1" style="color: #fff;text-align: left;margin: 1% 2%;"></h3>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div style="" class="info-box">
+            <div class="layui-card-header"><span class="fa fa-pie-chart   font-icon">&nbsp;&nbsp;新增客户</span></div>
+            <div id="main1" style="width: 100%;height: 30rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header">
+                <span class="fa fa-bar-chart-o   font-icon">&nbsp;&nbsp;收款</span>
+                <span style="margin-right: 30px; float: right;">签单次数<b id="order"></b></span>
+                <p id="total"><span id="money"></span><span id="standard">标准  <b></b></span></p>
+            </div>
+
+            <div id="main2" style="width: 100%;height: 25rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header"><span class="fa fa-pie-chart   font-icon">&nbsp;&nbsp;报名缴费统计</span></div>
+            <div class="box-sm" style="float: left">
+                新签:<span style="color:#166bbf;padding-left: 2rem;" id="new_proportion">0%</span>
+                <br> ￥<span style="color: #e3a90d;margin: 0 4%" id="new_order"></span>元
+            </div>
+            <div class="box-sm" style="float: right">
+                续费:<span style="color:#166bbf;padding-left: 2rem;" id="old_proportion">0%</span>
+                <br> ￥<span style="color: #e3a90d;margin: 0 4%" id="old_order"></span>元
+            </div>
+            <div style="clear:both;margin-bottom: 5%"></div>
+
+            <div id="main3" style="width: 100%;height: 25rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header"><span class="fa fa-bar-chart-o   font-icon">&nbsp;&nbsp;销售人员业绩</span></div>
+            <div id="main4" style="width: 100%;height: 28rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header"><span class="fa fa-bar-chart-o   font-icon">&nbsp;&nbsp;待办事项</span></div>
+            <div id="main5" style="width: 100%;height: 30rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header"><span class="fa fa-bar-chart-o   font-icon">&nbsp;&nbsp;校区数据</span></div>
+            <div id="main6" style="width: 100%;height: 28rem;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div id="main7_2" style="width: 100%;height: 50%;padding-top: 5%"></div>
+            <div id="main7" style="width: 100%;height: 50%;"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <div class="layui-card-header"><span class="fa fa-bar-chart-o   font-icon">&nbsp;&nbsp;近60天全部销售跟进量</span>
+            </div>
+            <div id="main8" style="width: 100%;height: 30rem"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/plugs/countdown/countdown.js"></script>
+<script type="text/javascript">
+    window.form.render();
+    require(['echarts'], function () {
+        // 基于准备好的dom，初始化echarts实例
+        var echarts = require('echarts');
+        var myChart1 = echarts.init(document.getElementById('main1'));
+        var myChart2 = echarts.init(document.getElementById('main2'));
+        var myChart3 = echarts.init(document.getElementById('main3'));
+        var myChart4 = echarts.init(document.getElementById('main4'));
+        var myChart5 = echarts.init(document.getElementById('main5'));
+        var myChart6 = echarts.init(document.getElementById('main6'));
+        var myChart7 = echarts.init(document.getElementById('main7'));
+        var myChart7_2 = echarts.init(document.getElementById('main7_2'));
+        var myChart8 = echarts.init(document.getElementById('main8'));
+        var branch = $('[name="branch"] option:selected').val();
+        // 指定图表的配置项和数据
+        option1 = {
+            aria: {
+                show: true
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            color: ["#FFBF0A", "#034CC3", "#9C04FF", "#00bd8d", "#e00252", "#01b5d3", "#fff"],
+            legend: {
+                orient: 'vertical',
+                x: "25%",
+                y: "85%",
+                //  data: data.key,
+                data: [],
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            series: {
+                name: '营销渠道',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: true,
+                labelLine: {
+                    formatter: "{a} <br/>{b}: {c} ({d}%)",
+                    normal: {
+                        show: true,
+                        length: 40,
+                        length2: 20,
+                        lineStyle: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                label: {},
+                // data: data.value
+                data: []
+            }
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        setInterval(function () {
+            $.post('{:url("$classuri/customer_data")}', {branch: branch}, function (data) {
+                option1.series.data = data.value;
+                option1.legend.data = data.key;
+                myChart1.setOption(option1, true);
+            });
+        }, 3000);
+
+        option2 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true,
+                y2: 140
+            },
+            xAxis: {
+                type: 'category',
+                //  data: res.status,
+                data: [],
+                axisTick: {
+                    alignWithLabel: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#37a8af',//坐标值得具体的颜色
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#fff'
+                    }
+                }
+            },
+            yAxis: [
+                {
+                    name: '跟进客户状态',
+                    type: 'value',
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#1c133e",
+                            width: 2,
+                            type: 'solid'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff'
+                        }
+                    }
+                }
+            ],
+            series: {
+                name: '人数/人',
+                type: 'bar',
+                barWidth: '40%',
+                data: [],
+                itemStyle: {
+                    //通常情况下：
+                    normal: {
+                        //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        color: function (params) {
+                            var colorList = ["#FFBF0A", "#034CC3", "#9C04FF", "#00bd8d", "#e00252", "#01b5d3","#FFBF0A"];
+                            return colorList[params.dataIndex];
+                        }
+                    }
+                }
+            }
+
+        };
+
+        setInterval(function () {
+            $.post('{:url("$classuri/follow")}', {branch: branch}, function (res) {
+                option2.series.data = res.data;
+                option2.xAxis.data = res.status;
+                myChart2.setOption(option2, true);
+                $('#order').html(res.order);
+                $('#total #money').html('￥' + res.total);
+                $('#standard b').html(res.per)
+            });
+        }, 3000);
+
+
+        option3 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#fff'
+                    }
+                }
+            },
+            legend: {
+                data: ['收款量/万元', '报名量/人'],
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: [],
+                axisPointer: {
+                    type: 'shadow',
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            }
+            ,
+            yAxis: [
+                {
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#1c133e",
+                            width: 2,
+                            type: 'solid'
+                        }
+                    },
+                    type: 'value',
+                    min: 0,
+                    //  max: 250,
+                    //   interval: 50,
+                    axisLabel: {
+                        formatter: function (value) {
+                            value = value / 10000 + "万";
+                            return value;
+                        },
+                        textStyle: {
+                            color: '#fff'//坐标值得具体的颜色
+                        }
+                    }
+                },
+                {
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#1c135f",
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    type: 'value',
+                    //  name: '',
+                    min: 0,
+                    // max: 25,
+                    //   interval: 5,
+                    axisLabel: {
+                        formatter: '{value}',
+                        textStyle: {
+                            color: '#fff'//坐标值得具体的颜色
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '收款量/万元',
+                    type: 'bar',
+                    data: [],
+                    itemStyle: {
+                        //通常情况下：
+                        normal: {
+                            //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                            color: "#03eeff"
+
+                        }
+                    }
+
+                },
+                {
+                    name: '报名量/人',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data: [],
+                    itemStyle: {
+                        //通常情况下：
+                        normal: {
+                            //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                            color: "#034cc3"
+                        }
+                    }
+                }
+            ]
+        };
+        setInterval(function () {
+            $.post('{:url("$classuri/branch_cost")}', {branch: branch}, function (res) {
+                option3.series[0].data = res.total;
+                option3.series[1].data = res.count;
+                option3.xAxis.data = res.branch;
+                myChart3.setOption(option3, true);
+                $("#new_order").text(res.new_order);
+                $("#old_order").text(res.old_order);
+                var sum = parseFloat(res.new_order) + parseFloat(res.old_order);
+                var new_proportion = parseFloat(res.new_order) / sum * 100;
+                var old_proportion = parseFloat(res.old_order) / sum * 100;
+                $("#new_proportion").text(new_proportion.toFixed(2) + "%");
+                $("#old_proportion").text(old_proportion.toFixed(2) + "%");
+            });
+        }, 3000);
+
+        option4 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#1c133e",
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                type: 'value',
+                boundaryGap: [0, 0.01],
+                axisLabel: {
+                    formatter: function (value) {
+                        value = value / 10000 + "万";
+                        return value;
+                    },
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                // data: e.name,
+                data: [],
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            },
+            series: {
+                name: '销售额/元',
+                barWidth: '20%',
+                type: 'bar',
+                data: [],
+                itemStyle: {
+                    //通常情况下：
+                    normal: {
+                        //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        color: "#01b5d3"
+                    }
+                }
+            }
+
+        };
+
+        setInterval(function () {
+            $.post('{:url("$classuri/sale")}', {branch: branch}, function (e) {
+                option4.series.data = e.data;
+                option4.yAxis.data = e.name;
+                myChart4.setOption(option4, true);
+
+            });
+        }, 3000);
+
+
+        option5 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ["未付款", "待续费", "待跟进"],
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+
+            },
+            yAxis: {
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#1c133e",
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                type: 'value',
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            },
+            series: {
+                data: ['', '', ''],
+                type: 'bar',
+                itemStyle: {
+                    //通常情况下：
+                    normal: {
+                        //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        color: function (params) {
+                            var colorList = ["#FFBF0A", "#034CC3", "#9C04FF", "#00bd8d", "#e00252", "#01b5d3"];
+                            return colorList[params.dataIndex];
+                        }
+                    }
+                }
+            }
+        };
+        setInterval(function () {
+            $.post('{:url("$classuri/Continued")}', {branch: branch}, function (res) {
+                option5.series.data[0] = res.nopay_num;
+                option5.series.data [1] = res.comingSoon_num;
+                option5.series.data [2] = res.fallow;
+                myChart5.setOption(option5, true);
+            });
+        }, 3000);
+
+
+        option7 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            xAxis: {
+                name: '日期',
+                type: 'category',
+                data: [],
+                axisLine: {
+                    lineStyle: {
+                        color: '#fff'
+                    }
+                },
+                axisLabel: {
+                    axisLabel: {
+                        textStyle: {
+                            color: '#fff'//坐标值得具体的颜色
+                        }
+                    },
+                    interval: 0,
+                    rotate: 60
+                }
+
+            },
+            yAxis: {
+                name: '全馆报名人数/人',
+                axisLine: {
+                    lineStyle: {
+                        color: '#fff'
+                    }
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#1c133e",
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                type: 'value',
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            },
+            series: {
+                //  data: res.data,
+                data: [],
+                type: 'bar',
+                itemStyle: {
+                    //通常情况下：
+                    normal: {
+                        //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        color: "#FFBF0A"
+                    }
+                }
+            }
+        };
+        option7_2 = {
+            title: {
+                text: '近7天报名统计'
+                , textStyle: {
+                    color: "#fff"
+                    , fontSize: 14
+                }
+            },
+            tooltip: {},
+            radar: {
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        borderRadius: 100,
+                        padding: [-10, 5]
+                    }
+                },
+                // indicator: res.branch,
+                indicator: '',
+                axisLine: {            // 坐标轴线
+
+                    show: true,      // 默认显示，属性show控制显示与否
+                    lineStyle: {
+                        width: 1,
+                        color: '#0341c4',// 图表背景网格线的颜色
+                        type: 'dashed'
+                    }
+
+                },
+                splitArea: {
+                    show: false
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        width: 1,
+                        color: '#0341c4',// 图表背景网格线的颜色
+                        type: 'dashed'
+                    }
+                }
+            },
+
+            series: {
+                type: 'radar',
+                symbol: "none",
+                itemStyle: {
+                    normal: {
+                        color: "rgba(0,0,0,0)",
+
+                        lineStyle: {
+                            color: "0341c4" // 图表中各个图区域的边框线颜色
+
+                        }
+                    }
+                },
+                splitLine: {
+                    color: "#fff"
+                },
+                areaStyle: {
+                    normal: {
+                        color: "#0341c4"
+
+
+                    }
+
+                },
+                data: [
+                    {
+                        // value: res.count,
+                        value: "",
+                        name: '报名人数'
+                    }
+                ]
+
+            }
+        };
+
+        setInterval(function () {
+            $.post('{:url("$classuri/sign_up_7day")}', {branch: branch}, function (res) {
+                option7.xAxis.data = res.date;
+                option7.series.data = res.data;
+
+                option7_2.radar.indicator = res.branch;
+                option7_2.series.data[0].value = res.count;
+                myChart7.setOption(option7, true);
+                myChart7_2.setOption(option7_2, true);
+            });
+        }, 3000);
+
+
+        option6 = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
+            },
+            legend: {
+                data: ['学员数', '科目'],
+                textStyle: {
+                    color: '#fff'          // 图例文字颜色
+                }
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 60,
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                },
+                //  data: e.branch
+                data: []
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '学员数',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#fff'//坐标值得具体的颜色
+                        }
+
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#1c133e",
+                            width: 2,
+                            type: 'solid'
+                        }
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '科目',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    min: 0,
+                    axisLabel: {
+                        textStyle: {
+                            color: '#fff'//坐标值得具体的颜色
+                        }
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#1c133e",
+                            width: 2,
+                            type: 'solid'
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '学员数',
+                    type: 'line',
+                    //  data: e.stu,
+                    data: [],
+                    itemStyle: {
+                        //通常情况下：
+                        normal: {
+                            //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                            color: "#FFBF0A"
+
+                        }
+                    }
+                },
+                {
+                    name: '科目',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    //  data: e.cou,
+                    data: [],
+                    itemStyle: {
+                        //通常情况下：
+                        normal: {
+                            //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                            color: "#00bd8d"
+
+                        }
+                    }
+                }
+            ]
+        };
+
+        setInterval(function () {
+            $.post('{:url("$classuri/course")}', function (e) {
+                option6.xAxis.data = e.branch;
+                option6.series[0].data = e.stu;
+                option6.series[1].data = e.cou;
+                myChart6.setOption(option6, true);
+
+            });
+        }, 3000);
+
+        //  $.post('{:url("$classuri/get_follow")}', function (res) {
+        option8 = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{a} <br/>{b} : {c}条'
+
+
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    interval: 5,
+                    rotate: 60,
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                },
+                //data: res.days
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#1c133e",
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'//坐标值得具体的颜色
+                    }
+                }
+            },
+            series: {
+                title: "销售电跟进量",
+                name: '销售电跟进量',
+                symbol: 'none',  //这句就是去掉点的
+                smooth: true,  //这句就是让曲线变平滑的
+                type: 'line',
+                stack: '总量',
+                // data: res.nums,
+                data: [],
+                fillerColor: "red",
+                areaStyle: {
+                    color: "#0a3051"
+                },
+
+                itemStyle: {
+                    normal: {
+                        lineStyle: {
+                            color: '#06a2ba'
+                        }
+                    }
+                }
+
+
+            }
+        };
+        setInterval(function () {
+            $.post('{:url("$classuri/get_follow")}', function (res) {
+
+                option8.series.data = res.nums;
+                option8.xAxis.data = res.days;
+                myChart8.setOption(option8, true);
+            });
+        }, 3000);
+    })
+
+
+</script>
+</body>
+</html>
+
+

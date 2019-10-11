@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>很抱歉，抢购失败</title>
+</head>
+
+<body>
+</body>
+<script src="/static/plugs/jquery/jquery.min.js"></script>
+<script src="/static/plugs/layer_mobile/layer.js"></script>
+<script>
+    $(function () {
+        layer.open({
+            content: '<b style="font-size: 18px">'+'秒杀已结束'+'<br>'+'感谢您的参与'+'</b>',
+            btn: '抱歉',
+            style: 'background-color:#fbc000; color:#000;', //自定风格
+            yes: function(){
+                window.location.href = '/home/introduction/index'
+            }
+        });
+    })
+</script>
+</html>

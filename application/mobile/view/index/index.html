@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>用户中心</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css"/>
+</head>
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>用户中心</h1>
+</header>
+<div class="hui-wrap">
+    <div class="hui-list" style="background:#FFFFFF; margin-top:28px;">
+        <a href="" style="height:auto; height:80px; padding-bottom:8px;">
+            <div class="hui-list-icons" style="width:110px; height:80px;">
+                <img src="{$user.employee['avatar']}" onerror=this.src="/static/extend_res/mobile/img/list/home.png"
+                     style="width:66px; margin:0px; border-radius:50%;"/>
+            </div>
+            <div class="hui-list-text" style="height:79px; line-height:79px;">
+                <div class="hui-list-text-content">
+                    {$user.employee['name']}
+                </div>
+                <div class="hui-list-info">
+                    <span class="hui-icons hui-icons-right"></span>
+                </div>
+            </div>
+        </a>
+        <a href="">
+            <div class="hui-list-text" style="display: block">
+                <p style="text-align: center">用户身份 : {$user.authorize|convert_auth_title}</p>
+            </div>
+        </a>
+    </div>
+    <div class="hui-list" style="background:#FFFFFF; margin-top:28px;">
+        <ul>
+            <li>
+                <a href="{:url('mobile/customerlist/index')}">
+                    <div class="hui-list-icons">
+                        <img src="/static/extend_res/mobile/img/list/order.png"/>
+                    </div>
+                    <div class="hui-list-text">
+                        客户列表
+                        <div class="hui-list-info">
+                            <span class="hui-icons hui-icons-right"></span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="{:url('customer_add')}">
+                    <div class="hui-list-icons">
+                        <img src="/static/extend_res/mobile/img/list/sc.png"/>
+                    </div>
+                    <div class="hui-list-text">
+                        添加客户
+                        <div class="hui-list-info">
+                            <span class="hui-icons hui-icons-right"></span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div style="background:#FFFFFF; margin-top:28px;">
+        <a href="{:url('Login/out')}" type="button" class="hui-button hui-button-large" onclick="hui.toast('正在退出...');">
+            <span class="hui-icons hui-icons-logoff"></span>退出系统
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui.js" charset="UTF-8"></script>
+</body>
+</html>

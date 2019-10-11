@@ -1,0 +1,95 @@
+﻿* {
+	margin: 0;
+	padding: 0;
+}
+
+.clearfix:after {
+	content: '';
+	display: table;
+	width: 100%;
+	clear: both;
+}
+
+.myModa {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.4);
+}
+
+.myModa .myAlert{
+	width: 90%;
+	height: 300px;
+	background: url(../images/alert_bg.png) no-repeat;
+	background-size: 100% 100%;
+	margin: auto;
+	text-align: center;
+	color: #fff;
+}
+
+.myModa .myAlertBox {
+	
+	position: relative;
+	padding: 80px 0;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.myModa .myAlertBox img{
+	width: 100%;
+}
+
+.myModa .myAlertBox h6 {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 18px;
+    padding: 0 70px;
+    font-weight: 100;
+}
+
+.myModa .myAlertBox p {
+	padding: 20px;
+	line-height: 26px;
+	font-size: 14px;
+	color: #808080;
+	margin: 24% 16%;
+}
+
+.myModa .myAlertBox .btn.sure {
+    width: 41%;
+    height: 54px;
+    margin: 0 auto;
+    background: url(../images/sure_btn.png) no-repeat;
+	background-size: 100%;
+	margin-top: 22px;
+}
+
+.btn.exit {
+    position: absolute;
+    right: 0;
+    top: 2%;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background: #f72722;
+    text-align: center;
+    line-height: 25px;
+}
+
+
+
+.myToast {
+	position: fixed;
+	display: inline-block;
+	padding: 5px 10px;
+	line-height: 24px;
+	font-size: 14px;
+	color: #fff;
+	background: #000;
+	max-width: 300px;
+	_width: expression(this.offsetWidth >300 ? '300px': 'auto');
+	*width: expression(this.offsetWidth >300 ? '300px': 'auto');
+	border-radius: 5px;
+}

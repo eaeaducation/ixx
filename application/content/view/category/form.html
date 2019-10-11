@@ -1,0 +1,54 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="{:request()->url()}" data-auto="true" method="post">
+    {:getSelectList($menus,'pid','id','name','上级栏目',$vo.pid,true)}
+    <div class="layui-form-item">
+        <label class="layui-form-label">应用类型</label>
+        <div class='layui-input-block'>
+            {if isset($vo.type) && !empty($vo.type)}
+            <input type="radio" name="type"  value="1" title="PC端" style="display: none !important;" required {if $vo.type eq 1}checked{/if}>
+            <input type="radio" name="type"  value="2" title="移动端" style="display: none !important;" required {if $vo.type eq 2}checked{/if}>
+            <input type="radio" name="type"  value="3" title="商城" style="display: none !important;" required {if $vo.type eq 3}checked{/if}>
+            {else}
+            <input type="radio" name="type"  value="1" title="PC端" checked style="display: none !important;" required>
+            <input type="radio" name="type"  value="2" title="移动端" style="display: none !important;" required>
+            <input type="radio" name="type"  value="3" title="商城" style="display: none !important;" required>
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" value='{$vo.name|default=""}' required="required" title="请输入分类名称"
+                   placeholder="请输入分类名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" title="请输入排序" placeholder="请输入排序" value="{$vo.sort|default='0'}"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题图</label>
+        <div class='col-sm-8'>
+            <img data-tips-image style="height:auto;max-height:35px;min-width:35px" src="{$vo.thumb|default=''}"/>
+            <input type="hidden" name="thumb" onchange="$(this).prev('img').attr('src', this.value)"
+                   value="{$vo.thumb|default=''}" class="layui-input">
+            <a class="btn btn-link text-center" data-file="one" data-type="png" data-field="thumb">上传图片</a>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+    <script>
+        window.form.render();
+    </script>
+</form>

@@ -1,0 +1,22 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        .hui-header {background: #00255a; height: unset; display: flex}
+        .header h1{color: #fff;padding: 0 1rem; font-size: 17px;line-height: 2.2rem;}
+        .hui-img-list {margin: 17% 0;}
+        .hui-footer-icon img{width: 30%;}
+        .hui-footer-icon {text-align: center;}
+        .hui-footer-text {padding-top: unset;}
+        .back {z-index:2;position:absolute;height:3.2rem;padding-left:1.5rem;background:url(/static/home/shop/images/product/back1.png) no-repeat .75rem center;background-size:auto 1.2rem;width:.5rem;}
+    </style>
+{/block}
+{block name="body"}
+<header class="hui-header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em style="color: #fff;">低龄留学</em></h1>
+</header>
+<div class="hui-img-list">
+    <img onerror="error_img(this)" src="{$image.thumb}" />
+</div>
+{include file='public:footer'}
+{/block}

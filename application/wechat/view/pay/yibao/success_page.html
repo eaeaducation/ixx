@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {if $success}
+    <title>支付成功</title>
+    {else}
+    <title>支付失败</title>
+    {/if}
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/static/plugs/jquery-weui/lib/weui.min.css">
+    <link rel="stylesheet" href="/static/plugs/jquery-weui/css/jquery-weui.min.css">
+</head>
+<body ontouchstart>
+<div class="weui-msg">
+    <div class="weui-msg__icon-area">
+        {if $success}
+        <i class="weui-icon-success weui-icon_msg"></i>
+        {else}
+        <i class="weui-icon-warn weui-icon_msg"></i>
+        {/if}
+    </div>
+    <div class="weui-msg__text-area">
+        {if $success}
+        <h2 class="weui-msg__title">支付成功</h2>
+        {else}
+        <h2 class="weui-msg__title">支付失败</h2>
+        {/if}
+    </div>
+    <div class="weui-msg__opr-area">
+        {if $success && isset($order.return_url)}
+        <p class="weui-btn-area">
+            <a href="{$order.return_url}" class="weui-btn weui-btn_primary">返回</a>
+        </p>
+        {/if}
+    </div>
+    <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+        </p>
+    </div>
+</div>
+<script src="/static/plugs/jquery-weui/lib/fastclick.js"></script>
+<script src="/static/plugs/jquery-weui/lib/jquery-2.1.4.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body)
+    });
+</script>
+</body>
+</html>

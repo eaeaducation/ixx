@@ -1,0 +1,40 @@
+{
+  "tplname": "test1",
+  "pages": 3,
+  "logo":"http",
+  "data":[
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl002/images/bg1.png","type":"pic"},
+      "title_img":{"name":"标题背景","value":"/static/temp/tpl002/images/z1_title.png","type":"pic"},
+      "title":{"name":"主标题","value":"黑哥伯爵","type":"text"},
+      "Subtitle":{"name":"副标题","value":"欢迎访问黑格伯爵","type":"text"},
+      "content":{"name":"内容","value":"时间:2018年6月-8月","type":"text"},
+      "foot_left":{"name":"左边小图","value":"/static/temp/tpl002/images/z1_foot_left.png","type":"pic"},
+      "foot_right":{"name":"右边小图","value":"/static/temp/tpl002/images/z1_foot_right.png","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl002/images/bg2.png","type":"pic"},
+      "title_img":{"name":"标题背景","value":"/static/temp/tpl002/images/z2_title.png","type":"pic"},
+      "title":{"name":"主标题","value":"黑格伯爵简介","type":"text"},
+      "content":{"name":"内容","value":"黑格伯爵品牌创立于2012年，由黑格伯爵青少年国际公馆、黑格伯爵国际贵族幼儿园、黑格伯爵国际英语贵族学校等组成，以“在生活中学习，在学习中生活”为教育理念，引进并整合以加拿大为代表的先进教育理念、教育资源、教育形式等，将加拿大先进的教学方式与中国孩子现状做结合，为孩子提供实用性、趣味性、贵族化、国际化的精英教育，旨在为社会培养国际化的高素质人才。","type":"text"},
+      "z2_img":{"name":"内容图","value":"/static/temp/tpl002/images/hgbj.jpg","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl002/images/bg3.png","type":"pic"},
+      "title_img":{"name":"标题背景","value":"/static/temp/tpl002/images/z3_title.png","type":"pic"},
+      "title":{"name":"主标题","value":"免费领取体验课","type":"text"},
+      "content":{"name":"内容","value":"一对一欧美私教，根据自己喜好选择专属或不专属老师，劳师均拥有教师资格证，拥有丰富的教学经验。让老师和孩子成为好朋友，家长再也不用抢老师！","type":"text"},
+      "z3_img":{"name":"内容图","value":"/static/temp/tpl002/images/about_img.png","type":"pic"}
+    },
+    {
+      "background":{"name":"背景图","value":"/static/temp/tpl002/images/bg4.png","type":"pic"},
+      "title_img":{"name":"标题背景","value":"/static/temp/tpl002/images/z4_title.png","type":"pic"},
+      "title":{"name":"主标题","value":"联系我们","type":"text"},
+      "content1":{"name":"内容1","value":"地址:西安市高新区高新二路i创途众创空间","type":"text"},
+      "content2":{"name":"内容2","value":"电话:400-6692-620","type":"text"},
+      "z4_img":{"name":"内容图","value":"/static/temp/tpl002/images/ewm.png","type":"pic"},
+      "foot_img":{"name":"底部图","value":"/static/temp/tpl002/images/z4_foot.png","type":"pic"},
+      "isShow":{"name":"是否显示表单","value":"1","type":"radio"}
+    }
+  ]
+}

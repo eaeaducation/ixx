@@ -1,0 +1,75 @@
+{extend name='admin@public/content'}
+{block name="content"}
+<style>
+    .content_box {
+        width: 80%;
+        margin: 0 auto;
+    }
+</style>
+<form class="layui-form layui-box content_box" action="{:request()->url()}" data-auto="true"
+      method="post">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+        <legend>审批详情</legend>
+    </fieldset>
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr class="text-center">
+            <th>日志编写人</th>
+            <th>日志查收人</th>
+            <th>审批内容</th>
+            <th>审批状态</th>
+            <th>申请时间</th>
+            <th>回复时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $content as $value}
+        <tr>
+            <td>{$vo.from_user|get_employee_name}</td>
+            <td>{$value.to_user|get_employee_name}</td>
+            <td>{:htmlspecialchars_decode($value.content)}</td>
+            {if $value.is_pass==1}
+            <td class="text-center"><span class="color-green">已通过</span></td>
+            {elseif $value.is_pass==2/}
+            <td class="text-center"><span class="color-red">已驳回</span></td>
+            {else/}
+            <td class="text-center"><span class="color-blue">审核中</span></td>
+            {/if}
+            <td>{$value.created_at|format_time}</td>
+            <td>{$value.created_at|format_time}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {foreach $content as $item}
+    {if $item['to_user'] == session('user.employee.id') && $item['is_pass'] == 0}
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+        <legend>审批回复</legend>
+    </fieldset>
+    <div>
+        <textarea name="content"></textarea>
+    </div>
+    <div class="layui-form-item text-center" style="margin-top: 3%">
+        <input type="hidden" name="s_id" value="{$vo.id}">
+        <input type="hidden" name="to_userid" value="{:session('user.employee.id')}">
+        <button class="layui-btn" id="pass" type='submit'>通过</button>
+        <button class="layui-btn" id="nopass" type='submit'>驳回</button>
+    </div>
+    {/if}
+    {/foreach}
+    <div style="margin-bottom: 2%">&nbsp;</div>
+</form>
+<script>
+    window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
+    /*! 实例富文本编辑器  */
+    require(['ckeditor'], function () {
+        window.createEditor('[name="content"]', {height: 200});
+    });
+    $("#pass").on('click', function () {
+        $("#pass").append('<input type="hidden" name="is_pass" value="1">')
+    });
+    $("#nopass").on('click', function () {
+        $("#nopass").append('<input type="hidden" name="is_pass" value="2">')
+    })
+</script>
+{/block}

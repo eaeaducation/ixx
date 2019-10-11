@@ -1,0 +1,50 @@
+{extend name='admin@public/content'}
+{block name="content"}
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label label-required">活动名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请填写活动标题"
+                   placeholder="请填写活动名称" class="layui-input" maxlength="128">
+            <p class="help-block">请填写活动名称</p>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label label-required">描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="content" value='{$vo.content|default=""}' required="required" title="请填写活动描述"
+                   placeholder="请填写活动描述" class="layui-input" maxlength="128">
+            <p class="help-block">请30个字左右描述</p>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label label-required">完成条件</label>
+        <div class="layui-input-block">
+            <input type="text" name="condition" value='{$vo.condition|default=""}' required="required" title="请填写完成条件"
+                   placeholder="请填写完成条件,单位:人" class="layui-input" maxlength="128">
+            <p class="help-block">例如满足条件是5人,请填写5</p>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">奖品</label>
+        <div class="layui-input-block">
+            <input type="text" name="prize" value='{$vo.prize|default=""}' required="required" title="请填写满足条件后的奖品"
+                   placeholder="请填写满足条件后的奖品" class="layui-input" maxlength="128">
+            <p class="help-block">请简单描述奖品</p>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="created_at" value="{:time()}">
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+    </div>
+
+</form>
+{/block}

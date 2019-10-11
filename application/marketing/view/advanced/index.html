@@ -1,0 +1,85 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/add")}' data-title="添加客户"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加客户
+</button>
+<!--{/if}-->
+{/block}
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">关键字</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" value="{$Think.get.keyword|default=''}" name="keyword"
+                   placeholder="请输入关键字   ">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">注册时间</label>
+        <div class="layui-input-inline">
+            <input name="created_at" id="create_at" value="{$Think.get.create_at}" placeholder="请选择发布时间"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    window.laydate.render({range: true, elem: '#create_at'});
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">姓名</th>
+            <th class="text-center">性别</th>
+            <th class="text-center">联系电话</th>
+            <th class="text-center">机构名称</th>
+            <th class="text-center">地址</th>
+            <th class="text-center">注册时间</th>
+            <th class="text-center"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center">{$vo.id}</td>
+            <td class="text-center text-nowrap">
+                    {$vo.name}
+            </td>
+            <td class="text-center text-nowrap">
+                {$vo.gender|convert_category=3|raw}
+            </td>
+            <td class="text-center">{$vo.tel}</td>
+            <td class="text-center">{$vo.company}</td>
+            <td class="text-center">{$vo.address}</td>
+            <td class="text-center">{$vo.created_at|date="Y-m-d H:i:s"}</td>
+            <td>
+                <!--{if auth("$classuri/edit")}-->
+                <span class="text-explode">|</span>
+                <a data-title="编辑" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                <!--{/if}-->
+                <!--{if auth("$classuri/del")}-->
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                <!--{/if}-->
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html class="expanded">
+<head>
+    <meta charset="utf-8"/>
+    <title>学员成绩信息</title>
+    <meta id="viewport" name="viewport"
+          content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="stylesheet" type="text/css" href="/static/admin/student_score/css/list.css"/>
+</head>
+<body>
+<nav class="m-top-title-nav">
+    <div class="top-title">
+        <h2>学员成绩信息</h2>
+    </div>
+</nav>
+{volist name="info" id="vo"}
+<div class="m-card my-info">
+    <div class="card-head">
+        <i class="icon-basic-info"></i>
+        <span class="card-title">{$vo.course_id|get_courses_title}</span>
+    </div>
+    <div class="info-item">
+        <div><span class="key">姓名</span><span class="val">{$vo.student_id|get_customer_name}</span></div>
+        <div><span class="key">班级</span><span class="val">{$vo.class}</span></div>
+        <div><span class="key">分数</span><span class="val" style="color: red;font-weight: bold">{$vo.score}分</span></div>
+        <div><span class="key">备注</span><span class="val">{$vo.remark|default=""}</span></div>
+    </div>
+
+</div>
+{/volist}
+
+<div class="m-row m-footer-row" id="J_footer">
+    <footer class="m-footer">
+        <div class="footer-text">
+            本项目由爱学学提供技术支持
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

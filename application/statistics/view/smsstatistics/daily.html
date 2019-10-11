@@ -1,0 +1,80 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div style="margin-left:1%;float: left;margin-right: 2%">
+        <div class="layui-btn-group">
+            <a class="layui-btn {eq name='Think.get.res' value='fp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+               data-open="{$classuri}/daily">
+               成功
+            </a>
+            <a class="layui-btn {eq name='Think.get.res' value='dfp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+               data-open="{$classuri}/daily?res=2">
+               失败
+            </a>
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">选择时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="选择时间" class="input-sm form-control">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">时间</th>
+            <th class="text-center">总条数</th>
+            <th class="text-center">消费金额</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.days}</td>
+            <td class="text-center text-nowrap">{$vo.counts}</td>
+            <td class="text-center text-nowrap">{:sum_money($vo.counts)}元</td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                if ((endDate - date) / 1000 / 86400 > 31) {
+                    $.msg.alert('最大时间范围为31天', function () {
+                        $('#time_range').val('')
+                    })
+                }
+            }
+        })
+    })
+</script>
+{/block}

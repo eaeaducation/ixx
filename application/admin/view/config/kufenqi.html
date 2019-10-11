@@ -1,0 +1,78 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+
+    <div class="hr-line-dashed"></div>
+    <div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                商户平台号
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="kfq_midplatform"
+                       value="{:sysconf('kfq_midplatform')}"
+                       title="请输入商户平台号" placeholder="请输入商户平台号" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                aes_key
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="kfq_aes_key" required="required"
+                       value="{:sysconf('kfq_aes_key')}"
+                       title="请输入aes_key" placeholder="请输入aes_key" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                md5_key
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="kfq_md5_key" required="required"
+                       value="{:sysconf('kfq_md5_key')}"
+                       title="请输入md5_key" placeholder="请输入请输入md5_key" class="layui-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                api地址
+            </label>
+            <div class='col-sm-8'>
+                <input type="text" name="kfq_api" required="required"
+                       value="{:sysconf('kfq_api')}"
+                       title="请输入api地址" placeholder="请输入商户api地址" class="layui-input">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">贴息</label>
+            <div class='col-sm-8'>
+                <select class="layui-input" name="kfq_discount" required="required">
+                {if sysconf('kfq_discount') == 1}
+                        <option value='1' selected>用户贴息</option>
+                        <option value='2'>商户贴息</option>
+                {else}
+                        <option value='1'>用户贴息</option>
+                        <option value='2' selected>商户贴息</option>
+                {/if}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="col-sm-4 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">保存配置</button>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script src="/static/plugs/layui/layui.all.js" charset="utf-8"></script>
+{/block}

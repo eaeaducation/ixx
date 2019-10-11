@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>支付失败</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body>
+
+<div class="payBox">
+    <img src="/static/home/pay/img/fail.png"/>
+    <p>{$msg}</p>
+</div>
+<a href="{:url('order/pay/paytype')}" class="weui-btn weui-btn_primary nextBtn next" style="margin-top: 5%; width: 50%">
+    返回支付首页
+</a>
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script>
+    $(function () {
+        $('.left-btn').click(function () {
+            history.back(-1);
+        })
+    });
+</script>
+</body>
+</html>

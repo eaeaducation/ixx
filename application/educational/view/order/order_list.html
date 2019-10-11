@@ -1,0 +1,160 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除订单
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="row">
+        <div style="margin-left:1%;margin-right:5%;float: left">
+            <div class="layui-btn-group">
+                <a class="layui-btn {eq name='Think.get.status' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/orderlist">
+                    全部
+                </a>
+                <a class="layui-btn {eq name='Think.get.status' value='4'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/orderlist?status=4">
+                    未付款
+                </a>
+                <a class="layui-btn {eq name='Think.get.status' value='5'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/orderlist?status=5">
+                    已付款
+                </a>
+                <a class="layui-btn {eq name='Think.get.status' value='6'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
+                   data-open="{$classuri}/orderlist?status=6">
+                    已退款
+                </a>
+            </div>
+        </div>
+        {if in_array(session('user.authorize'),[1,3,4])}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">校区</label>
+            <div class="layui-input-inline">
+                {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-inline">
+                {:get_class_select('class_id', $Think.get.class_id, '', [],false)}
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">订单编号</label>
+            <div class="layui-input-inline">
+                <input name="orderno" value="{$Think.get.orderno|default=''}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">学生姓名</label>
+            <div class="layui-input-inline">
+                <input name="name" value="{$Think.get.name|default=''}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">选择时间</label>
+            <div class="layui-input-inline">
+                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                       placeholder="选择时间" class="input-sm form-control">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>'
+        })
+    })
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>订单编号</th>
+            <th class='text-center'>姓名</th>
+            <th class="text-center">班级</th>
+            <th class="text-center">订单总计/元</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">支付方式</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">
+                <a data-open='{:url("$classuri/orderView")}?id={$vo.id}'>{$vo.orderno}</a></td>
+            <td class="text-center">{$vo.student_id|get_customer_name|raw}</td>
+            <td class="text-center">{$vo.class_id|convert_class|raw|default='<font style="color:red">未分班</font>'}</td>
+            <td class="text-center">￥{$vo.price}元</td>
+            <td class="text-center">{$vo.status|convert_category=35|raw}</td>
+            <td class="text-center">{$vo.pay_type|convert_category=36|raw}</td>
+            <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+            <td class="text-nowrap text-center">
+                {if $vo.status==5}
+                <span class="text-explode">|</span>
+                <span style="color: green;">已支付</span>
+                {else/}
+                {if auth("$classuri/priceEdit")}
+                <span class="text-explode">|</span>
+                <a data-title="费用操作" data-modal='{:url("$classuri/priceEdit")}?id={$vo.id}'>支付操作</a>
+                {/if}
+                {/if}
+                {if auth("$classuri/orderView")}
+                <span class="text-explode">|</span>
+                <a data-title="查看详情"
+                   data-open='{:url("$classuri/orderView")}?id={$vo.id}'>查看详情</a>
+                {/if}
+                {if auth("$classuri/detail_print")}
+                <span class="text-explode">|</span>
+                <a data-title="打印订单"
+                   data-modal='{:url("/order/detail/detail_print")}?id={$vo.id}' >打印订单</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

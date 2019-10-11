@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>恭喜你</title>
+</head>
+<body>
+</body>
+<script src="/static/plugs/jquery/jquery.min.js"></script>
+<script src="/static/plugs/layer_mobile/layer.js"></script>
+<script>
+    $(function () {
+        layer.open({
+            content: '<b style="font-size: 18px">'+'成功以11111的价格'+'<br>'+'抢得价值13800精英课程'+'</b>',
+            btn: '恭喜你',
+            style: 'background-color:#fbc000; color:#000;', //自定风格
+            yes: function(){
+                window.location.href = '/home/introduction/index'
+            }
+        });
+    })
+</script>
+</html>

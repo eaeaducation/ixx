@@ -1,0 +1,23 @@
+{extend name='home@public/mobile_content'}
+
+{block name="content"}
+
+<!--顶部 end-->
+<!--正文begin-->
+<section class="content">
+    <!--案例begin-->
+
+    <div class="casetitle02">
+        <h4>{:htmlspecialchars_decode($content.title)}</h4>
+        <p>&nbsp;&nbsp;2018-09-07 11:58</p>
+    </div>
+    <div class="newsdetail">
+        {:htmlspecialchars_decode($content.content)}
+    </div>
+    <!--案例end-->
+    <a href="http://m.eaeducation.net/lianxiwomen/" title="点击免费领取598元大礼包" class="i_tel_a"><img
+            src="/static/home/mobile/images/i_pic5.png"><span>点击免费领取598元大礼包</span></a>
+    <div style="height:6px;"></div>
+</section>
+<!--正文end-->
+{/block}

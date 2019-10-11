@@ -1,0 +1,78 @@
+<!-- 右则内容区域 开始 -->
+{block name="style"}{/block}
+<div class="layui-card">
+    <!--{notempty name='title'}-->
+    <div class="layui-header notselect">
+        <div class="pull-left"><span>{$title}</span></div>
+        <div class="pull-right margin-right-15 nowrap">{block name="button"}{/block}</div>
+    </div>
+    <!--{/notempty}-->
+    <div class="layui-card-body">{block name='content'}{/block}</div>
+</div>
+{block name='script'}{/block}
+{if sysconf('call_center_type') != '' && sysconf('call_center_type') != 'no'}
+<style>
+    #make_call_tools_box {
+        height: 44px;
+        background: rgba(0, 0, 0, 0.3);
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 99999;
+        line-height: 44px;
+        padding-right: 22px;
+        padding-left: 22px;
+        left: 220px;
+        text-align: right;
+    }
+
+    .framework-body {
+        margin-bottom: 44px;
+    }
+</style>
+<div id="make_call_tools_box">
+    <input type="text" class="form-control input-sm" style="width: 160px;display: inline-block;margin-right: 10px;"
+           placeholder="输入电话号码直接拨打" name="mobile">
+
+    <a data-action="{:url('marketing/call/make_call')}" data-confirm-msg="您确定要联系这个客户吗?"
+       class="layui-btn layui-btn-sm" style="background-color: #0090d9" id="make_call">
+        <span class="fa fa-phone" data-tips-text="点击拨打电话"></span>
+    </a>
+    <a data-action="{:url('marketing/call/hangup_call')}" data-update="1"
+       data-confirm-msg="您确定要挂断当前通话吗?"
+       class="layui-btn layui-btn-sm " style="background-color: #f56954"><span data-tips-text="挂断当前通话">挂断</span></a>
+    <a class="layui-btn layui-btn-sm"
+       data-action="{:url('marketing/call/agent_status_setup')}" data-update="1"
+       data-confirm-msg="您确定要示忙吗?" style="background-color: #37a8af">
+        <span data-tips-text="将当前坐席设置为忙碌状态">示忙</span>
+    </a>
+    <a class="layui-btn layui-btn-sm" style="background-color: #37a8af"
+       data-action="{:url('marketing/call/agent_status_setup')}" data-update="2"
+       data-confirm-msg="您确定要示闲吗?"><span data-tips-text="将当前坐席设置为空闲状态">示闲</span></a>
+    <a data-modal='{:url("marketing/call/checkin")}'
+       class="layui-btn layui-btn-sm " style="background-color: #3e739d"
+       data-area="['50%']"
+    >
+        签入/签出
+    </a>
+</div>
+<script>
+    function call() {
+        var mobile = $("input[name=mobile]").val();
+        if (mobile == "") {
+            layer.alert('请输入电话号码');
+            return false;
+        }
+        $("#make_call").attr('data-update', mobile)
+    }
+
+    $("input[name=mobile]").bind('keydown', function (event) {
+        if (event.keyCode == "13") {
+            call();
+            $("#make_call").trigger('click')
+        }
+    });
+    $("#make_call").on('click', call)
+</script>
+{/if}
+<!-- 右则内容区域 结束 -->

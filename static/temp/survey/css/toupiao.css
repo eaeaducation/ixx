@@ -1,0 +1,44 @@
+.toup {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.swipers {
+    margin: 0.2rem 0.5rem 0 0.5rem;
+}
+
+.scores {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.choose {
+    margin-top: 0.25rem;
+}
+
+.form-checkbox, .form-radio, .form-switch {
+    display: block;
+    line-height: 1.2rem;
+    margin: .2rem .5rem;
+    min-height: 1.2rem;
+    padding: .1rem .4rem .1rem 1.2rem;
+    position: relative;
+}
+
+.con {
+    border: 3px solid #fff;
+    border-radius: 10px;
+    padding: 1rem 0.8rem 0.5rem;
+    -webkit-box-shadow: 0 0 10px #9bb5c4 inset;
+    -moz-box-shadow: 0 0 10px #9bb5c4 inset;
+    box-shadow: 0 0 10px #9bb5c4 inset;
+    box-sizing: border-box;
+}
+
+.con h1 {
+    font-size: 1rem;
+    text-align: center;
+    line-height: 2.5;
+}

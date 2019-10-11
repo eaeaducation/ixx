@@ -1,0 +1,97 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<!--<button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'-->
+<!--data-title="添加课件"-->
+<!--class='layui-btn layui-btn-sm layui-btn-primary'>添加课件-->
+<!--</button>-->
+<!--{/if}-->
+{if auth("$classuri/del")}
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除课件
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">课件标题</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">课程</label>
+        <div class="layui-input-inline">
+            {:get_courses_select('course_id', $Think.get.course_id,'',[],false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <div class="table-responsive">
+        <table id="test" class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th class='list-table-check-td'>
+                    <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+                </th>
+                <th class='text-center nowrap'>ID</th>
+                <th class='text-center nowrap'>课程名称</th>
+                <th class="text-center nowrap">课件标题</th>
+                <th class="text-center nowrap">简介</th>
+                <th class="text-center nowrap">资源地址</th>
+                <th class="text-center nowrap">备注</th>
+                <th class="text-center nowrap">创建时间</th>
+                <th class="text-center nowrap">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$vo}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+                </td>
+                <td class="text-center nowrap">{$vo.id}</td>
+                <td class="text-center nowrap">{$vo.course_id|get_courses_title=$vo.course_id}</td>
+                <td class="text-center nowrap">{$vo.title}</td>
+                <td class="text-center nowrap" title="{$vo.content}">{:cn_substr($vo.content)}</td>
+                <td class="text-center" ><a href="http://{$vo.url}" target="_blank" title='点击查看'>访问资源</a></td>
+                <td class="text-center" title="{$vo.remark}">{:cn_substr($vo.remark)}</td>
+                <td class="text-center nowrap">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+                <td class="text-nowrap text-center">
+                    {if auth("$classuri/edit")}
+                    <span class="text-explode">|</span>
+                    <a data-title="编辑"
+                       data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                    {/if}
+                    {if auth("$classuri/del")}
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='delete'
+                       data-action='{:url("$classuri/del")}?id={$Think.get.id}'>删除</a>
+                    {/if}
+                </td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+    </div>
+    <!--{/empty}-->
+</form>
+{/block}

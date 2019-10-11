@@ -1,0 +1,58 @@
+{extend name='admin@public/content'}
+{block name="style"}
+{css href="/static/admin/show/css/index.min.css"/}
+{/block}
+{block name="button"}
+<!--{if auth("$classuri/tpladd")}-->
+<button data-open='{:url("$classuri/tpladd")}' data-title="添加模板"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加模板
+</button>
+<!--{/if}-->
+{/block}
+{block name="content"}
+<div class="layui-tab layui-tab-card layui-box">
+    <ul class="layui-tab-title">
+        {notempty name='types'}
+        {volist name='types' id='type'}
+        {eq name='key' value='1'}
+        <li class="layui-this">{$type}</li>
+        {else}
+        <li>{$type}</li>
+        {/eq}
+        {/volist}
+        {/notempty}
+    </ul>
+    <div class="layui-tab-content">
+        {notempty name='types'}
+        {volist name='types' id='type'}
+        <div class="layui-tab-item {eq name='key' value='1'}layui-show{/eq}">
+            {if isset($list[$key])}
+            <div class="layui-row">
+                {volist name="$list[$key]" id="vo"}
+                <div class="layui-col-xs6 layui-col-sm4 layui-col-lg3 text-center entry-panel">
+                    <div class="thumbnail">
+                        <a class="no-decoration" data-text-tip="点击预览"
+                           data-phone-view='{:url("showtpl/tplmgmt")}?tplid={$vo.id}'>
+                            <img style="height: 38em;" class="cover" src="{$vo.demo_pic1|default='http://placekitten.com/320/568'}"></a>
+                        <div class="caption text-center"> {$vo.tpl_name}</div>
+                        {if auth("$classuri/tpledit")}
+                        <a data-open="{:url('show/tpledit')}?id={$vo.id}"
+                           class="layui-btn layui-btn-normal layui-btn-radius">修改模板</a>
+                        {/if}
+                        {if auth("$classuri/tpldel")}
+                        <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/tpldel")}?id={$vo.id}'
+                           class="layui-btn layui-btn-danger layui-btn-radius">删除模板</a>
+                        {/if}
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            {else}
+            暂无模板
+            {/if}
+        </div>
+        {/volist}
+        {/notempty}
+    </div>
+</div>
+{/block}

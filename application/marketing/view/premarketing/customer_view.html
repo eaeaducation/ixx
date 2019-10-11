@@ -1,0 +1,290 @@
+{extend name="admin@public/content"}
+{block name="button"}
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20'>
+
+    <table id="basic" class="layui-table" lay-skin="line">
+        <thead>
+        <tr style="background-color: honeydew">
+            <th class="text-center" colspan="6">基本信息
+                {if auth("$classuri/basicedit")}
+                <a data-modal='{:url("$classuri/basicedit")}?id={$customer->id}' data-title="基本信息"
+                   class="pull-right">编辑</a>
+                {/if}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>客户姓名</th>
+            <td>{$customer->name}</td>
+            <th>性别</th>
+            <td>{$customer->gender|convert_category=3|raw}</td>
+            <th>监护人电话</th>
+            <td>{$customer->parent_tel}</td>
+        </tr>
+        <tr>
+            <th>昵称</th>
+            <td>{$customer->nickname}</td>
+            <th>监护人姓名</th>
+            <td>{$customer->parent_name}</td>
+            <th>亲属关系</th>
+            <td>{$customer->relation|convert_category=9|raw}</td>
+        </tr>
+        <tr>
+            <th>所属校区</th>
+            <td>{$customer->branch|convert_branch}</td>
+            <th>学员卡号</th>
+            <td>{$customer->icard|default="未绑卡"}</td>
+            <th>出生日期</th>
+            <td>{$customer->birthday|date="Y-m-d"}</td>
+        </tr>
+
+        <tr>
+            <th>微信</th>
+            <td>{$customer->wechat}</td>
+            <th>QQ</th>
+            <td>{$customer->qq}</td>
+            <th>公立学校</th>
+            <td>{$customer->school}</td>
+        </tr>
+        <tr>
+            <th>公立学校班级</th>
+            <td>{$customer->class}</td>
+            <th>标签</th>
+            <td>{$customer->tags}</td>
+            <th>居住区域</th>
+            <td>{$customer->address}</td>
+        </tr>
+        <tr>
+            <th>其他信息</th>
+            <td colspan="3">{$customer->other_info}</td>
+            <th>介绍人姓名</th>
+
+            <td>
+                {if(isset($introducer.introducer_id))}
+                <a data-open='{:url("marketing/premarketing/customerview")}?id={$introducer.introducer_id}'>
+                    {$introducer.introducer_id|get_parent_name|raw}
+                </a>
+
+                {else/}
+                未经介绍
+              {/if}
+            </td>
+
+        </tr>
+
+        </tbody>
+    </table>
+    <div class="layui-tab layui-tab-card layui-box">
+        <ul class="layui-tab-title">
+            <li class="layui-this">咨询记录</li>
+            <li>订单</li>
+            <li>课程</li>
+            <li>上课记录</li>
+            <li>成绩</li>
+            <!--<li>学员账户</li>-->
+            <li>操作日志</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                {if auth("$classuri/consultingRecord")}
+                <a class="layui-btn layui-btn-normal layui-btn-sm"
+                   data-modal='{:url("$classuri/consultingRecord")}?id={$customer->id}' data-title="咨询信息">新建咨询</a>
+                {/if}
+                {php}
+                $follows = $customer->follows;
+                {/php}
+                <!--{empty name='follows'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table class="layui-table" lay-even lay-skin="line">
+                    <thead>
+                    <tr style="background-color: #F2F2F2;">
+                        <th>意向度</th>
+                        <th>咨询方式</th>
+                        <th>跟进状态</th>
+                        <th>下次跟进时间</th>
+                        <th>沟通内容</th>
+                        <th>关键词</th>
+                        <th>创建时间</th>
+                        <th>跟进人</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $follows as $item}
+                    <tr>
+                        <td class="text-left nowrap">
+                            <div id="interest-{$item.id}" data-path="static/plugs/jquery-raty/images"></div>
+                            <script>
+                                require(['jquery.raty'], function () {
+                                    $('div#interest-{$item.id}').raty({
+                                        readOnly: true,
+                                        number: 5,
+                                        half: true,
+                                        score: '{$item.interest}',
+                                        path: function () {
+                                            return this.getAttribute('data-path');
+                                        }
+                                    });
+                                })
+                            </script>
+                        </td>
+                        <td>{$item.type|convert_category=4|raw}</td>
+                        <td>{$item.follow_status|convert_category=7|raw}</td>
+                        <td>{$item.remind_time|format_date}</td>
+                        <td>{$item.content}</td>
+                        <td>{$item.keyword}</td>
+                        <td>{$item.created_at|format_time}</td>
+                        <td>{$item.user_id|get_user_realname}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                <!--{/empty}-->
+            </div>
+            <div class="layui-tab-item">
+                <!--{empty name='order'}-->
+                <p class="help-block text-center well">没 有 记 录 哦！</p>
+                <!--{else}-->
+                <table id="test" class="layui-table" lay-skin="line">
+                    <thead>
+                    <tr>
+                        <th class='text-center'>订单编号</th>
+                        <th class='text-center'>姓名</th>
+                        <th class="text-center">班级</th>
+                        <th class="text-center">订单总计/元</th>
+                        <th class="text-center">状态</th>
+                        <th class="text-center">支付方式</th>
+                        <th class="text-center">创建时间</th>
+                        <th class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--{foreach $order as $key=>$vo}-->
+                    <tr>
+                        <td class="text-center">
+                            <a data-open='{:url("educational/order/orderView")}?id={$vo.id}'>{$vo.orderno}</a></td>
+                        <td class="text-center">{$vo.student_id|get_customer_name|raw}</td>
+                        <td class="text-center">{$vo.class_id|convert_class|raw|default='<font style="color:red">未分班</font>'}</td>
+                        <td class="text-center">￥{$vo.price}元</td>
+                        <td class="text-center">{$vo.status|convert_category=35|raw}</td>
+                        <td class="text-center">{$vo.pay_type|convert_category=36|raw}</td>
+                        <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+                        <td class="text-nowrap text-center">
+                            {if auth("$classuri/priceEdit")}
+                            <span class="text-explode">|</span>
+                            <a data-title="费用操作" data-modal='{:url("educational/order/priceEdit")}?id={$vo.id}'>支付操作</a>
+                            {/if}
+                            {if auth("$classuri/orderView")}
+                            <span class="text-explode">|</span>
+                            <a data-title="查看详情" data-open='{:url("educational/order/orderView")}?id={$vo.id}'>查看详情</a>
+                            {/if}
+                            {if auth("$classuri/detail_print")}
+                            <span class="text-explode">|</span>
+                            <a data-title="打印订单" data-modal='{:url("/order/detail/detail_print")}?id={$vo.id}' >打印订单</a>
+                            {/if}
+                            {if auth("$classuri/del")}
+                            <span class="text-explode">|</span>
+                            <a data-update="{$vo.id}" data-field='delete' data-action='{:url("educational/order/del")}?id={$vo.id}'>删除</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <!--{/foreach}-->
+                    </tbody>
+                </table>
+                {php}$total = $order[0]['price']{/php}
+                <!--{/empty}-->
+            </div>
+            <div class="layui-tab-item">
+                <blockquote class="layui-elem-quote">课程</blockquote>
+            </div>
+            <div class="layui-tab-item">
+                <blockquote class="layui-elem-quote">上课记录</blockquote>
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <!--{empty name='record'}-->
+                    <p class="help-block text-center well">没 有 记 录 哦！</p>
+                    <!--{else}-->
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">课程名称</th>
+                            <th class="text-center">消耗课时</th>
+                            <th class="text-center">状态</th>
+                            <th class="text-center">打卡时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--{foreach $record as $key=>$vo}-->
+                        <tr>
+                            <td class="text-center">{$vo.course_id|get_courses_title}</td>
+                            <td class="text-center text-red">{$vo.course_hour}</td>
+                            {if $vo.status == 1}
+                            <td class="text-center text-blue">正常</td>
+                            {else /}
+                            <td class="text-center text-red">补课</td>
+                            {/if}
+                            <td class="text-center">{$vo.created_at|format_time}</td>
+                        </tr>
+                        <!--{/foreach}-->
+                        </tbody>
+                    </table>
+                    <!--{/empty}-->
+                </form>
+            </div>
+            <div class="layui-tab-item">
+                <blockquote class="layui-elem-quote">成绩</blockquote>
+            </div>
+            <!--<div class="layui-tab-item">-->
+                <!--<blockquote class="layui-elem-quote">学员账户</blockquote>-->
+            <!--</div>-->
+            <div class="layui-tab-item">
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <!--{empty name='log'}-->
+                    <p class="help-block text-center well">没 有 记 录 哦！</p>
+                    <!--{else}-->
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">操作账号</th>
+                            <th class="text-center">操作员姓名</th>
+                            <th class="text-center">操作行为</th>
+                            <th class="text-center" width="55%">操作内容</th>
+                            <th class="text-center">操作时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--{foreach $log as $key=>$vo}-->
+                        <tr>
+                            <td class="text-center">{$vo.userid}</td>
+                            <td class="text-center">{$vo.username}</td>
+                            <td class="text-center">{$vo.action}</td>
+                            <td class="text-center">{$vo.content|raw}</td>
+                            <td class="text-center">{$vo.create_at}</td>
+                        </tr>
+                        <!--{/foreach}-->
+                        </tbody>
+                    </table>
+                    <!--{/empty}-->
+                </form>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="script"}
+<script>
+
+</script>
+{/block}

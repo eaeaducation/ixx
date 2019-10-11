@@ -1,0 +1,132 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-open='{:url("$classuri/addapproval")}' data-title="添加审批" class='layui-btn layui-btn-sm layui-btn-primary'>添加工作审批
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del")}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/approvaldel")}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除工作审批
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <a class="layui-btn layui-btn-success layui-btn-small" data-open="{$classuri}/approval">
+            全部
+        </a>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">审批状态</label>
+        <div class="layui-input-inline">
+            <select name="is_pass" id="is_pass" class="text-center">
+                <option value="">-- 请选择 --</option>
+                <option value="0">审核中</option>
+                <option value="1">已通过</option>
+                <option value="2">已驳回</option>
+            </select>
+            <script>
+                $(function () {
+                    var type = '{$Think.get.is_pass}';
+                    $("select#is_pass option[value='" + type + '\']').attr('selected', true)
+                })
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">审批标题</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title}" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">创建时间</label>
+        <div class="layui-input-inline">
+            <input name="created_at" id="created_at" value="{$Think.get.created_at}" placeholder="请选择发布时间" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<!-- 表单搜索 结束 -->
+<script>
+    window.form.render();
+    window.laydate.render({range: true, elem: '#created_at'});
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>标题</th>
+            <th class='text-center' width="30%">内容</th>
+            <th class='text-center'>提交人</th>
+            <th class='text-center'>审核人</th>
+            <th class='text-center'>审核状态</th>
+            <th class='text-center'>创建时间</th>
+            <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        {if in_array(session('user.employee.id'),$vo.shenpi) || session('user.employee.id') == $vo.from_user}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">
+                <a data-title="审批内容" data-modal='{:url("$classuri/approvalview")}?id={$vo.id}'>
+                    {$vo.title}
+                </a>
+            </td>
+            <td class="text-center">{$vo.content|raw}</td>
+            <th class='text-center'>{$vo.from_user|get_employee_name}</th>
+            <td class="text-center">
+                {foreach $vo.shenpi as $item}
+                    {$item|get_employee_name}&nbsp;
+                {/foreach}
+            </td>
+            {if $vo.is_pass==1}
+            <td class="text-center"><span class="color-green">已通过</span></td>
+            {elseif $vo.is_pass==2/}
+            <td class="text-center"><span class="color-red">已驳回</span></td>
+            {else/}
+            <td class="text-center"><span class="color-blue">审核中</span></td>
+            {/if}
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="查看" data-modal='{:url("$classuri/approvalview")}?id={$vo.id}'>查看</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/approvaldel")}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        {/if}
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,175 @@
+{extend name='admin@public/content'}
+{block name="style"}
+{css href="/static/admin/show/css/index.min.css"/}
+{/block}
+{block name='content'}
+<form class="form-horizontal layui-form padding-top-20" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="form-group" data-storage-type="local">
+        <label class="col-sm-2 control-label">
+            活动主题
+        </label>
+        <div class='col-sm-8'>
+            <input name="title" required value="" class="layui-input" title="请输入活动主题"
+                   placeholder="请输入活动主题">
+        </div>
+    </div>
+
+    <div class="form-group" data-storage-type="local">
+        <label class="col-sm-2 control-label">
+            活动时间
+        </label>
+        <div class='col-sm-8'>
+            <input name="time" id="time" class="layui-input" required title="请选择活动时间" placeholder="请选择活动时间">
+        </div>
+    </div>
+
+    <div class="form-group" data-storage-type="local">
+        <label class="col-sm-2 control-label">
+            选择模板
+        </label>
+        <div class='col-sm-8'>
+            <input type="hidden" name="tpl_id"/>
+            <input type="hidden" name="type"/>
+            <input type="hidden" name="status" value="2"/>
+            <input name="tpl_name" readonly disabled class="layui-input" required
+                   placeholder="请在以下列表中选择模板">
+            <div class="layui-tab layui-tab-card layui-box">
+                <ul class="layui-tab-title">
+                    {notempty name='types'}
+                    {volist name='types' id='type'}
+                    {eq name='key' value='1'}
+                    <li class="layui-this">{$type}</li>
+                    {else}
+                    <li>{$type}</li>
+                    {/eq}
+                    {/volist}
+                    {/notempty}
+                </ul>
+                <div class="layui-tab-content">
+                    {notempty name='types'}
+                    {volist name='types' id='type'}
+                    <div class="layui-tab-item {eq name='key' value='1'}layui-show{/eq}">
+                        {php}
+                        $type = $key;
+                        {/php}
+                        {if isset($list[$key])}
+                        <div class="layui-row">
+                            {volist name="$list[$key]" id="vo"}
+                            <div class="layui-col-xs6 layui-col-sm2 layui-col-lg3 text-center entry-panel">
+                                <div class="thumbnail">
+                                    <a class="no-decoration" data-text-tip="点击预览"
+                                       data-phone-view='{:url("showtpl/tplmgmt")}?tplid={$vo.id}'>
+                                        <img style="height: 25em;" class="cover"
+                                             src="{$vo.demo_pic1|default='http://placekitten.com/320/568'}">
+                                    </a>
+                                    <h4 class="caption text-center">{$vo.tpl_name}</h4>
+                                    <a class="layui-btn layui-btn-normal layui-btn-radius" id="{$vo.tpl_name}"
+                                       href="javascript:selectTemplate('{$vo.id}','{$vo.tpl_name}','{$type}')">选择</a>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        {else}
+                        暂无模板
+                        {/if}
+                    </div>
+                    {/volist}
+                    {/notempty}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <input type="hidden" name="created_at" value="{:time()}">
+        <button class="layui-btn sub" type='button'>
+            添加活动
+        </button>
+    </div>
+    <script>
+        laydate.render({
+            elem: '#time'
+            , type: 'datetime'
+            , range: true
+        });
+        window.form.render();
+    </script>
+</form>
+{/block}
+{block name='script'}
+<script>
+    function selectTemplate(tpl_id, tpl_name, type) {
+        $("input[name=tpl_name]").val(tpl_name)
+        $("input[name=tpl_id]").val(tpl_id)
+        $("input[name=type]").val(type)
+        $(".thumbnail").attr('style', "border:");
+        $("#" + tpl_name).parent().attr('style', 'border:2px solid red')
+    }
+
+    $('.sub').click(function () {
+        var title = $('[name="title"]').val();
+        var time = $('[name="time"]').val();
+        var type = $('[name="type"]').val();
+        var tplid = $('[name="tpl_id"]').val();
+        var status = $('[name="status"]').val();
+        if (title == '') {
+            layer.msg('请输入活动主题', {icon: 5});
+            return false;
+        }
+        if (time == '') {
+            layer.msg('请选择活动时间', {icon: 5});
+            return false;
+        }
+        if (tplid == '') {
+            layer.msg('请选择模板', {icon: 5});
+            return false;
+        }
+        $.post('/admin/showact/actadd', {
+            title: title,
+            time: time,
+            type: type,
+            tplid: tplid,
+            status: status
+        }, function (res) {
+            var url = '/admin.html#/admin/showact/actlist.html';
+            if (res.success) {
+                var index = layer.alert("活动添加成功,是否前去配置模板?", {
+                    icon: 6,
+                    skin: 'layer-ext-moon',
+                    btn: ['去配置', "算了吧"],
+                    cancel: function () {
+                        location.href = url
+                    },
+                    yes: function () {
+                        perContent = layer.open({
+                            type: 2,
+                            title: res.acttitle + '-' + "-模板设置",
+                            shadeClose: false,
+                            shade: false,
+                            // maxmin: true, //开启最大化最小化按钮
+                            area: ['80%', '90%'],
+                            shade: [0.8, '#393D49'],//遮罩层
+                            content: '{:url("showactb/updatetpl")}?act_id=' + res.actid,
+                            cancel: function () {
+                                location.href = url
+                            },
+                            success: function () {
+                                layer.close(index)
+                            }
+                        });
+                    }
+                    , 'btn2': function () {
+                        location.href = url
+                    }
+                })
+            } else {
+                layer.msg('活动添加失败', {icon: 5});
+            }
+        })
+    })
+</script>
+{/block}
+

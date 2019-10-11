@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>验证信息</title>
+    <link rel="stylesheet" type="text/css" href="/static/home/pay/css/index.css"/>
+</head>
+<body>
+<div class="head">
+    <div class="head-top">
+        <div class="left-btn">
+            <img src="/static/home/pay/img/left-btn.png" />
+        </div>
+        <div class="title">
+            <h3>{:sysconf('app_name')}</h3>
+        </div>
+    </div>
+</div>
+<div class="form">
+    <div class="form-input">
+        <p>银    行    验    证    码</p>
+        <input type="number" name="code" placeholder="请输入银行验证码" class="userInput"/>
+    </div>
+</div>
+<a href="javascript:;" class="weui-btn weui-btn_primary nextBtn next">
+    确认支付
+</a>
+<script type="text/javascript" src="/static/home/pay/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/static/home/pay/js/jquery-weui.min.js"></script>
+<script>
+    $(function () {
+        $('.left-btn').click(function () {
+            history.back(-1);
+        })
+    });
+    $('.next').click(function () {
+        var code = $('[name="code"]').val(),
+            price = '{$price}',
+            oid = '{$oid}',
+            uid = '{$uid}',
+            payid = '{$payId}',
+            applyid = '{$applyId}',
+            bankno = '{$bankno}',
+            url = '{:url("api2/kufenqi/verif")}';
+        $.post(url, {code: code, price: price, oid: oid, uid: uid, payid: payid, applyid: applyid, bankno: bankno}, function (e) {
+            console.log(e);
+            if (e.result == 200) {
+                window.location.href = 'paySuccess?oid=' + oid;
+            } else {
+                window.location.href = 'payFail?msg=' + e.errMsg;
+            }
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+Index: application/home/view/introduction/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- application/home/view/introduction/index.html	(revision 3613bef26466834565169c46d8b3e89d24b18eb8)
++++ application/home/view/introduction/index.html	(revision )
+@@ -59,10 +59,8 @@
+         </div>
+     </a>
+     {/volist}
+-    <a href='{:url("$classuri/payact")}?openid=' .{$openid}>
+         <div class="f2" id="submit"><span style="font-size: 14px;font-weight: bold">方式二</span>：点击此处成为“土豪”妈妈，29.9元获取入场券
+         </div>
+-    </a>
+ </div>
+ </body>
+ <script src="/static/plugs/jquery/jquery.min.js"></script>
+@@ -80,7 +78,7 @@
+             , content: '请稍后……'
+         });
+         $.post('/api/v1/Shows/getcusbyopenid', {
+-            openid: getQueryVariable('openid')
++            openid: "{$openid}"
+         }, function (res) {
+             if (res.parent_tel != '') {
+                 $.post('/api/v1/Shows/collect', {
+@@ -128,18 +126,5 @@
+             }
+         });
+     });
+-
+-    // 获取urlget到的值
+-    function getQueryVariable(variable) {
+-        var query = window.location.search.substring(1);
+-        var vars = query.split("&");
+-        for (var i = 0; i < vars.length; i++) {
+-            var pair = vars[i].split("=");
+-            if (pair[0] == variable) {
+-                return pair[1];
+-            }
+-        }
+-        return (false);
+-    }
+ </script>
+ </html>
+\ No newline at end of file

@@ -1,0 +1,250 @@
+html, body {
+    position: relative;
+    height: 100%;
+    font-size: 14px;
+}
+
+body {
+    background: #eee;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    /*  font-size: 14px;*/
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.ani {
+    width: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    width: 100%;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/*.swiper-slide img {*/
+    /*width: 80%;*/
+/*}*/
+
+.bg1 {
+    height: 100%;
+    width: 100%;
+}
+
+.z1_title {
+    width: 60%;
+    height: 13em;
+    margin: 0 auto;
+    /*background-image: url(/static/temp/tpl003/images/z1_title.png);*/
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.z1_title h1 {
+    font-size: 2em;
+    color: #fff;
+    margin-top: 10%;
+    padding-top: 25%;
+}
+
+.z1_content {
+    width: 95%;
+    height: 6em;
+
+    margin: 0 auto
+}
+
+.z1_foot {
+    width: 100%;
+    height: 10em;
+
+    margin: 0 auto;
+}
+
+.z1_foot_left {
+
+    width: 40%;
+    height: 10em;
+    margin: 0;
+    float: left;
+    /*background-image: url(/static/temp/tpl002/images/z1_foot_left.png);*/
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+.z1_foot_right {
+    float: right;
+    margin: 0;
+
+    width: 58%;
+    height: 10rem;
+    /*background-image: url(/static/temp/tpl002/images/z1_foot_right.png);*/
+    background-size: 100%;
+    background-repeat: no-repeat;
+
+}
+.z2_title_img{
+    width: 100%;
+}
+.z2_content{
+    font-size: 14px;
+    line-height:1.5em;
+    color: #fff;
+   margin: 0 auto;
+    height: 20em;
+    width: 90%;
+    margin-bottom: 10%;
+}
+.z2_content img{
+    width: 45%;
+    height:auto;
+}
+.z3_title_img{
+    width: 60%;
+}
+.z3_content{
+    font-size: 14px;
+    line-height:1.5em;
+    color: #fff;
+    margin: 0 auto;
+    height: 20em;
+    width: 70%;
+    margin-bottom: 10%;
+}
+.z3_content img{
+    width: 100%;
+    height:auto;
+    border: 10px solid #cccccc;
+}
+.z4_title_img{
+    width: 100%;
+}
+.z4_content{
+    font-size: 14px;
+    line-height:1.5em;
+    color: #000;
+    margin: 0 auto;
+    height: 20em;
+    width: 70%;
+}
+.z4_content img{
+    width: 50%;
+    height:auto;
+    border: 10px solid #cccccc;
+}
+.z4_foot_img{
+    width: 100%;
+}
+
+
+
+/**********/
+
+.box{
+    margin-top: 10%;
+}
+
+.item {
+    width: 100%;
+    height: 2.7rem;
+    margin: 0.5rem;
+    margin-left:0;
+    border-radius: 25px;
+    border: 1px solid #318cff;
+}
+
+.item input {
+    width: 100%;
+    height: 2.7rem;
+    border-radius: 25px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    background: 0 0;
+    color: #318cff;
+    font-weight: 400;
+    border: none;
+    text-indent: 1.5em;
+
+}
+
+.captcha {
+    height: 44px;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 1px solid #318cff;
+
+}
+
+.verbox {
+    display: none;
+}
+
+.verbox input {
+    float: left;
+    width: 60%;
+    border: 0
+}
+
+#btnSendCode {
+    float: right;
+    width: 40%;
+    height: 100%;
+    border-radius: 90px;
+    background-color: #318cff;
+    border: 1px solid #318cff;
+    color: #fff;
+}
+
+/*.item{*/
+/*width: 80%;*/
+/*height: 2.5rem;*/
+/*border: 1px solid #318cff;*/
+/*}*/
+.sub-btn {
+    width: 100%;
+    height: 2.7rem;
+    border-radius: 90px;
+    background-color: #318cff;
+    border: 1px solid #318cff;
+    color: #fff;
+}
+
+.button {
+
+    margin-bottom: 0.5rem;
+}
+
+.res-btn {
+    width:100%;
+    height: 2.7rem;
+    border-radius: 90px;
+    background-color: #fff;
+    border: 1px solid #318cff;
+    color: #318cff;
+    display: block;
+    line-height: 2.7rem;
+}

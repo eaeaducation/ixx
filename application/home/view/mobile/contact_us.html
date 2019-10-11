@@ -1,0 +1,66 @@
+{extend name='home@public/mobile_content'}
+
+{block name="content"}
+<!--正文begin-->
+<section class="content">
+    <!--关于我们begin-->
+    <div class="news_index">
+        <div class="jsnav" style="margin-top:-1px;">
+            <div id="wrapper">
+                <div id="scroller">
+                    <ul>
+                        <li class="on">
+                            <a class="navlink" href="javascript:;">联系我们</a>
+                            <span class="arrow"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="about_div">
+            <!--文章正文调用end-->
+        </div>
+        <div class="contactform">
+            <h4>咨询热线：400-6692-620</h4>
+            <form action="http://m.eaeducation.net/plus/diy.php" enctype="multipart/form-data" method="post"
+                  name="myform" id="myform" onsubmit="return checkform3(this);">
+                <input type="hidden" name="action" value="post">
+                <input type="hidden" name="diyid" value="1">
+                <input type="hidden" name="do" value="2">
+                <ul><input name="typesname" value="手机合作意向表" type="hidden">
+                    <li class="clearfix">
+                        <span>*姓名</span>
+                        <div>
+                            <input class="textinput" type="text" id="names" name="name"></div>
+                    </li>
+                    <li class="clearfix">
+                        <span>*联系电话</span>
+                        <div>
+                            <input class="textinput" type="text" id="Tel" name="phone"></div>
+                    </li>
+                    <li class="clearfix">
+                        <span>*咨询类型</span>
+                        <div>
+                            <textarea cols="" id="bodys" name="zixun"></textarea></div>
+                    </li>
+                    <!--<li class="clearfix">
+                        <span>*验证码</span>
+                        <div class="clearfix">
+                            <input class="Codeinput" type="text" id="code">
+                            <span class="Codeimg">
+                                <img src="picture/code.jpg"></span>
+                            <span class="Codechange">
+                                <img src="picture/codechange.jpg"></span>
+                        </div>
+                    </li>-->
+                </ul>
+                <input type="hidden" name="dede_fields" value="name,text;phone,text;zixun,multitext">
+                <input type="hidden" name="dede_fieldshash" value="c25c2e1380cec8a74a6478d32de5acaa">
+                <input type="submit" value="立即提交" class="contactbtn">
+            </form>
+        </div>
+    </div>
+    <!--关于我们end-->
+</section>
+<!--正文end-->
+{/block}

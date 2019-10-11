@@ -1,0 +1,116 @@
+{extend name='admin@public/content'}
+{block name="button"}
+<button class="layui-btn layui-btn-normal">
+    <a data-field='exportData' href='{:url("$classuri/exportData")}?id={$id}' style="color:white;">导出数据</a>
+</button>
+<button onclick="window.history.back()"
+        class='layui-btn layui-btn-sm layui-btn-primary'>返回
+</button>
+{/block}
+{block name="content"}
+<style>
+    #basic tbody th {
+        background-color: #F2F2F2;
+    }
+    .well {
+        min-height: 5px;
+        padding: 12px;
+    }
+</style>
+<div class="col-lg-offset-2 col-lg-8 padding-bottom-15">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <div>
+        <div style="text-align: center;font-size: 20px;margin-bottom: 2px">
+            {$title}
+        </div>
+        <div class="layui-form-item" style="margin-left: 40%;color: #9d9d9d;">
+            <label class=" control-label ">调查时间：</label>
+            <span style="margin-right: 2%">
+                {$start_time|date='Y-m-d'} ~ {$end_time|date='Y-m-d'}
+            </span>
+            <label class="control-label">参与人数：</label>
+            <span>
+                {$total_count}
+            </span>
+        </div>
+        <div class="layui-form-item">
+            <label class="control-label" style="font-size: 17px">问卷简介：</label>
+            <span>
+                {$desc|default='暂无简介'}
+            </span>
+        </div>
+        <!--{foreach $list as $key=>$vo}-->
+        <div id="choice">
+            <span style="font-size: 15px">
+                 {$vo.sort}、
+                <span>{$vo.name|default=''}</span>
+                (本题答案总数：{$vo.n}个)
+            </span>
+        </div>
+        {if $vo.type ==1 || $vo.type == 2}
+        <div id="main{$key}" style="width: 100%;height:400px;"></div>
+        <script type="text/javascript">
+            require(['echarts'], function () {
+                var echarts = require('echarts');
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main{$key}'));
+                myChart.showLoading();
+                // 初始 option
+                option = {
+                    color: ['#3398DB'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: {$vo.names}
+                }
+            ],
+                yAxis : [
+                    {
+                        type: 'value'
+                    }
+                ],
+                    series :[
+                    {
+                    name: '回答数',
+                    type: 'bar',
+                    barWidth: '60%',
+                    data: {$vo.num}
+                }
+            ]
+            };
+                myChart.hideLoading();
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            });
+        </script>
+        {else}
+        {if isset($vo.answer) && is_array($vo['answer'])}
+        <ul class="layui-timeline" style="max-height: 200px;overflow: scroll;display: block">
+            {volist name="vo.answer" id="v1"}
+            <li class="help-block  well" style="line-height: 5px">{$v1}</li>
+            {/volist}
+        </ul>
+        {else}
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+        {/if}
+        {/if}
+        <!--{/foreach}-->
+    </div>
+    <!--{/empty}-->
+</div>
+{/block}
+

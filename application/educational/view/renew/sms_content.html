@@ -1,0 +1,39 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 30px;' action="{:request()->url()}" data-auto="true"
+      method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">短信内容：</label>
+        <div class="layui-input-block">
+            <textarea name="content" required placeholder="可选择短信模板或自主编辑" class="layui-textarea"
+                      maxlength="60"></textarea>
+            <div class="help-block">
+                <p class="text-danger">短信内容最大为60个汉字,请精简您的内容信息!</p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>确定发送</button>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item">
+        快捷回复模板：
+        <div class="layui-input-block">
+            <table class="table table-view">
+                <tbody>
+                {foreach $fastword as $item}
+                <tr style="cursor: pointer;">
+                    <td>{$item.content}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $("td").on('click', function () {
+            val = $(this).html()
+            $("textarea[name='content']").val(val)
+        });
+    </script>
+</form>
+
+

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{$msg|default='Error'}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        .image {
+            margin-top: 40%;
+            text-align: center;
+            width: 100%;
+        }
+
+        .image img {
+            width: 80%;
+        }
+
+        .text {
+            text-align: center;
+            margin-top: 10%;
+            color: #67a2cc;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="image">
+        <img src="/static/temp/survey/images/banner.png" alt="">
+    </div>
+    <div class="text">
+        <span>{$msg|default='Error'}</span>
+    </div>
+</div>
+</body>
+</html>

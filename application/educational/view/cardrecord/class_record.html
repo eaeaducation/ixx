@@ -1,0 +1,91 @@
+
+<form class="layui-form layui-form-pane form-search" action="{:url('educational/cardrecord/class_record')}?class_id={$class_id}"
+      onsubmit="return false" method="get">
+    <div class="row">
+        <div style="margin-left:1%;float: left">
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="请输入关键字"
+                           class="input-sm form-control">
+                </div>
+            </div>
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">选择时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                           placeholder="选择时间" class="input-sm form-control">
+                </div>
+            </div>
+            <div class="layui-form-item layui-inline">
+                <button class="layui-btn layui-btn-primary"><i class="layui-icon"></i> 搜 索</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                if ((endDate - date) / 1000 / 86400 > 31) {
+                    $.msg.alert('最大时间范围为31天', function () {
+                        $('#time_range').val('')
+                    })
+                }
+            }
+        })
+    })
+</script>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">学员姓名</th>
+            <th class="text-center">课程名称</th>
+            <th class="text-center">消耗课时</th>
+            <th class="text-center">学员卡号</th>
+            <th class="text-center">状态</th>
+            <th class="text-center">打卡时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">
+                {$vo.name}【{$vo.gender|convert_category=3|raw}】
+            </td>
+            <td class="text-center">{$vo.course_id|get_courses_title}</td>
+            <td class="text-center text-red">{$vo.course_hour}</td>
+            <td class="text-center">{$vo.icard}</td>
+            {if $vo.status == 1}
+            <td class="text-center text-blue">正常</td>
+            {else /}
+            <td class="text-center text-red">补课</td>
+            {/if}
+            <td class="text-center">{$vo.created_at|format_time}</td>
+            <td class="text-center">
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>

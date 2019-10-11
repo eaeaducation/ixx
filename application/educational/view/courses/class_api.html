@@ -1,0 +1,537 @@
+<!--弹出课程详细信息html-->
+<link rel="stylesheet" href="/static/plugs/fullcalendar/fullcalendar.css">
+<div hidden id="info">
+    <div class="col-md-12">
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+                <col width="150">
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td>日期</td>
+                <td id="courses_day"></td>
+            </tr>
+            <tr>
+                <td>时间</td>
+                <td id="courses_time"></td>
+            </tr>
+
+            <tr>
+                <td>课程</td>
+                <td id="courses"></td>
+
+            </tr>
+            <tr>
+                <td>班级</td>
+                <td id="class"></td>
+
+            </tr>
+            <tr>
+                <td>教室</td>
+                <td id="room">/td>
+
+            </tr>
+            <tr>
+                <td>老师</td>
+                <td id="teacher"></td>
+
+            </tr>
+            <tr>
+                <td>助教</td>
+                <td id="ta"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--弹出课程详细信息html-->
+<!--弹出编辑的 html-->
+<div hidden id="edit">
+    <form id="edit_form" class="layui-form layui-box" lay-filter="example" style='padding:25px 30px 20px 0'
+          action="" data-auto="true"
+          method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">班级</label>
+            <div class="layui-input-block" id="class_edit">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程</label>
+            <div class="layui-input-block" id="courses_edit">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">教室</label>
+            <div class="layui-input-block">
+                <select name="room_id" id="room_select">
+                    <option value="">-请选择-</option>
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">教师</label>
+            <div class="layui-input-block">
+                <select name="teacher_id" id="teacher_select">
+                    <option value="">-请选择-</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">助教</label>
+            <div class="layui-input-block">
+                <select name="ta_id" id="ta_select">
+                    <option value="">-请选择-</option>
+
+                </select>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上课时间</label>
+            <div class="layui-input-block">
+                {:get_courses_time_select('class_time', isset($vo.class_time)?$vo.class_time:'',
+                '',['required'=>'',"id"=>"time_select"],false)}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程周期</label>
+            <div class="layui-input-block">
+                {:get_category_select(13, 'cycle', isset($vo.cycle)?$vo.cycle:'',
+                '',['required'=>'',"lay-filter"=>"cycle","id"=>"cycle_select"],false)}
+            </div>
+        </div>
+        <div class="layui-form-item" id="week_edit">
+            <label class="layui-form-label">星期</label>
+            <div class="layui-input-block active">
+                <input type='checkbox' name="week[]" id="week1" value="1" style="display: none!important" title="星期一">
+                <input type='checkbox' name="week[]" id="week2" value="2" style="display: none!important" title="星期二">
+                <input type='checkbox' name="week[]" id="week3" value="3" style="display: none!important" title="星期三">
+                <input type='checkbox' name="week[]" id="week4" value="4" style="display: none!important" title="星期四">
+                <input type='checkbox' name="week[]" id="week5" value="5" style="display: none!important" title="星期五">
+                <input type='checkbox' name="week[]" id="week6" value="6" style="display: none!important" title="星期六">
+                <input type='checkbox' name="week[]" id="week0" value="0" style="display: none!important" title="星期日">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程状态</label>
+            <div class="layui-input-block active">
+                {:get_category_select(8, 'status', isset($vo.status)?$vo.status:'',
+                '',['required'=>'',"id"=>"status_select"])}
+            </div>
+        </div>
+        <div class="layui-form-item text-center">
+            <input type='hidden' value='' name='id'/>
+            <input type='hidden' value='' id="form_class_id" name='class_id'/>
+            <button class="layui-btn" type='button' onclick="editSubmit()">保存数据</button>
+            <button class="layui-btn layui-btn-danger" type='button' onclick="javascript:layer.closeAll();">取消编辑
+            </button>
+        </div>
+    </form>
+</div>
+
+
+<!--弹出编辑的 html-->
+<script>
+    window.form.render();
+</script>
+
+
+<div id='calendar'></div>
+<script>
+    $(function () {
+        require(['fullcalendar', 'moment', 'lang-all', 'jqui'], function () {
+            $(document).ready(function () {
+
+                var initialLangCode = 'en';
+                //初始化FullCalendar
+                $('#calendar').fullCalendar({
+                    //设置头部信息，如果不想显示，可以设置header为false
+                    header: {
+                        //日历头部左边：初始化切换按钮
+                        left: 'prev,next today',
+                        //日历头部中间：显示当前日期信息
+                        center: 'title',
+                        //日历头部右边：初始化视图
+                        right: 'month,agendaWeek,agendaDay,list'
+                    },
+                    monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                    monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                    dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+                    dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+                    buttonText: {
+                        today: ["今天"],
+                        month: '月视图',
+                        week: '周',
+                        day: '日视图',
+                        list: '任务列表'
+
+                    },
+                    //一天的开始
+                    minTime: "06:00:00",
+                    //一天的结束时间
+                    maxTime: "22:00:00",
+                    //日历的高度
+                    height: 780,
+                    //周视图不显示全天事件
+                    allDaySlot: false,
+                    //设置时间为24小时制
+
+                    axisFormat: 'H(:mm)点',
+                    //设置事件显示不重叠
+                    slotEventOverlap: true,
+                    //设置是否显示周六和周日，设为false则不显示
+                    weekends: true,
+                    //日历初始化时显示的日期，月视图显示该月，周视图显示该周，日视图显示该天，和当前日期没有关系
+                    //   defaultDate: '2018-06-10',
+                    //日程数据
+                    eventLimit: true,
+
+                    weekMode: 'liquid',
+                    defaultView: 'agendaWeek',
+                    allDayText: '全天',
+                    businessHours: true,
+                    defaultEventMinutes: 120,
+
+                    droppable: true,
+                    drop: function (date, allDay) {
+// retrieve the dropped element's stored Event Object
+
+                        var originalEventObject = $(this).data('eventObject');
+
+//                        console.log(originalEventObject);
+                        return;
+
+// we need to copy it, so that multiple events don't have areference to the same object
+
+                        var copiedEventObject = $.extend({}, originalEventObject);
+
+
+// assign it the date that was reported
+
+                        copiedEventObject.start = date;
+
+                        copiedEventObject.allDay = allDay;
+
+//                        console.log(date);
+//                        console.log(allDay);
+
+// render the event on the calendar
+
+// the last `true` argument determines if the event"sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+
+                        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+
+// is the "remove after drop" checkbox checked?
+
+                        if ($('#drop-remove').is(':checked')) {
+
+// if so, remove the element from the "Draggable Events"list
+
+                            $(this).remove();
+                        }
+                        // is the "remove after drop" checkbox checked?
+
+                    },
+                    dayClick: function (date) {
+//                        console.log(date)
+//
+                    },
+                    //设置是否可被单击或者拖动选择
+                    selectable: true,
+                    //点击或者拖动选择时，是否显示时间范围的提示信息，该属性只在agenda视图里可用
+                    selectHelper: true,
+                    //点击或者拖动选中之后，点击日历外的空白区域是否取消选中状态 true为取消 false为不取消，只有重新选择时才会取消
+                    unselectAuto: true,
+
+
+//
+                    eventClick: function (event) {
+                        $("#courses_day").html((event.start._i).substring(5, 10));
+                        $("#courses_time").html((event.start._i).substring(11, 16) + '~' + (event.end._i).substring(11, 16));
+                        $("#courses").html(event.title);
+                        $("#class").html(event.class);
+                        $("#room").html(event.room);
+                        $("#teacher").html(event.teacher);
+                        $("#ta").html(event.ta);
+
+                        layer.open({
+                            type: 1 //此处以iframe举例
+                            , title: event.title
+                            , area: ['500px', 'auto']
+                            , shade: 0
+                            , maxmin: true
+                            , content: $("#info").html()
+                            , btn: ['编辑排课', '删除排课', '返回']
+                            , yes: function () {
+                                layer.closeAll();
+                                var editForm = layer.open({
+                                    type: 1,
+                                    title: event.title + "编辑",
+                                    maxmin: true,
+                                    area: ['500px', 'auto'],
+                                    content: $("#edit").html(),
+                                    success: function () {
+                                        window.form.render();
+                                        form.on('select(cycle)', function (data) {
+                                            if (data.value == 5) {
+                                                layer.msg("提示:一次性课程选择的星期将无效", {icon: 7})
+                                            }
+
+                                        })
+
+                                    }
+                                })
+                            }
+                            , btn2: function () {
+                                layer.closeAll();
+                                layer.confirm('删除将删掉这一期的课程,确定吗?', {
+                                        title: "删除确认",
+                                        time: 20000, //20s后自动关闭
+                                        btn: ['确定删除', '取消删除'],
+                                    },
+                                    function (index, layero) {
+                                        $.post(
+                                            '{:url("$classuri/del")}',
+                                            {"id": +event.id, "field": "delete"},
+                                            function (data) {
+                                                layer.closeAll();
+                                                if (data.code = 1) {
+                                                    layer.msg(data.msg, {icon: 6}, function () {
+                                                        $('#calendar').fullCalendar('refetchEvents');
+                                                    });
+                                                } else {
+                                                    layer.msg(data.msg, {icon: 5}, function () {
+                                                        $('#calendar').fullCalendar('refetchEvents');
+                                                    })
+                                                }
+
+
+                                            });
+                                    });
+                            }
+                            , zIndex: layer.zIndex //重点1
+                            , success: function (layero) {
+                                layer.setTop(layero); //重点2
+                                $("[name='class']").val(event.class);//两项不可更改项目 js直接写死
+                                $("[name='courses']").val(event.title);
+                                //根据 id 去后台获取这套课程信息
+                                $.post('{:url("$classuri/getEditData")}', {"id": event.id},
+                                    function (data) {
+                                        //给表单赋值班级名称和课程名称
+                                        $("#class_edit").html(" <input type='text'  value='" + data.class_name + "' class='layui-input' disabled='' >");
+                                        $("#courses_edit").html(" <input type='text'  value='" + data.course_name + "' class='layui-input' disabled='' >");
+                                        // 给教室选择框增加选项
+                                        var roomHtml = '<option value="">-请选择-</option>';
+                                        for (var i = 0; i < data.room.length; i++) {
+                                            if (event.room == data.room[i].code) {
+                                                roomHtml += '<option value="' + data.room[i].id + '" selected="selected">' + data.room[i].code + '</option>';
+                                            } else {
+                                                roomHtml += '<option value="' + data.room[i].id + '">' + data.room[i].code + '</option>';
+                                            }
+                                        }
+                                        $('#room_select').html(roomHtml);
+                                        // 给老师选择框增加选项
+                                        var teacherHtml = '<option value="">-请选择-</option>';
+                                        for (var i = 0; i < data.teacher.length; i++) {
+                                            if (event.teacher == data.teacher[i].name) {
+                                                teacherHtml += '<option value="' + data.teacher[i].id + '" selected="selected">' + data.teacher[i].name + '</option>';
+                                            } else {
+                                                teacherHtml += '<option value="' + data.teacher[i].id + '">' + data.teacher[i].name + '</option>';
+                                            }
+                                        }
+                                        $('#teacher_select').html(teacherHtml);
+                                        // 给助教选择框增加选项
+                                        var taHtml = '<option value="">-请选择-</option>';
+                                        for (var i = 0; i < data.ta.length; i++) {
+                                            if (event.ta == data.ta[i].name) {
+                                                taHtml += '<option value="' + data.ta[i].id + '" selected="selected">' + data.ta[i].name + '</option>';
+                                            } else {
+                                                taHtml += '<option value="' + data.ta[i].id + '">' + data.ta[i].name + '</option>';
+                                            }
+                                        }
+                                        $('#ta_select').html(taHtml);
+                                        //课程时间
+                                        $("#time_select").find('option').each(function () {
+                                            var time = $(this).val();
+                                            $(this).removeAttr("selected");
+                                            //去除掉其他的选中属性
+                                            if (data.time_id == time) {
+                                                $(this).attr("selected", 'selected');
+                                            }
+                                        });
+                                        //课程周期
+                                        $("#cycle_select").find('option').each(function () {
+                                            var cycle = $(this).val();
+                                            $(this).removeAttr("selected");
+                                            //去除掉其他的选中属性
+                                            if (data.cycle == cycle) {
+                                                $(this).attr("selected", 'selected');
+                                            }
+                                        });
+
+                                        //设置星期选中
+                                        var weeks = data.week.split(",");
+                                        $("[type='checkbox']").removeAttr("checked");
+                                        for (var i = 0; i < weeks.length; i++) {
+                                            var week = weeks[i];
+                                            $('#week' + week).attr('checked', 'checked')
+                                        }
+                                        //设置状态选中
+                                        $("#status_select").find('option').each(function () {
+                                            var status = $(this).val();
+                                            $(this).removeAttr("selected");
+                                            //去除掉其他的选中熟悉
+                                            if (data.status == status) {
+                                                $(this).attr("selected", 'selected');
+                                            }
+                                        });
+                                        //设置隐藏域的值
+                                        $("[name='id']").val(data.id)
+                                        $("#form_class_id").val(data.class_id)
+
+
+                                    }//回调结束
+                                );
+
+
+                            }
+                        });
+
+                    },
+                    eventMouseover: function (event) {
+                        //do something here...
+//                        console.log('鼠标经过 ...');
+//                        console.log('eventMouseover被执行，选中Event的title属性值为：', event.title);
+//                        console.log(event);
+                        // var s= event.start.format('YYYY-MM-DD HH:mm');
+                        if (event.end == null) {
+                            var time = "全天事件";
+                        } else {
+
+//                    event.start._f="('YYYY-MM-DD HH:ss')";
+//                   event.end._f="('YYYY-MM-DD HH:ss')";
+                            var time = event.start.format('MM-DD HH:mm') + '~' + event.end.format('MM-DD HH:mm');
+                        }
+                        layer.tips(["<p style='color: #ffff00'>" + time
+                        + "</p><p style='color: red'>课程:" + event.course
+                        + "</p><p style='color: blue'>助教:" + event.ta +
+                        "</p><p style='color: blue'>班级:" + event.class +
+                        "</p><p style='color: red'>教室:" + event.room], this, {
+                            tips: [3, '#0FA6D8'],
+                            time: 6000
+                        })
+                    },
+                    eventMouseout: function (event) {
+                        //do something here...
+//                        console.log('eventMouseout被执行，选中Event的title属性值为：', event.title);
+//                        console.log('鼠标离开 ...');
+                        // ...
+                        layer.closeAll('tips');
+                    },
+                    //Event是否可被拖动或者拖拽
+                    editable: true,
+                    //Event被拖动时的不透明度
+                    dragOpacity: 0.5,
+                    eventDrop: function (event, dayDelta, revertFunc) {
+                        //do something here...
+//                        console.log('eventDrop --- start ---');
+//                        console.log(event);
+//                        console.log('eventDrop被执行，Event的title属性值为：', event.title);
+//                        console.log('eventDrop被执行，Event的title属性值为：', event.id);
+                        if (dayDelta._days != 0) { //拖动时间改变天
+//                            console.log('eventDrop被执行，Event的start和end时间改变了：', dayDelta._days + '天！');
+                            var data = {
+                                'id': event.id,
+                                'date': dayDelta._days,
+                                'dataType': 'day'
+                            }
+                        } else if (dayDelta._milliseconds != 0) {
+//                            console.log('eventDrop被执行，Event的start和end时间改变了：', dayDelta._milliseconds / 1000 + '秒！');
+                            var data = {
+                                'id': event.id,
+                                'date': dayDelta._milliseconds / 1000,
+                                'dataType': 'second'
+                            }
+                        } else {
+//                            console.log('eventDrop被执行，Event的start和end时间没有改变！');
+                        }
+                        //revertFunc();
+//                        console.log('eventDrop --- end ---');
+                        var url = "{:url('eventDrop')}";
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: data,
+                            dataType: "json",
+                            success: function (e) {
+                                layer.msg(e.msg)
+                                $('#calendar').fullCalendar('refetchEvents');
+                            }
+                        })
+
+                    },
+                    eventResize: function (event, dayDelta, revertFunc) {
+                        //do something here...
+//                        console.log(' 11111111start  eventResize');
+//                        console.log('eventResize被执行，Event的title属性值为：', event.title);
+                        if (dayDelta._days != 0) {
+                            var data = {
+                                'id': event.id,
+                                'date': dayDelta._days,
+                                'dataType': 'addDay'
+                            }
+//                            console.log('eventResize被执行，Event的start和end时间改变了：', dayDelta._days + '天！');
+                        } else if (dayDelta._milliseconds != 0) {
+//                            console.log('eventResize被执行，Event的start和end时间改变了：', dayDelta._milliseconds / 1000 + '秒！');
+                            var data = {
+                                'id': event.id,
+                                'date': dayDelta._milliseconds / 1000,
+                                'dataType': 'addSecond'
+                            }
+                        } else {
+//                            console.log('eventResize被执行，Event的start和end时间没有改变！');
+                        }
+                        //revertFunc();
+//                        console.log('--- 111111end --- eventResize');
+                        var url = "{:url('eventDrop')}";
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: data,
+                            dataType: "json",
+                            success: function (e) {
+                                layer.msg(e.msg)
+                                $('#calendar').fullCalendar('refetchEvents');
+                            }
+                        })
+                    },
+                    events: '{:url("$classuri/classData")}?name={$Think.get.name|default=""}&branch={$Think.get.branch|default=""}&cycle={$Think.get.cycle|default=""}&class_id={$Think.get.class_id|default=""}&teacher={$Think.get.teacher|default=""}'
+                });
+
+            });
+        });
+
+
+    });
+    function editSubmit() {
+        //提交事件
+        var formdata = $("#edit_form").serialize();
+        $.post('{:url("$classuri/edit")}', formdata, function (data) {
+            layer.closeAll();
+            layer.msg(data.msg, {icon: 6});
+            $('#calendar').fullCalendar('refetchEvents');
+        })
+    }
+
+</script>

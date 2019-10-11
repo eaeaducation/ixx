@@ -1,0 +1,20 @@
+{extend name='shop@public/main'}
+{block name="style"}
+    <style>
+        .header{background: #002458;}
+        .header h1{color: #fff;padding: 0 1rem;}
+        .header h1 .sign{margin-left: 29px;color: #fff;}
+        .header h1 .reg{float: right; font-size: 13px; color: #fff;}
+        .header .back{background: url("/static/home/shop/images/product/back1.png") no-repeat .75rem center; background-size: auto 16px;}
+        #content{margin: 2% 8%;}
+    </style>
+{/block}
+{block name="body"}
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1>
+        <span class="sign">用户协议</span>
+    </h1>
+</header>
+<div id="content">{$row.content|raw}</div>
+{/block}

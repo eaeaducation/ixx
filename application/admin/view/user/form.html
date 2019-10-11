@@ -1,0 +1,60 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    {if isset($vo.avatar)}
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户头像</label>
+        <div class="layui-input-block">
+            <img style="height:auto;max-height:100px;min-width:100px" src="{$vo.avatar|default=''}" class="img-circle"/>
+            <input type="hidden" name="avatar" onchange="$(this).prev('img').attr('src', this.value)"
+                   value="{$vo.avatar|default=''}">
+            <a class="layui-btn layui-btn-sm layui-btn-primary" data-file="one" data-uptype="local" data-type="ico,png"
+               data-field="avatar"><i class="fa fa-upload-p">&nbsp</i>上传图片</a>
+        </div>
+    </div>
+    {/if}
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户账号</label>
+        <div class="layui-input-block">
+            <input readonly="readonly" disabled="disabled" value="{:session('user.phone')}" title="请输入用户名称"
+                   placeholder="请输入用户名称" class="layui-input layui-bg-gray">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系邮箱</label>
+        <div class="layui-input-block">
+            <input readonly="readonly" name="email"
+                   pattern="^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$"
+                   value='{$vo.email|default=""}' title="请输入联系邮箱" placeholder="请输入联系邮箱"
+                   class="layui-input layui-bg-gray">
+        </div>
+    </div>
+
+    {if isset($vo.english_name)}
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文名</label>
+        <div class="layui-input-block">
+            <input type="tel" autofocus name="mobile" value='{$vo.english_name|default=""}'
+                   title="请输入英文名" placeholder="请输入英文名" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户描述</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入用户描述" title="请输入用户描述" class="layui-textarea"
+                      name="description">{$vo.description|default=""}</textarea>
+        </div>
+    </div>
+
+    {/if}
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'>{/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+    <script>window.form.render();</script>
+</form>

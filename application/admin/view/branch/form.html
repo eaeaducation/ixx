@@ -1,0 +1,68 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请输入校区名称"
+                   placeholder="请输入校区名称" class="layui-input" maxlength="20">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区类型</label>
+        <div class="layui-input-block">
+            {:get_category_select(1, 'top_id', isset($vo.top_id) ? $vo.top_id : '', 'layui-select full-width',
+            ['lay-ignore'
+            => '',
+            'required'=>'required'])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" value='{$vo.address|default=""}' title="请输入校区地址"
+                   placeholder="请输入校区地址" class="layui-input" maxlength="50">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">负责人</label>
+        <div class="layui-input-block">
+            <input type="text" name="principal" value='{$vo.principal|default=""}' title="请输入校区负责人"
+                   placeholder="请输入校区负责人" class="layui-input" maxlength="32" required>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="tel" value='{$vo.tel|default=""}' title="请输入校区联系电话"
+                   placeholder="请输入校区联系电话" class="layui-input" maxlength="15" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">客服电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="service_tel" value='{$vo.service_tel|default=""}'
+                   title="请输入校区客服电话"
+                   placeholder="请输入校区客服电话" class="layui-input" maxlength="15">
+        </div>
+    </div>
+
+
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="created_at" value="{:time()}">
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+    <script>
+        window.form.render();
+    </script>
+
+</form>

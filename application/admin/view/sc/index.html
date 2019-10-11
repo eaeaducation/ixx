@@ -1,0 +1,101 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add") && in_array(session('user.authorize'), [1,3,4])}-->
+<button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'
+        data-title="添加类目"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加类目
+</button>
+<!--{/if}-->
+<!--{if auth("$classuri/del") && in_array(session('user.authorize'), [1,3,4])}-->
+<button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
+        class='layui-btn layui-btn-sm layui-btn-primary'>删除类目
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">一级类目</label>
+        <div class="layui-input-inline">
+            <select name='top_id' class='layui-select' lay-search="">
+                <option value=''> - 所有记录 -</option>
+                <!--{foreach $top_categories as $k => $v}-->
+                <!--{if $k == $Think.get.top_id}-->
+                <option selected="selected" value='{$k}'>{$v}</option>
+                <!--{else}-->
+                <option value='{$k}'>{$v}</option>
+                <!--{/if}-->
+                <!--{/foreach}-->
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">Key</label>
+        <div class="layui-input-inline">
+            <input name="key" value="{$Think.get.key|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<script>
+    window.form.render();
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>一级类目(Top Title)</th>
+            <!--<th class='text-center'>唯一key(Key)</th>-->
+            <th class='text-center'>标题(Title)</th>
+            <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">{$vo.t_title}</td>
+            <!--<td class="text-center">{$vo.key}</td>-->
+            <td class="text-center">{$vo.title|raw}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit") && in_array(session('user.authorize'), [1,3,4])}
+                <span class="text-explode">|</span>
+                <a data-title="编辑类目"
+                   data-modal='{:url("$classuri/edit")}?id={$vo.id}&top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del") && in_array(session('user.authorize'), [1,3,4])}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete'
+                   data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

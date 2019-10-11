@@ -1,0 +1,24 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">坐席号</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{:cookie('agent_no')}" name="agent_no" required>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="password" value="{:cookie('password')}" class="layui-input" name="password" required>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" type='submit'>签入</button>
+    </div>
+    <script>window.form.render();</script>
+</form>

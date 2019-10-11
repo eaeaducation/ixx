@@ -1,0 +1,543 @@
+{extend name='admin@public/content'}
+{block name="style"}
+<style>
+    .survey_prefix {
+        background: #fff;
+        margin-left: -10px;
+        margin-right: -10px;
+        padding-left: 9px;
+        padding-right: 9px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #menu2 {
+        text-align: center;
+    }
+
+    .box {
+        height: 800px;
+        overflow-y: auto;
+    }
+
+</style>
+{/block}
+{block name="content"}
+<div class="survey">
+    <form action="{:request()->url()}" onsubmit="return false" data-auto="true" method="post">
+        <div class="row layui-border-box survey">
+            <div class="col-xs-8">
+                <div class="box">
+                    <!--主要问卷内容 start-->
+                    <div class="layui-tab-content">
+                        <div class="survey_title">
+                            <div class="inner">
+                                <h1 class="title_content cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                    contenteditable="true" data-editor="editor1" tabindex="0" spellcheck="false"
+                                    style="text-align: center;position: relative;font-size: 20px;height:44px;line-height: 44px;"
+                                    role="textbox"
+                                    aria-label="false"
+                                    aria-describedby="cke_35">
+                                    {$vo.title|default="创建问卷 ( 请编辑…… )"}</h1>
+                            </div>
+                        </div>
+                        <div class="survey_prefix">
+                            <div class="prefix_content cke_editable cke_editable_inline cke_contents_ltr cke_show_borders">
+                            <textarea id="surveydesc" title="请输入该问卷的描述信息" class="layui-textarea" name="desc"
+                                      placeholder="请输入该问卷的描述信息">{$vo.desc|default=''}</textarea>
+                            </div>
+                        </div>
+
+                        <!--内容  start-->
+                        <div class="all_660">
+                            {if isset($vo_cont)}
+                            <div class="yd_box">
+                                {volist name="$vo_cont" id="v1"}
+                                <div isover="yes" class="movie_box"
+                                     style="border: 1px solid rgb(255, 255, 255);" data-id="{$v1.id}">
+                                    <ul class="wjdc_list">
+                                        <li>
+                                            <div class="tm_btitlt">
+                                                <i class="nmb">{$v1.sort}</i>. <i class="btwenzi">{$v1.name}</i><span
+                                                    class="tip_wz">{$v1['type_name']}</span>
+                                            </div>
+                                            &nbsp;&nbsp;<input class="isbt" {in name="v1.is_require" value="1" } checked
+                                                               {/in} style="vertical-align: middle;" type="checkbox"
+                                            /><font color="red">
+                                            <small>必填</small>
+                                        </font>
+                                        </li>
+                                        {if isset($v1['items'])}
+                                        {volist name="v1.items" id="v2"}
+                                        <li>
+                                            <label class="think-radio"><input name="input[{$v1.sort}][{$v1.type}][]"
+                                                                              type="{$v1.type}"
+                                                                              value=""><span>{$v2}</span></label>
+                                        </li>
+                                        {/volist}
+                                        {/if}
+
+                                        {if $v1['type']=='input'}
+                                        <li>
+                                            <input name="input[{$v1.sort}][text][]"
+                                                   class="layui-input layui-input-inline input_wenbk btwen_text btwen_text_dx"/>
+                                        </li>
+                                        {/if}
+
+                                        {if $v1['type']=='text'}
+                                        <li>
+                                        <textarea name="input[{$v1.sort}][text][]"
+                                                  class="layui-textarea input_wenbk btwen_text btwen_text_dx"></textarea>
+                                        </li>
+                                        {/if}
+
+                                    </ul>
+                                    <div class="dx_box" data-t="{$v1.type_index}" style="display: none;"></div>
+                                </div>
+                                {/volist}
+
+                            </div>
+                            {else /}
+                            <div class="yd_box"></div>
+                            {/if}
+
+                        </div>
+                        <!--内容  end  -->
+                    </div>
+                    <!--主要问卷内容 end-->
+                </div>
+            </div>
+
+            <div class="col-xs-4">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <div class="box-title">
+                            选择题型
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <ul class="nav nav-stacked">
+                            <li class="type_item" value="1">
+                                <a><i class="fa fa-dot-circle-o">&nbsp;</i>单选题</a>
+                            </li>
+                            <li class="type_item" value="2">
+                                <a><i class="fa fa-check-square-o">&nbsp;</i>多选题</a>
+                            </li>
+                            <li class="type_item" value="3"><a><i class="fa fa-file-text-o">&nbsp;</i>单行文本</a></li>
+                            <li class="type_item" value="4"><a><i class="fa fa-navicon">&nbsp;</i>多行文本</a></li>
+
+                            <!--<li class="type_item" value="3"><a><i class="fa fa fa-calendar">&nbsp;</i>多行文本</a></li>-->
+                        </ul>
+                        <!--设置问卷时间段 和 背景-->
+                        <hr class="layui-bg-orange">
+                        <div class="layui-form">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">问卷背景图</label>
+                                <div class="layui-input-block">
+                                    <img data-tips-image="" style="height:auto;max-height:36px;min-width:36px"
+                                         src='{$vo.bg_pic|default="/static/admin/show/images/00bj.png"}'>
+                                    <input type="hidden" id="avatar" value='{$vo.bg_pic|default=""}' name="avatar"
+                                           onchange="$(this).prev('img').attr('src', this.value)" value=""
+                                           class="layui-input">
+                                    <a class="btn btn-link" data-file="one" data-uptype="local"
+                                       data-type="ico,png,jpg,jpeg"
+                                       data-field="avatar">上传问卷背景</a>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label label-required">问卷时间段</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="time_range" name="time_range"
+                                           value="{$vo.strtime|default=''}"
+                                           placeholder="设置问卷起止时间" class="layui-input">
+                                </div>
+                            </div>
+
+                            <!--结束页面信息设置-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">问卷结束语</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="finishword" name="finishword"
+                                           value="{$vo.finishword|default='感谢您的支持！'}"
+                                           placeholder="设置问卷完成后跳转页面结束语" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">完成提示图</label>
+                                <div class="layui-input-block">
+                                    <img data-tips-image="" style="height:auto;max-height:36px;min-width:36px"
+                                         src='{$vo.finish_pic|default="/static/admin/show/images/finishpic.png"}'>
+                                    <input type="hidden" id="finishpic" value='{$vo.finish_pic|default=""}'
+                                           name="finishpic"
+                                           onchange="$(this).prev('img').attr('src', this.value)"
+                                           class="layui-input">
+                                    <a class="btn btn-link" data-file="one" data-uptype="local"
+                                       data-type="ico,png,jpg,jpeg"
+                                       data-field="finishpic">上传结束页提示图</a>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">开启引流：</label>
+                                <div class="layui-input-block">
+                                    {if isset($vo['isyl'])}
+                                    <label class="think-radio">
+                                        <input {in name="$vo.isyl" value="0" } checked {/in} checked=''   type="radio" value="0" name="isyl">否　
+                                        <input {in name="$vo.isyl" value="1" } checked {/in}  type="radio" value="1"  name="isyl">是
+                                    </label>
+                                    {else /}
+                                    <label class="think-radio">
+                                        <input  checked=''   type="radio" value="0" name="isyl">否　
+                                        <input   type="radio" value="1"  name="isyl">是
+                                    </label>
+                                    {/if}
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="box-footer text-center">
+                        <div class="btn-group" style="width: 100%">
+                            {if isset($disable)}
+                            {if $disable=='yes'}
+                            <button onclick="showtips()"  type="button" class="btn btn-primary" style="width: 40%;">
+                                <i class="fa fa-exclamation-circle"></i> &nbsp;保存问卷
+                            </button>
+                            {else /}
+                            <button onclick="actionsave()" type="button" class="btn btn-primary" style="width: 40%;">
+                                保存问卷
+                            </button>
+                            {/if}
+                            {else /}
+                            <button onclick="actionsave()" type="button" class="btn btn-primary" style="width: 40%;">
+                                保存问卷
+                            </button>
+                            {/if}
+
+                            {if isset($vo.id)}
+                            <button type="button" id="preview" scrolling="yes" class="btn btn-success"
+                                    style="width: 40%;"
+                                    data-phone-view="{$yl_url}">
+                                预览问卷
+                            </button>
+                            <button type="button" id="previewend" scrolling="yes" class="btn btn-info"
+                                    style="width: 20%;"
+                                    data-phone-view="{$ylend_url}">
+                                预览结束页
+                            </button>
+                            {else /}
+                            <button type="button" disabled scrolling="yes" class="btn btn-success layui-btn-disabled"
+                                    style="width: 40%;">
+                                预览问卷
+                            </button>
+                            <button type="button"  scrolling="yes" class="btn btn-info layui-btn-disabled"
+                                    style="width: 20%;">
+                                预览结束页
+                            </button>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="xxk_box">
+            <div class="xxk_conn hide">
+                <!--单选----------------------------------------------------------------------------------------------------------------------------------------->
+                <div class="xxk_xzqh_box dxuan">
+            <textarea name="" class="layui-textarea btwen_text"
+                      placeholder="单选题目"></textarea>
+                    <div class="title_itram">
+                        <div class="kzjxx_iteam">
+                            <input name="" type="radio" value="" class="dxk">
+                            <input name="" type="text" class="input_wenbk" value="" placeholder="选项">
+                            <!--<label>-->
+                            <!--<input name="" type="checkbox" value="" class="fxk"> <span>可填空</span>-->
+                            <!--</label> -->
+                            <a href="javascript:void(0);" class="del_xm"><i class="fa fa-close">&nbsp;</i>删除</a>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" class="zjxx">增加选项</a>
+                    <!--完成编辑-->
+                    <div class="bjqxwc_box">
+                        <a href="javascript:void(0);" class="qxbj_but">取消编辑</a>
+                        <a href="javascript:void(0);" class="swcbj_but"> 完成编辑</a>
+                    </div>
+                </div>
+                <!--多选----------------------------------------------------------------------------------------------------------------------------------------->
+                <div class="xxk_xzqh_box duoxuan hide">
+                                <textarea name="" cols="" rows="" class="layui-textarea btwen_text btwen_text_duox"
+                                          placeholder="多选题目"></textarea>
+                    <div class="title_itram">
+                        <div class="kzjxx_iteam">
+                            <input name="" type="checkbox" value="" class="dxk">
+                            <input name="" type="text" class="input_wenbk" value="选项" placeholder="选项">
+                            <!--<label>-->
+                            <!--<input name="" type="checkbox" value="" class="fxk">-->
+                            <!--<span>可填空</span></label>-->
+                            <a href="javascript:void(0);" class="del_xm">删除</a>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" class="zjxx">增加选项</a>
+                    <!--完成编辑-->
+                    <div class="bjqxwc_box">
+                        <a href="javascript:void(0);" class="qxbj_but">取消编辑</a>
+                        <a href="javascript:void(0);" class="swcbj_but"> 完成编辑</a>
+                    </div>
+                </div>
+                <!-- 填空----------------------------------------------------------------------------------------------------------------------------------------->
+                <div class="xxk_xzqh_box tktm hide">
+            <textarea name="" cols="" rows="" class="layui-textarea btwen_text"
+                      placeholder="答题区"></textarea>
+                    <!--完成编辑-->
+                    <div class="bjqxwc_box">
+                        <a href="javascript:void(0);" class="qxbj_but">取消编辑</a>
+                        <a href="javascript:void(0);" class="swcbj_but"> 完成编辑</a>
+                    </div>
+                </div>
+                <!-- 矩阵----------------------------------------------------------------------------------------------------------------------------------------->
+                <div class="xxk_xzqh_box  hide">
+                    <div class="line_dl"></div>
+                    <div class="jztm">
+                <textarea name="" cols="" rows="" class="layui-textarea btwen_text"
+                          placeholder="题目"></textarea>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                            <tr valign="top">
+                                <td width="135">
+                                    <h4 class="ritwenz_xx">左标题</h4>
+                                    <textarea name="" cols="" rows="" class="leftbtwen_text"
+                                              placeholder="例子：CCTV1，CCTV2，CCTV3"></textarea>
+                                </td>
+                                <td>
+                                    <h4 class="ritwenz_xx  ">
+                                        右侧选项文字 <input type="radio" name="xz" value="0"
+                                                      checked="checked" class="xzqk">单选<input
+                                            type="radio" value="1" name="xz" class="xzqk">多选
+                                    </h4>
+                                    <div class="title_itram">
+                                        <div class="kzjxx_iteam">
+                                            <input name="" type="text" class="input_wenbk jzwent_input"
+                                                   value="选项" onblur="if(!this.value)this.value='选项'"
+                                                   onclick="if(this.value&&this.value=='选项' )  this.value=''">
+                                            <!--<label>-->
+                                            <!--<input name="" type="checkbox" value="" class="fxk"> <span>可填空</span></label>-->
+                                            <a href="javascript:void(0);" class="del_xm">删除</a>
+                                        </div>
+                                        <div class="kzjxx_iteam">
+                                            <input name="" type="text" class="input_wenbk jzwent_input"
+                                                   value="选项" onblur="if(!this.value)this.value='选项'"
+                                                   onclick="if(this.value&&this.value=='选项' )  this.value=''">
+                                            <!--<label>-->
+                                            <!--<input name="" type="checkbox" value="" class="fxk"> <span>可填空</span></label>-->
+                                            <a href="javascript:void(0);" class="del_xm">删除</a>
+                                        </div>
+                                        <div class="kzjxx_iteam">
+                                            <input name="" type="text" class="input_wenbk jzwent_input"
+                                                   value="选项" onblur="if(!this.value)this.value='选项'"
+                                                   onclick="if(this.value&&this.value=='选项' )  this.value=''">
+                                            <!--<label>-->
+                                            <!--<input name="" type="checkbox" value="" class="fxk"> <span>可填空</span></label>-->
+                                            <a href="javascript:void(0);" class="del_xm">删除</a>
+                                        </div>
+                                    </div>
+                                    <a href="javascript:void(0)" class="zjxx"
+                                       style="margin-left: 0;">增加选项</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--完成编辑-->
+                        <div class="bjqxwc_box">
+                            <a href="javascript:void(0);" class="qxbj_but">取消编辑</a> <a
+                                href="javascript:void(0);" class="swcbj_but"> 完成编辑</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<form id="finishForm" action="{:request()->url()}" onsubmit="return false" data-auto="true" method="post">
+
+</form>
+<script>
+
+    require(['ckeditor'], function () {
+        window.createEditor('#surveydesc', {height: 200});
+    });
+
+</script>
+<script>
+    require(['survey'], function () {
+    });
+
+    window.laydate.render({
+        elem: '#time_range',
+        range: true,
+        theme: '#0099CC',
+        format: 'yyyy-MM-dd'
+    });
+
+    function actionsave() {
+
+        var checkstatus = 1;
+        var msg = '';
+        var survey = '"'+$('.cke_show_borders').html()+'"';
+        var surveydesc=CKEDITOR.instances.surveydesc.getData();
+        surveydesc=encodeURIComponent(CKEDITOR.instances.surveydesc.getData());
+        var surveytimes = $("#time_range").val();
+        surveytimes = encodeURIComponent(surveytimes);
+        var surveybgpic = $("#avatar").val();
+        var finishpic = $("#finishpic").val();
+        var finishword = $("#finishword").val();
+        var isyl = $("input[name='isyl']:checked").val();
+
+        //保存前的验证
+        if (surveydesc.length > 3200) {
+            msg = '【问卷描述】内容过长，请重新编辑。字数请在800字以内！';
+            tips(msg);
+            checkstatus = 0;
+            return false;
+        }
+        if (survey.length < 3) {
+            msg = '【问卷标题】为空或过短，请重新设置！';
+            tips(msg);
+            checkstatus = 0;
+            return false;
+        }
+
+        if ($(".movie_box").html() == undefined) {
+            msg = '您未设置任何【题型】，请在右侧选择【题型】！';
+            tips(msg);
+            checkstatus = 0;
+            return false;
+        }
+        $(".movie_box").each(function () {
+            var num = $(this).find('.nmb').html();
+            var qtype = $(this).find('.dx_box').attr('data-t');
+            if ($(this).attr("isover") == 'no') {
+                msg = "第【" + num + "】题 请通过【编辑】完成题型设置！";
+                tips(msg);
+                checkstatus = 0;
+                return false;
+            }
+            if (qtype == '1') { //单选题
+                item_num = 0;
+                $(this).find('input').not(".isbt").each(function (index) {
+                    item_num++;
+                    if ($(this).next().html().length < 1) {
+                        msg = "第【" + num + "】题 ， 第【" + (index + 1) + "】选项未设置名称";
+                        tips(msg);
+                        checkstatus = 0;
+                        return false;
+                    }
+                })
+                if (item_num < 2) {
+                    msg = "第【" + num + "】题 ，选项不得少于2项！";
+                    tips(msg);
+                    checkstatus = 0;
+                    return false;
+                }
+            } else if (qtype == '2') { //多选题
+                item_num = 0;
+                $(this).find('input').not(".isbt").each(function (index) {
+                    item_num++;
+                    if ($(this).next().html().length < 1) {
+                        msg = "第【" + num + "】题 ， 第【" + (index + 1) + "】选项未设置名称";
+                        tips(msg);
+                        checkstatus = 0;
+                        return false;
+                    }
+                })
+                if (item_num < 2) {
+                    msg = "第【" + num + "】题 ，选项不得少于2项！";
+                    tips(msg);
+                    checkstatus = 0;
+                    return false;
+                }
+            }
+        })
+
+        if (checkstatus == '1') {
+            if (surveytimes.length < 10) {
+                msg = "请设置 【问卷时间】！";
+                tips(msg);
+                checkstatus = 0;
+                return false;
+            }
+        }
+
+        //结束验证 查看验证结果 0 失败 1成功
+        if (checkstatus == '1') {
+            var finishForm = $("#finishForm");
+            finishForm.html('');
+            finishForm.append('<input type="hidden" name="cont[title]" value=' + survey + '>');
+            finishForm.append('<input  name="cont[desc]" value=' + surveydesc + '>');
+            finishForm.append('<input type="hidden" name="cont[times]" value=' + surveytimes + '>');
+            finishForm.append('<input type="hidden" name="cont[bgpic]" value=' + surveybgpic + '>');
+            finishForm.append('<input type="hidden" name="cont[finishword]" value=' + finishword + '>');
+            finishForm.append('<input type="hidden" name="cont[finishpic]" value=' + finishpic + '>');
+            finishForm.append('<input type="hidden" name="cont[isyl]" value=' + isyl + '>');
+            $(".movie_box").each(function () {
+                var num = $(this).find('.nmb').html();
+                var qtitle = " ' "+$(this).find('.btwenzi').html()+" ' ";
+                var type = $(this).find('.dx_box').attr('data-t');
+                var id = $(this).attr('data-id')
+                finishForm.append('<input type="hidden" name="cont[data][' + num + '][id]" value=' + id + '>');
+                finishForm.append('<input type="hidden" name="cont[data][' + num + '][sort]" value=' + num + '>');
+                finishForm.append('<input type="hidden" name="cont[data][' + num + '][qtitle]" value=' + qtitle + '>');
+
+                if ($(this).find(".isbt").is(':checked')) {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][is_require]" value="yes">');
+                } else {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][is_require]" value="no">');
+                }
+
+                if (type == '1') {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][qtype]" value="radio">');
+                    $(this).find('input').not(".isbt").each(function (index) {
+                        var items_title = " ' "+$(this).next().html()+" ' ";
+                        finishForm.append('<input  name="cont[data][' + num + '][items][]" value=' + items_title + '>');
+                    })
+                } else if (type == '2') {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][qtype]" value="checkbox">');
+                    $(this).find('input').not(".isbt").each(function (index) {
+                        var items_title = " ' "+$(this).next().html()+" ' ";
+                        finishForm.append('<input  name="cont[data][' + num + '][items][]" value=' + items_title + '>');
+                    })
+                } else if (type == '3') {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][qtype]" value="input">');
+                } else if (type == '4') {
+                    finishForm.append('<input type="hidden" name="cont[data][' + num + '][qtype]" value="text">');
+                }
+
+            })
+
+            finishForm.submit();
+        }
+    }
+    function showtips (){
+        msg = "当前问卷已被回答，不可以再修改了。";
+        tips(msg);
+    }
+
+    function tips(msg) {
+        layer.alert(msg, {
+            skin: 'layui-layer-lan' //样式类名
+            , closeBtn: 0
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+</script>
+{/block}

@@ -1,0 +1,88 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/add")}' data-title="添加工资"
+        class='layui-btn layui-btn-sm layui-btn-primary'>添加工资
+</button>
+<!--{/if}-->
+{/block}
+
+{block name='content'}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">员工姓名</label>
+        <div class="layui-input-inline">
+            {:get_employee_select('','user_id', session('user')['employee']['department'], $Think.get.user_id, 'input-sm form-control', [],false)}
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">发薪月份</label>
+        <div class="layui-input-inline">
+            <input type="text" autocomplete="off" class="layui-input" name="month" value='{$Think.get.month|default=""}'
+                   id="month" placeholder="- 请选择 -">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function(){
+        var laydate = layui.laydate
+            ,form = layui.form;
+        laydate.render({
+            elem: '#month'
+            ,type: 'month'
+        });
+    })
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class="text-center">员工姓名</th>
+            <th class="text-center">基本工资</th>
+            <th class="text-center">绩效</th>
+            <th class="text-center">奖金</th>
+            <th class="text-center">杂费扣除</th>
+            <th class="text-center">发薪月份</th>
+            <th class="text-center">实发工资</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.name}</td>
+            <td class="text-center">￥{$vo.basic}元</td>
+            <td class="text-center">￥{$vo.performance}元</td>
+            <td class="text-center">￥{$vo.bonus}元</td>
+            <td class="text-center">￥{$vo.deduction}元</td>
+            <td class="text-center">{$vo.month|date='Y-m'}</td>
+            <td class="text-center">{$vo.total}</td>
+            <td class="text-nowrap text-center">
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-title="编辑" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}'>删除</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

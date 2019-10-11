@@ -1,0 +1,55 @@
+{extend name='home@public/content'}
+{block name="content"}
+<div class="greywrap">
+    <div class="cate">
+        <!--<div class="cateen hasani finl ani">NEWS</div>
+        <div class="catecn hasani finl delay03 ani">最新资讯</div>-->
+    </div>
+
+    <ul class="tulist">
+        {volist name="content" id="vo"}
+        <li>
+            <div class="tulin hasani find ani">
+                <a href="{:url('home/index/innerPage')}?id={$vo.id}">
+                <div class="pic">
+                    <img src="{$vo.thumb}" alt="">
+                    <i></i>
+                </div>
+                <h3>
+                    <b>{$vo.title}</b>
+                </h3>
+            </a>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+    <!--<div class="hasani scl05 ani">-->
+        <!--<div class="dede_pages">-->
+            <!--<ul class="pagelist" style="display:flex; margin-left:900px;&gt;&lt;li&gt;首页&lt;/li&gt;&lt;li class=" thisclass "="">1-->
+            <!--<li><a href="http://eaeducation.net/tf/news/list_5_2.html">2</a></li>-->
+            <!--<li><a href="http://eaeducation.net/tf/news/list_5_2.html">下一页</a></li>-->
+            <!--<li><a href="http://eaeducation.net/tf/news/list_5_2.html">末页</a></li>-->
+            <!--<li><select name="sldd" style="width:36px" onchange="location.href=this.options[this.selectedIndex].value;">-->
+                <!--<option value="list_5_1.html" selected="">1</option>-->
+                <!--<option value="list_5_2.html">2</option>-->
+            <!--</select></li>-->
+            <!--&lt;!&ndash;<li><span class="pageinfo">共 <strong>2</strong>页<strong>13</strong>条</span></li>&ndash;&gt;-->
+            <!--</ul></div>-->
+    <!--</div>-->
+
+</div>
+
+
+<!-- Home End -->
+
+<div class="play-box">
+    <div class="video-body">
+        <video id="orginal-video" src="" width="960" height="540" controls="" autoplay=""></video>
+    </div>
+    <a href="javascript:void(0);" class="close"></a>
+</div>
+<div class="gray-bg" style="background-color:#000000;"></div>
+
+
+<!-- Footer Start -->
+{/block}

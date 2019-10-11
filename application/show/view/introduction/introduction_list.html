@@ -1,0 +1,76 @@
+{extend name='admin@public/content'}
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">客户电话</label>
+        <div class="layui-input-inline">
+            <input name="customer_tel" value="{$Think.get.customer_tel|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">介绍人电话</label>
+        <div class="layui-input-inline">
+            <input name="introducer_tel" value="{$Think.get.introducer_tel|default=''}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <div class="table-responsive">
+        <table id="test" class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <!--<th class='list-table-check-td'>-->
+                <!--<input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>-->
+                <!--</th>-->
+                <th class="text-center nowrap">编号</th>
+                <th class='text-center nowrap'>客户姓名</th>
+                <th class="text-center nowrap">客户电话</th>
+                <th class="text-center nowrap">校区</th>
+                <th class='text-center nowrap'>介绍人姓名</th>
+                <th class='text-center nowrap'>介绍人电话</th>
+                <th class='text-center nowrap'>活动名称</th>
+                <th class="text-center nowrap">介绍时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $data as $key=>$vo}-->
+            <tr>
+                <!--<td class='list-table-check-td'>-->
+                <!--<input class="list-check-box" value='{$vo.id}' type='checkbox'>-->
+                <!--</td>-->
+                <td class="text-center">{$vo.id}</td>
+                <td class="text-center">
+                    <a data-open='{:url("marketing/premarketing/customerview")}?id={$vo.cid}'>
+                        {$vo.parent_name}
+                    </a>
+                </td>
+                <td class="text-center nowrap">{$vo.parent_tel|mobile_mask}</td>
+                <td class="text-center nowrap">{$vo.branch| convert_branch|raw}</td>
+                <td class="text-center nowrap">
+                    <a data-open='{:url("marketing/premarketing/customerview")}?id={$vo.introducer_id}'>
+                        {$vo.introducer_id|get_parent_name|raw}
+                    </a>
+                </td>
+                <td class="text-center nowrap">{$vo.introducer_id|get_customer_tel|mobile_mask|raw}</td>
+                <td class="text-center nowrap">{$vo.title}</td>
+                <td class="text-center nowrap">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+    </div>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

@@ -1,0 +1,127 @@
+{extend name="admin@public/content"}
+
+{block name="button"}
+<!--{if auth("$classuri/add")}-->
+<button data-modal='{:url("$classuri/set")}' data-title="添加日志"
+        class='layui-btn layui-btn-sm layui-btn-primary'>参数设置</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+    <ul id="my_ul" class="layui-tab-title">
+        <li class="layui-this" data_type="1" >员工打卡</li>
+        <li data_type="2">刷卡找员工</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show text-center">
+                <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+                <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+        </div>
+        <div class="layui-tab-item text-center">
+            <p class="help-block text-center font-s18 st-pc margin-bottom-10">请 刷 卡</p>
+            <img src="/static/img/card.png" style="height: 350px; width: 670px;" class="margin-bottom-20">
+            <form onsubmit="return false;" data-auto="true" method="post">
+                <table class="layui-table" lay-skin="line">
+                    <thead>
+                    <tr>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">电话</th>
+                        <th class="text-center">人事状态</th>
+                        <th class="text-center">合同状态</th>
+                        <th class="text-center">所属校区</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="employee"></tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <input id="hidCardNo" name="card" autocomplete="off" value="" style="width: 1px;border:0px;position: absolute;left: -90%">
+    <input id="my_type" name="type"  type="hidden" value="1"/>
+
+    <script type="text/javascript">
+        function doTTS(){
+            var ttsDiv = document.getElementById('bdtts_div_id');
+            var ttsAudio = document.getElementById('tts_autio_id');
+            var ttsText = document.getElementById('ttsText').value;
+
+            // 这样为什么替换不了播放内容
+            /*var ssrcc = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=10&text='+ttsText;
+            document.getElementById('tts_source_id').src=ssrcc;*/
+
+            // 这样就可实现播放内容的替换了
+            ttsDiv.removeChild(ttsAudio);
+            var au1 = '<audio id="tts_autio_id" autoplay="autoplay">';
+            var sss = '<source id="tts_source_id" src="http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=15&text='+ttsText+'" type="audio/mpeg">';
+            var eee = '<embed id="tts_embed_id" height="0" width="0" src="">';
+            var au2 = '</audio>';
+            ttsDiv.innerHTML = au1 + sss + eee + au2;
+
+            ttsAudio = document.getElementById('tts_autio_id');
+
+            ttsAudio.play();
+        }
+    </script>
+
+    <div style="display: none">
+        <input type="text" id="ttsText" value="">
+        <input type="button" id="tts_btn" onclick="doTTS()" value="播放">
+    </div>
+    <div id="bdtts_div_id">
+        <audio id="tts_autio_id" autoplay="autoplay">
+            <source id="tts_source_id" src="http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=15&text=" type="audio/mpeg">
+            <embed id="tts_embed_id" height="0" width="0" src="">
+        </audio>
+    </div>
+</div>
+
+<script>
+    $("#my_ul").find("li").click(function(){
+        var li_type = $(this).attr("data_type");
+        $("#my_type").val(li_type);
+    })
+
+    function card() {
+
+        $("#hidCardNo").focus();
+
+        var cardNo = $("#hidCardNo").val();
+
+        var type = $("#my_type").val();
+
+        if (cardNo != null && cardNo.length >= 10) {
+            $.post('{:url("oa/staffAttend/card")}', {card: cardNo, type: type}, function (e) {
+                if (type == 1) {
+                    if (e.code == 1) {
+                        layer.msg(e.msg, {icon: 6})
+                        $('#ttsText').val(e.msg);
+                        $('#tts_btn').click();
+                    } else {
+                        layer.msg(e.msg, {icon: 5})
+                        $('#ttsText').val(e.msg);
+                        $('#tts_btn').click();
+                    }
+                } else if (type == 2) {
+                    var res = e.data;
+                    var str = '';
+                    if (e.code == 1) {
+                        str = '<td class="text-center text-nowrap">' + res.name + '</td>' +
+                            '<td class="text-center">' + res.mobile+ '</td>' +
+                            '<td class="text-center nowrap">' + res.personnel + '</td>' +
+                            '<td class="text-center nowrap">' + res.contract + '</td>' +
+                            '<td class="text-center nowrap">' + res.department + '</td>';
+                    } else {
+                        str = '<td colspan="6" class=\'list-table-check-td font-s18 text-red\'>' + e.msg + '</td>';
+                    }
+                    $('.employee').html(str);
+                }
+            })
+            $("#hidCardNo").val('');
+        }
+    }
+    var i = setInterval(card, 1000);
+</script>
+{/block}

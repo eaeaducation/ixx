@@ -1,0 +1,522 @@
+{extend name="admin@public/content"}
+
+{block name="content"}
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20' id="class-form" lay-filter="class">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>基本信息</legend>
+    </fieldset>
+
+    <div data-consultation-type="basic" class="form-item">
+        <div class="layui-form-item">
+            <a style="background-color: #63ba79"
+               data-iframe='admin/index/fragment.html#{:url("$classuri/choose_student")}'
+               class="layui-btn layui-btn-primary col-md-12"
+               data-area="['70%','85%']" data-title="选择已有学生"><i class="fa fa-plus-square"> 从客户中选择需要报名的学员</i></a>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                姓名
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[name]" required="required"
+                       value="{$vo.name|default=''}"
+                       title="请输入客户姓名" placeholder="请输入客户姓名" class="layui-input">
+            </div>
+
+            <label class="col-sm-1 control-label">
+                性别
+            </label>
+            <div class='col-sm-4'>
+                {:get_category_radio(3, 'student[gender]', isset($vo.gender)?$vo.gender:'1')}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                监护人电话
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[parent_tel]" required="required" lay-verify="required"
+                       value="{$vo.parent_tel|default=''}"
+                       title="电话号码必须输入手机号码" placeholder="请输入联系人电话" class="layui-input" pattern="^1\d{10}$">
+            </div>
+            <label class="col-sm-1 control-label">
+                监护人姓名
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[parent_name]" value="{$vo.parent_name|default=''}" title="请输入联系人姓名"
+                       required="required"
+                       placeholder="请输入联系人姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                亲属关系
+            </label>
+            <div class='col-sm-4'>
+                {:get_category_radio(9, 'student[relation]', isset($vo.relation)?$vo.relation:'1')}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                昵称
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[nickname]"
+                       value="{$vo.nickname|default=''}"
+                       title="请输入昵称" placeholder="请输入昵称" class="layui-input">
+            </div>
+            <label class="col-sm-1 control-label">
+                微信号码
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[wechat]"
+                       value="{$vo.wechat|default=''}"
+                       title="请输入微信号码" placeholder="请输入微信号码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                学员卡号
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[icard]"
+                       value="{$vo.icard|default=''}" class="layui-input" placeholder="学员卡号">
+            </div>
+            <label class="col-sm-1 control-label">
+                QQ号码
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[qq]"
+                       value="{$vo.qq|default=''}" class="layui-input" placeholder="请输入QQ号码">
+                <div class="help-block text-right">
+                    <a href="javascript:showMore()">更多信息 >></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-consultation-type="other" class="form-item" style="display:none;">
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                出生日期
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[birthday]"
+                       value='{$vo.birthday|default=""|date="Y-m-d"}' class="layui-input">
+            </div>
+            <label class="col-sm-1 control-label">
+                居住地址
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[address]"
+                       value="{$vo.address|default=''}" class="layui-input" placeholder="请输入居住地址">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                公立学校
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[school]"
+                       value="{$vo.school|default=''}" class="layui-input" placeholder="请输入公立学校">
+            </div>
+            <label class="col-sm-1 control-label">
+                公立班级
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[class]"
+                       value="{$vo.class|default=''}" class="layui-input" placeholder="请输入公立学校班级">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                其他信息
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[other_info]"
+                       value="{$vo.other_info|default=''}" class="layui-input" placeholder="请输入其他信息">
+            </div>
+            <label class="col-sm-1 control-label">
+                标签
+            </label>
+            <div class='col-sm-4'>
+                <input type="text" name="student[tags]"
+                       value="{$vo.tags|default=''}" class="layui-input" placeholder="请输入标签">
+                <div class="help-block">
+                    <p class="text-info">请以半角 <code>,</code> 分隔每个标签</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>班级信息</legend>
+    </fieldset>
+    <div class="follow">
+        <div class="layui-form-item">
+            <a style="background-color: #63ba79;width:49%;"
+               data-iframe='admin/index/fragment.html#{:url("$classuri/choose_class")}'
+               class="layui-btn layui-btn-primary"
+               data-area="['70%','85%']" data-title="选择班级"><i class="fa fa-adjust"> 选择班级</i></a>
+            <a style="background-color: #63ba79;width:49%;"
+               data-iframe='admin/index/fragment.html#{:url("$classuri/choose_courses")}'
+               class="layui-btn layui-btn-primary"
+               data-area="['70%','85%']" data-title="选择课程"><i class="fa fa-plug"> 选择课程</i></a>
+        </div>
+        <div class="layui-form-item">
+            <table class="layui-table" lay-skin="line">
+                <thead>
+                <tr id="table_thead" hidden>
+                    <th class="text-center nowrap">包含课程</th>
+                    <th class="text-center nowrap">课程价格</th>
+                    <th class="text-center nowrap" style="width: 50px;">包含课时</th>
+                    <th class="text-center nowrap" style="width: 50px;">优惠金额</th>
+                    <th class="text-center nowrap" style="width: 150px;">备注</th>
+                    <th class="text-center nowrap">课程总额</th>
+                </tr>
+                </thead>
+                <tbody id="table_tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <fieldset class="layui-elem-field">
+        <legend>结算信息</legend>
+        <div class="layui-field-box">
+            <label class="col-sm-1 control-label">
+                <span style="font-size: 20px; color: #f0ad4e;">总价格：</span>
+            </label>
+            <span style="font-size: 20px;color: #FF8C00;">￥</span><span id="showmoney"
+                                                                        style="font-size: 20px;color: #FF8C00;">
+                0
+            </span>
+        </div>
+        <div class="layui-field-box">
+            <fieldset class="layui-elem-field">
+                <legend>包含杂费</legend>
+                <div class="layui-field-box">
+                    <!--<div id="textbookdetail">-->
+                    <table class="layui-table" lay-skin="line" id="zf_data">
+                        <thead>
+                        <tr id="zf_thead" hidden>
+                            <th class='text-center nowrap'></th>
+                            <th class="text-center nowrap">费用名称</th>
+                            <th class="text-center nowrap">费用内容</th>
+                            <th class="text-center nowrap">费用类型</th>
+                            <th class="text-center nowrap">费用金额</th>
+                        </tr>
+                        </thead>
+                        <tbody id="zf_tbody">
+                        </tbody>
+                    </table>
+                    <!--</div>-->
+                </div>
+            </fieldset>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>经办信息</legend>
+    </fieldset>
+    <div>
+        <div class="layui-form-item">
+            <label class="col-sm-1 control-label">
+                经办校区
+            </label>
+            <div class='col-sm-2'>
+                {if in_array(session('user.authorize'),[1,3,4,22])}
+                {:get_branches_select('student[branch]', isset($vo.branch)?$vo.branch:'', '', [], false)}
+                {else/}
+                <input type="text" class="layui-input" value={:convert_branch(session('user.employee.department'))}
+                       readonly>
+                <input type="hidden" name="student[branch]" class="layui-input"
+                       value={:session('user.employee.department')}>
+                {/if}
+            </div>
+            <label class="col-sm-1 control-label">
+                来源渠道
+            </label>
+            <div class='col-sm-2'>
+                {:get_channels_select('student[source]', isset($vo.source)?$vo.source:'', '', [], false)}
+            </div>
+            <label class="col-sm-1 control-label">
+                cc
+            </label>
+            <div class='col-sm-2'>
+                {:get_sellers_select('cc','student[collect_id]', '', '', [],false)}
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="created_at" value="{:time()}">
+    <input type="hidden" name="device_info" value="System">
+    <input type="hidden" name="student[is_student]" value="1">
+    <input type="hidden" name="userid" value="{:session('user.id')}">
+    <input type="hidden" name="customer_id" value="{$customer_id|default=''}">
+    <input type="hidden" name="class_id" value="">
+    <input type="hidden" name="result_money" value="">
+    <div class="col-sm-4 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="button" id="submit">保存订单</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="script"}
+
+
+<script>
+    window.form.render();
+    window.laydate.render({range: false, elem: 'input[name="student[birthday]"]', max: '{:date("Y-m-d")}'});
+    function showMore() {
+        $("[data-consultation-type='other']").toggle();
+    }
+</script>
+<script>
+    var totalmoney = '';
+    require(['angular'], function () {
+        // 应用创建与初始化
+        window.app = angular.module("ClassForm", []).run(callback);
+        angular.bootstrap(document.getElementById('class-form'), [app.name]);
+
+        function callback() {
+            window.add_old = function (id) {
+                $.post('{:url("$classuri/choose_student")}', {id: id}, function (res) {
+                    $(":radio[name='student[relation]'][value='" + res.relation + "']").prop("checked", "checked");
+                    $(":radio[name='student[gender]'][value='" + res.gender + "']").prop("checked", "checked");
+                    $("select[name='student[source]'] option[value='" + res.source + "']").attr("selected", "selected");
+                    $("select[name='student[branch]'] option[value='" + res.branch + "']").attr("selected", "selected");
+                    $("select[name='student[collect_id]'] option[value='" + res.collect_id + "']").attr("selected", "selected");
+                    window.form.render();
+
+                    $('input[name="customer_id"]').val(res.id);
+                    $('input[name="student[parent_name]"]').val(res.parent_name);
+                    $('input[name="student[name]"]').val(res.name);
+                    $('input[name="student[birthday]"]').val(timestampToTime((res.birthday)));
+                    $('input[name="student[parent_tel]"]').val(res.parent_tel);
+                    $('input[name="student[qq]"]').val(res.qq);
+                    $('input[name="student[wechat]"]').val(res.wechat);
+                    $('input[name="student[school]"]').val(res.school);
+                    $('input[name="student[class]"]').val(res.class);
+                    $('input[name="student[address]"]').val(res.address);
+                    $('input[name="student[other_info]"]').val(res.other_info);
+                    $('input[name="student[tags]"]').val(res.tags);
+                });
+            };
+
+            window.choose_class = function (ids) {
+                $('input[name="class_id"]').val(ids);
+                $.post('{:url("$classuri/choose_class")}', {ids: ids}, function (res) {
+                    $("#table_tbody").html('');
+                    $("#zf_tbody").html('');
+                    totalmoney = res.total_money;
+                    $("#table_thead").show();
+                    for (var i in res) {
+                        // 杂费添加
+                        for (var j in res[i]) {
+                            // 排除空结果，否则会append多个
+                            if (res[i][j].textbook_title != undefined && i != 'total_money') {
+                                $("#zf_thead").show();
+                                $("#zf_tbody").append(
+                                    "<tr>" +
+                                    "<td class='list-table-check-td'><input class='list-check-box' onchange='calculate_textbook($(this))' value=" + res[i][j].textbook_id + " checked name='zf[" + res[i][j].textbook_id + "][textbook_id]' lay-ignore type='checkbox'/></td>" +
+                                    "<td class='text-center nowrap'>" + res[i][j].textbook_title + "</td>" +
+                                    "<td class='text-center nowrap'>" + res[i][j].textbook_content + "</td>" +
+
+                                    "<td class='text-center nowrap'><input value=" + res[i][j].textbook_type + " name='zf[" + res[i][j].textbook_id + "][textbook_type]' hidden>" + res[i][j].textbook_type_mc + "</td>" +
+
+                                    "<td class='text-center nowrap'><input value=" + res[i][j].textbook_price + " name='zf[" + res[i][j].textbook_id + "][textbook_price]' hidden>" + res[i][j].textbook_price + "</td>" +
+                                    "</tr>"
+                                );
+                            }
+                        }
+
+                        // 课程添加
+                        if (i != 'total_money') {
+                            $("#table_tbody").append(
+                                "<tr>" +
+                                "<td class='text-center nowrap'><input type='text' name='courses[" + res[i].course_id + "][id]' value=" + res[i].course_id + " hidden/>" + res[i].title + "</td>" +
+                                "<td class='text-center nowrap'><input type='text' name='courses[" + res[i].course_id + "][pre_price]' value=" + res[i].price + " hidden/>" + res[i].price + "</td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].course_id + "][total_class]' value='" + res[i].total_class + "' onkeyup='choose_course(this)' /></td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].course_id + "][cut_price]' value='' onkeyup='calculate_cut(this)'/></td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].course_id + "][remark]' value=''></td>" +
+                                "<td class='text-center nowrap'>" + res[i].total_class * res[i].price + "</td>" +
+                                "</tr>"
+                            );
+                        }
+                    }
+                    // 初始显示金额
+                    $("#showmoney").text(res.total_money);
+                    $('input[name="result_money"]').val(res.total_money);
+                });
+            };
+
+            window.choose_courses = function (ids) {
+                $('input[name="class_id"]').val('');
+                $.post('{:url("$classuri/choose_courses")}', {ids: ids}, function (res) {
+                    $("#table_tbody").html('');
+                    $("#zf_tbody").html('');
+                    totalmoney = res.total_money;
+                    $("#table_thead").show();
+                    for (var i in res) {
+                        if (i != 'total_money') {
+                            // 课程添加
+                            $("#table_tbody").append(
+                                "<tr>" +
+                                "<td class='text-center nowrap'><input type='text' name='courses[" + res[i].id + "][id]' value=" + res[i].id + " hidden/>" + res[i].title + "</td>" +
+                                "<td class='text-center nowrap'><input type='text' name='courses[" + res[i].id + "][pre_price]' value=" + res[i].price + " hidden/>" + res[i].price + "</td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].id + "][total_class]' value='" + res[i].total_class + "' onkeyup='choose_course(this)' /></td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].id + "][cut_price]' value='' onkeyup='calculate_cut(this)'/></td>" +
+                                "<td class='text-center nowrap'><input class='layui-input' type='text' name='courses[" + res[i].id + "][remark]' value=''></td>" +
+                                "<td class='text-center nowrap'>" + res[i].total_class * res[i].price + "</td>" +
+                                "</tr>"
+                            );
+                        }
+
+                        // 杂费添加
+                        for (var j in res[i].textbook_info) {
+                            $("#zf_thead").show();
+                            $("#zf_tbody").append(
+                                "<tr>" +
+                                "<td class='list-table-check-td'><input class='list-check-box' onchange='calculate_textbook($(this))' value=" + res[i].textbook_info[j].id + " checked name='zf[" + res[i].textbook_info[j].id + "][textbook_id]' lay-ignore type='checkbox'/></td>" +
+                                "<td class='text-center nowrap'>" + res[i].textbook_info[j].textbook_title + "</td>" +
+                                "<td class='text-center nowrap'>" + res[i].textbook_info[j].content + "</td>" +
+
+                                "<td class='text-center nowrap'><input value=" + res[i].textbook_info[j].type + " name='zf[" + res[i].textbook_info[j].id + "][textbook_type]' hidden>" + res[i].textbook_info[j].textbook_type_mc + "</td>" +
+
+                                "<td class='text-center nowrap'><input value=" + res[i].textbook_info[j].price + " name='zf[" + res[i].textbook_info[j].id + "][textbook_price]' hidden>" + res[i].textbook_info[j].price + "</td>" +
+                                "</tr>"
+                            );
+                        }
+                    }
+                    // 初始显示金额
+                    $("#showmoney").text(res.total_money);
+                    $('input[name="result_money"]').val(res.total_money);
+                });
+            }
+        }
+    });
+
+    // 提交
+    $("#submit").click(function () {
+        var data = $("#class-form").serialize();
+        var url = '{:url("student/add")}';
+        $.post(url, data, function (res) {
+            if (res.code == 1) {
+                layer.msg(res.msg);
+                layer.open({
+                    title: "订单详情",
+                    type: 2,
+                    area: ['1000px', '800px'],
+                    content: "/order/detail/detail.html?id=" + res.data,
+                    btn: ['查看列表'],
+                    yes: function () {
+                        window.location.href = 'admin.html#/educational/order/orderlist';
+                        layer.closeAll();
+                    },
+                    cancel: function () {
+                        window.location.href = 'admin.html#/educational/order/orderlist';
+                        layer.closeAll();
+                    }
+                });
+            } else {
+                console.log(res);
+                layer.msg(res.msg)
+            }
+        });
+    });
+
+    // 时间戳转换为年月日
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        D = date.getDate();
+        return Y + M + D;
+    }
+
+    // 课程优惠金额价格计算器
+    function calculate_cut(res) {
+        var cut_price = res.value;
+        var courses = res.parentNode.previousSibling;
+        var course = courses.firstChild.value;
+        var course_price = courses.previousSibling.innerText;
+        var total_price = course_price * course - cut_price;
+        res.parentNode.nextSibling.nextSibling.innerText = toDecimal(total_price);
+
+        $("#showmoney").text(paymoney());
+        $('input[name="result_money"]').val(paymoney());
+    }
+
+    // 课程包含课时价格计算器
+    function choose_course(res) {
+        var course = res.value;
+        var cus_prices = res.parentNode.nextSibling;
+        var cut_price = cus_prices.firstChild.value;
+        var course_price = res.parentNode.previousSibling.innerText;
+        var new_price = course_price * course - cut_price;
+        cus_prices.nextSibling.nextSibling.innerText = toDecimal(new_price);
+
+        $("#showmoney").text(paymoney());
+        $('input[name="result_money"]').val(paymoney());
+    }
+
+    // 调整课程或杂费后的实付款
+    function paymoney() {
+        // 调整课程实付款
+        var pay = new Array();
+        $("#table_tbody tr").each(function () {
+            var res = $(this).children("td:last").text();
+            pay.push(res);
+        });
+        var x = 0;
+        for (var i = 0; i < pay.length; i++) {
+            x += pay[i] * 1;
+        }
+
+        // 调整杂费实付款
+        var pay2 = new Array();
+        $("#zf_tbody tr").each(function () {
+            var ischecked = $(this).children("td:first").children('input').prop('checked');
+            if (ischecked) {
+                var res2 = $(this).children("td:last").text();
+                pay2.push(res2);
+            }
+        });
+        var y = 0;
+        for (var i = 0; i < pay2.length; i++) {
+            y += pay2[i] * 1;
+        }
+        return toDecimal(x + y);
+    }
+
+    // 取消杂费后金额
+    function calculate_textbook(res) {
+        var ischecked = res.prop('checked');
+        var textbook_fee = res.parent().parent().children("td:last-child")[0].innerText;
+        var now_price = ($("#showmoney").text()) * 1;
+        if (ischecked) {
+            var res_mon = now_price += textbook_fee * 1;
+            $('input[name="result_money"]').val(toDecimal(res_mon));
+            $("#showmoney").text(toDecimal(res_mon));
+        } else {
+            var res_mon = now_price -= textbook_fee * 1;
+            $('input[name="result_money"]').val(toDecimal(res_mon));
+            $("#showmoney").text(toDecimal(res_mon));
+        }
+    }
+
+    //保留两位小数
+    //功能：将浮点数四舍五入，取小数点后2位
+    function toDecimal(x) {
+        var f = parseFloat(x);
+        if (isNaN(f)) {
+            return;
+        }
+        f = Math.round(x * 100) / 100;
+        return f;
+    }
+</script>
+{/block}

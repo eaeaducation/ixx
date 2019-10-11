@@ -1,0 +1,47 @@
+{
+  "tplname": "test1",
+  "rule": "1、每人有三次机会，红包金额随机（0-300元）红包金额大小看你人品；2、分享给好友，每多一位好友参加，就多一次抽奖机会，邀请越多，机会越多；3、10元即可提现（每天0-8点由于官方限制不能提现，提现后会通过服务通知发到您的微信，注意查收噢；不要删掉了）",
+  "logo":"./images/jgo.png",
+  "data":[
+    {
+      "background":{"name":"背景图","value":"images/0.png","type":"pic"},
+      "reward":{"name":"奖项","value":"谢谢参与","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/1.png","type":"pic"},
+      "reward":{"name":"奖项","value":"苹果手机","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/2.png","type":"pic"},
+      "reward":{"name":"奖项","value":"10元红包","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/3.png","type":"pic"},
+      "reward":{"name":"奖项","value":"蓝牙耳机","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/4.png","type":"pic"},
+      "reward":{"name":"奖项","value":"20元红包","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/5.png","type":"pic"},
+      "reward":{"name":"奖项","value":"1元红包","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/6.png","type":"pic"},
+      "reward":{"name":"奖项","value":"女士包","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    },
+    {
+      "background":{"name":"背景图","value":"images/7.png","type":"pic"},
+      "reward":{"name":"奖项","value":"1000金币","type":"input"},
+      "probaility": {"name":"中奖概率","value":"12.5","type":"input"}
+    }
+  ]
+}

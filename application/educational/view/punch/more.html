@@ -1,0 +1,75 @@
+{extend name="admin@public/content"}
+{block name="content"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='student'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class="text-center">学员姓名</th>
+            <th class="text-center">总课时</th>
+            <th class="text-center">已经消耗课时</th>
+            <th class="text-center">剩余课时</th>
+            <th class="text-center">当前消耗课时</th>
+        </tr>
+        </thead>
+        <tbody id="course">
+        <!--{volist name='student' id="vo"}-->
+        <tr>
+            <td class='list-table-check-td'>
+                {if $vo.goods_num-$vo.consume_num>=$hour}
+                <input class="list-check-box" name="id[]" value="{$vo.id}-{$vo.student_id}-{$vo.consume_num+$hour}-{$vo.goods_num}"
+                       type='checkbox'>
+                {else/}
+                <input class="list-check-box" style="width: 1.45rem;height: 1.45rem" type='text' disabled="">
+                {/if}
+            </td>
+            <td class="text-center text-nowrap">{$vo.student_id|get_customer_name}</td>
+            <td class="text-center text-red">{$vo.goods_num}</td>
+            <td class="text-center text-blue xh">{$vo.consume_num}</td>
+            {if $vo.goods_num-$vo.consume_num<$hour}
+            <td class="text-center text-green sy"><span style="color: red;padding-right: 20px;">{$vo.goods_num-$vo.consume_num}</span><a
+                    class="layui-btn layui-btn-danger layui-btn-xs">课时不足</a></td>
+            {else/}
+            <td class="text-center text-green sy">{$vo.goods_num-$vo.consume_num}</td>
+            {/if}
+            <td class="text-center text-green">{$hour}</td>
+        </tr>
+        <!--{/volist}-->
+        </tbody>
+    </table>
+    <input type="hidden" name="course_id" value="{$course_id}">
+    <input type="hidden" name="hour" value="{$hour}">
+    <input type="hidden" name="course_detail_id" value="{$course_detail_id}">
+    <input type="hidden" name="status" value="{$status}">
+    <div class="layui-form-item text-center">
+        <input class="layui-btn" type="button" id="all" value="全部打卡">
+    </div>
+    <!--{/empty}-->
+</form>
+<script>
+    $("#all").click(function () {
+        var data = $("form").serializeArray();
+        if (data.length < 5) {
+            layer.msg('请至少选择一名学员', {icon: 5});
+            return false;
+        }
+        var url = '{url:("$classuri/more")}';
+        $.post(url, data, function (e) {
+            console.log(e);
+            if (e.code > 0) {
+                layer.msg(e.msg, {icon: 6});
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+            } else {
+                layer.msg(e.msg, {icon: 5});
+            }
+        })
+    })
+</script>
+{/block}

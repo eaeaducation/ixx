@@ -1,0 +1,326 @@
+<link href="/static/plugs/awesome/css/font-awesome.min.css?v=180620" rel="stylesheet">
+<link href="/static/plugs/bootstrap/css/bootstrap.min.css?v=180620" rel="stylesheet">
+<link href="/static/plugs/layui/css/layui.css?v=180620" rel="stylesheet">
+<link href="/static/theme/css/console.css?v=180620" rel="stylesheet">
+<link href="/static/theme/css/animate.css?v=180620" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/plugs/bootstrap/js/bootstrap.js"></script>
+<script src="/static/plugs/layui/layui.all.js"></script>
+
+<script>window.ROOT_URL = '';</script>
+<script src="/static/upadmin.js"></script>
+
+
+<style>
+    .tplContentSet {
+        height: 587px;
+        padding-top: 30px;
+        border: 1px solid #c0c0c0;
+        border-top: none;
+        overflow: auto;
+    }
+
+    .uploadimage {
+        border: 1px solid #ccc;
+    }
+
+    .iframebox {
+        width: 335px;
+        height: 650px;
+        /*position: absolute;*/
+        z-index: 999;
+        left: 0px;
+        top: 0px;
+        text-align: center;
+        background-image: url(/static/admin/show/images/phone.png);
+        margin: 0 auto;
+        margin-top: 10%;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-7">
+        {if isset($json_data)}
+        <form class="form-horizontal" role="form" style="padding: 30px 0 0 25px;">
+            <fieldset>
+                <legend>内容配置</legend>
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#pagebase" data-toggle="tab">基础配置</a></li>
+                    {volist name="json_data.data" id="vo" key="k"}
+                    {if $k<2}
+                    <li><a href="#page{$k}" onclick='setnum("{$k}")' data-toggle="tab">内容{$k}</a></li>
+                    {else /}
+                    <li onclick='setnum("{$k}")'><a href="#page{$k}" data-toggle="tab">内容{$k}</a></li>
+                    {/if}
+                    {/volist}
+                </ul>
+
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="pagebase">
+                        <div class="tplContentSet">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">模板名称：</label>
+                                <div class="col-sm-5">
+                                    <input readonly="readonly" class="form-control" type="text" placeholder="msh"
+                                           value="{$json_data.tplname}"></input>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">更换Logo：</label>
+                                <div class="col-sm-5">
+                                    <input type="hidden" id="baselogo" lay-verify="tpl_pic"
+                                           name="baselogo" value="{$json_data.logo|default=''}">
+                                    <script>
+                                        $(function () {
+                                            $('#baselogo').uploadOneImage();
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+                            <!--新增公共部分管理   start-->
+                            {if isset($json_data.public)}
+                            {volist name="json_data.public" id="v0" key="k0"}
+                            {if $v0['type']=='pic'}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v0['name']}</label>
+                                <div class="col-sm-5">
+                                    <input type="hidden" id="pupload{$k0}" lay-verify="tpl_pic"
+                                           name="public[{$k0}]" value="{$v0['value']|default=''}">
+                                    <script>
+                                        $(function () {
+                                            $('#pupload{$k0}').uploadOneImage();
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+
+                            {elseif $v0['type']=='text' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v0['name']}</label>
+                                <div class="col-sm-5">
+                                    <textarea rows="10" name="public[{$k0}]" class="form-control" type="text"
+                                              placeholder="msh">{$v0['value']}</textarea>
+                                </div>
+                            </div>
+
+                            {elseif $v0['type']=='radio' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v0['name']}</label>
+                                <div class="col-sm-5">
+                                    <label class="think-radio">
+                                        <input {in name="v0.value" value="1" } checked {/in} type="radio" value="1"
+                                        name="public[{$k0}]" > 是
+                                    </label>
+                                    <label class="think-radio">
+                                        <input {in name="v0.value" value="2" } checked {/in} type="radio" value="2"
+                                        name="public[{$k0}]" > 否
+                                    </label>
+                                </div>
+                            </div>
+
+                            {else /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v0['name']}</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control" name="public[{$k0}]" type="text"
+                                           placeholder="msh"
+                                           value="{$v0['value']}">
+                                </div>
+                            </div>
+                            {/if}
+                            {/volist}
+                            {/if}
+                            <!--新增公共部分管理    end-->
+                        </div>
+                    </div>
+
+                    <!------------------------------------------------------------------->
+                    {volist name="json_data.data" id="vo" key="k"}
+                    {if $k<2}
+                    <div class="tab-pane fad" id="page{$k}">
+                        <div class="tplContentSet">
+                            {volist name="vo" id="v" key="k1"}
+                            {if $v['type']=='pic'}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <input type="hidden" id="upload{$k-1}{$k1}" lay-verify="tpl_pic"
+                                           name="input[{$k-1}][{$k1-1}]" value="{$v['value']|default=''}">
+                                    <script>
+                                        $(function () {
+                                            $('#upload{$k-1}{$k1}').uploadOneImage();
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+
+                            {elseif $v['type']=='text' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <textarea rows="10" name="input[{$k-1}][{$k1-1}]" class="form-control" type="text"
+                                              placeholder="msh">{$v['value']}</textarea>
+                                </div>
+                            </div>
+
+                            {elseif $v['type']=='radio' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <label class="think-radio">
+                                        <input {in name="v.value" value="1" } checked {/in} type="radio" value="1"
+                                        name="input[{$k-1}][{$k2-1}]" > 是
+                                    </label>
+                                    <label class="think-radio">
+                                        <input {in name="v.value" value="2" } checked {/in} type="radio" value="2"
+                                        name="input[{$k-1}][{$k2-1}]" > 否
+                                    </label>
+                                </div>
+                            </div>
+
+                            {else /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control" name="input[{$k-1}][{$k1-1}]" type="text"
+                                           placeholder="msh"
+                                           value="{$v['value']}">
+                                </div>
+                            </div>
+                            {/if}
+                            {/volist}
+                        </div>
+                    </div>
+                    {else /}
+                    <div class="tab-pane fade" id="page{$k}">
+                        <div class="tplContentSet">
+                            {volist name="vo" id="v" key="k2"}
+                            {if $v['type']=='pic'}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <input type="hidden" id="upload{$k-1}{$k2}" lay-verify="tpl_pic"
+                                           name="input[{$k-1}][{$k2-1}]" value="{$v['value']|default=''}">
+                                    <script>
+                                        $(function () {
+                                            $('#upload{$k-1}{$k2}').uploadOneImage();
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+
+                            {elseif $v['type']=='text' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <textarea rows="10" class="form-control" name="input[{$k-1}][{$k2-1}]" type="text"
+                                              placeholder="msh">{$v['value']}</textarea>
+                                </div>
+                            </div>
+
+                            {elseif $v['type']=='radio' /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <label class="think-radio">
+                                        <input {in name="v.value" value="1" } checked {/in} type="radio" value="1"
+                                        name="input[{$k-1}][{$k2-1}]" > 是
+                                    </label>
+                                    <label class="think-radio">
+                                        <input {in name="v.value" value="2" } checked {/in} type="radio" value="2"
+                                        name="input[{$k-1}][{$k2-1}]" > 否
+                                    </label>
+                                </div>
+                            </div>
+
+                            {else /}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{$v['name']}</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control" name="input[{$k-1}][{$k2-1}]" type="text"
+                                           placeholder="msh"
+                                           value="{$v['value']}">
+                                </div>
+                            </div>
+                            {/if}
+                            {/volist}
+                        </div>
+                    </div>
+                    {/if}
+                    {/volist}
+                </div>
+            </fieldset>
+            <p style="text-align: center;padding-top: 15px">
+                <a onclick="tpllook({$myid})" href="javascript:void(0)"><span
+                        class="btn btn-sm btn-primary">保存预览</span></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                {if $status!='1'}
+                <a onclick="tplsave({$myid},{$actid})" href="javascript:void(0)"><span
+                        class="btn btn-sm btn-success">活动发布</span></a>
+                {else /}
+                <a onclick="tplsave({$myid},{$actid},'close')" href="javascript:void(0)"><span
+                        class="btn btn-sm btn-danger">取消发布</span></a>
+                {/if}
+            </p>
+        </form>
+        {/if}
+    </div>
+
+    <div class="col-sm-5">
+        <div class="iframebox">
+            <iframe id="iframe" style="width: 302px;height:500px;margin-top: 20%" id="ifrmshow"
+                    src="{:url('showtpl/tplsetok')}?tplid={$tplid}&myid={$myid}" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>
+</div>
+<input type="hidden" id="num" value="1">
+
+
+<script>
+    function setnum(page) {
+        $("#num").val(page);
+        console.log($("#num").val())
+        $('#iframe').attr('src', $('#iframe').attr('src'));
+    }
+
+    function getnum() {
+        var num = $("#num").val();
+        return num;
+    }
+
+    function tplsave(myid, actid, type) {
+        var url = '{:url("showactb/tplfb")}?&act_id=' + actid + '&type=' + type;
+        $.post(url, {}, function (res) {
+            if (res.success == 'true') {
+                layer.alert(res.msg, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                }, function () {
+                    parent.layer.closeAll();
+                    parent.$.form.reload();
+                });
+            } else {
+                layer.alert(res.msg, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                }, function () {
+                    layer.closeAll();
+                });
+            }
+        })
+    }
+
+    function tpllook(myid) {
+        var url = '{:url("showactb/edtpl")}?myid=' + myid + '&type=1';
+        var data = $(".form-horizontal").serialize();
+        $.post(url, data, function (res) {
+
+            $('#iframe').attr('src', $('#iframe').attr('src'));
+
+        })
+
+    }
+</script>
