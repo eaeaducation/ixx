@@ -28,6 +28,14 @@
             </div>
 
             <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">课程名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="course" value="{$Think.get.course|default=''}" placeholder="请输入课程名称"
+                           class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
                 <label class="layui-form-label">选择时间</label>
                 <div class="layui-input-inline">
                     <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
@@ -97,7 +105,8 @@
                 {$vo.name}【{$vo.gender|convert_category=3|raw}】
             </td>
             <td class="text-center">{$vo.class_id|convert_class}</td>
-            <td class="text-center">{$vo.course_id|get_courses_title}</td>
+<!--            <td class="text-center">{$vo.course_id|get_courses_title}</td>-->
+            <td class="text-center">{$vo.title}</td>
             <td class="text-center text-red">{$vo.course_hour}</td>
             <td class="text-center">{$vo.icard}</td>
             {if $vo.status == 1}

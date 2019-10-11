@@ -23,6 +23,7 @@ class Cardrecord extends BasicAdmin
         $db = Db::name('saas_course_log')->alias('l');
         $db->join('saas_customer c', 'c.id = l.student_id', 'left')
             ->join('saas_courses_detail d', 'l.class_course_no = d.class_course_no', 'left')
+            ->join('saas_courses co', 'l.course_id = co.id', 'left')
             ->where('l.student_id', '<>', null)
             ->where('l.course_id', '<>', null)
             ->where('c.status', '<>', 3)
@@ -30,6 +31,7 @@ class Cardrecord extends BasicAdmin
         $countDb = Db::name('saas_course_log')->alias('l')
             ->join('saas_customer c', 'c.id = l.student_id', 'left')
             ->join('saas_courses_detail d', 'l.class_course_no = d.class_course_no', 'left')
+            ->join('saas_courses co', 'l.course_id = co.id', 'left')
             ->where('l.student_id', '<>', null)
             ->where('l.course_id', '<>', null)
             ->where('c.status', '<>', 3)
@@ -65,9 +67,13 @@ class Cardrecord extends BasicAdmin
             $db->where('d.class_id', '=', $get['class_id']);
             $countDb->where('d.class_id', '=', $get['class_id']);
         }
+        if (isset($get['course']) && $get['course'] != '') {
+            $db->where('co.title', 'like', '%' . $get['course'] . '%');
+            $countDb->where('co.title', 'like', '%' . $get['name'] . '%');
+        }
         $count = $countDb->sum('l.course_hour');
         $this->assign('count', $count);
-        $db->field('l.course_id, l.created_at, l.icard, c.name, c.gender, l.course_hour, l.status, d.class_id, l.id')
+        $db->field('l.course_id, l.created_at, l.icard, c.name, c.gender, l.course_hour, l.status, d.class_id, l.id, co.title')
             ->order('l.id desc');
         return $this->_list($db);
     }
