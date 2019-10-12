@@ -34,8 +34,8 @@
 
     <div class="layui-form-item layui-inline text-left">
         <label class="layui-form-label">采单员</label>
-        <div class="layui-input-inline">
-            {:get_employee_select('', 'dxy', session('user.employee.department'), $Think.get.dxy, '', [], false)}
+        <div class="layui-input-inline" id="cdy">
+            {:get_employee_select('', 'dxy', session('user.employee.department'), $Think.get.dxy, '', ['lay-search' => '', "lay-filter" => "cdy"],false)}
         </div>
     </div>
 
