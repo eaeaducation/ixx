@@ -7,11 +7,24 @@
         <div class="video-body">
             <div class="pic-wrapper" node-type="video-container">
                 {foreach $banner1 as $k=>$v}
+                {if $k == 0}
+                <div class="picbox" style="display: block;">
+                    <div class="text">
+                        <img src="{$v['thumb']}">
+                    </div>
+                </div>
+                {else/}
                 <div class="picbox" style="display: none;">
                     <div class="text">
                         <img src="{$v['thumb']}">
                     </div>
                 </div>
+                {/if}
+<!--                <div class="picbox" style="display: none;">-->
+<!--                    <div class="text">-->
+<!--                        <img src="{$v['thumb']}">-->
+<!--                    </div>-->
+<!--                </div>-->
                 {/foreach}
             </div>
         </div>
