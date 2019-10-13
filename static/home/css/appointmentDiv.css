@@ -1,114 +1,131 @@
 ﻿#appointmentDiv {
-	position: fixed;
-	z-index: 9999999999;
-	left: 1999px;
-	margin-left: -235px;
-	top: -999px;
-	width: 378px;
-	padding-bottom: 40px;
-	border-radius: 5px;
-	background: #fff;
-	box-shadow: 2px 2px 3px, -2px 2px 3px;
-	height: 240px;
-	opacity: 0.9;
+    position: fixed;
+    z-index: 9999999999;
+    left: 1999px;
+    margin-left: -235px;
+    top: -999px;
+    width: 378px;
+    padding-bottom: 13px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 1px 4px 20px rgb(56, 56, 56);
+    opacity: 0.9;
+    display: none;
 }
+
 #appointmentDiv h2 {
-        margin:0 !important;
-        padding:0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
+
 #appointmentDiv h2 {
-	height: 50px;
-	line-height: 50px;
-	background: #08183a;
-	color: #fff;
-	position: relative;
-	text-align: center;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	background-color: tan;
+    height: 50px;
+    line-height: 50px;
+    background: #08183a;
+    color: #fff;
+    position: relative;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: tan;
 }
+
 #appointmentDiv h2 span {
-	font-size: 32px;
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	cursor: pointer
+    font-size: 32px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer
 }
+
 #appointmentDiv .info {
-	/*padding: 22px 40px 32px;*/
-	background: #ededed;
-	border-bottom: 1px solid #d1d1d1;
-	color: #666
+    /*padding: 22px 40px 32px;*/
+    background: #ededed;
+    border-bottom: 1px solid #d1d1d1;
+    color: #666
 }
+
 #appointmentDiv .info p {
-	font-size: 20px
+    font-size: 20px
 }
+
 #appBox {
-	padding-top: 13px
+    padding-top: 13px
 }
+
 #appInfo p {
-	font-size: 18px !important;
-	line-height: 35px
+    font-size: 18px !important;
+    line-height: 35px
 }
+
 #appointmentDiv .form p {
-	padding: 28px 0 14px;
-	color: #666;
-	font-size: 18px
+    padding: 28px 0 14px;
+    color: #666;
+    font-size: 18px
 }
+
 #appointmentDiv .form .formInfo {
-	width: 100%;
-	height: 38px;
-	border: 1px solid #999;
-	margin-bottom: 15px;
-	border-radius: 5px;
-	position: relative
+    width: 100%;
+    height: 38px;
+    border: 1px solid #999;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    position: relative
 }
+
 #appointmentDiv .form .formInfo b {
-	display: block;
-	position: absolute
+    display: block;
+    position: absolute
 }
+
 #appointmentDiv .form .formInfo .phone {
-	/*background: url(/images/pc-masterIcon.png) no-repeat center;*/
-	margin: 8px 16px;
-	width: 12px;
-	height: 22px;
-	background-position: -302px 0
+    /*background: url(/images/pc-masterIcon.png) no-repeat center;*/
+    margin: 8px 16px;
+    width: 12px;
+    height: 22px;
+    background-position: -302px 0
 }
-#appointmentDiv .form .formInfo input, #appointmentDiv .form .formInfo select {
-	width: 252px;
-	height: 34px;
-	line-height: 34px;
-	outline: 0;
-	border: 0;
-	color: #999;
-	margin-left: 44px;
-	margin-top: 2px;
-	font-size: 16px
+
+#appointmentDiv .form .formInfo input,
+#appointmentDiv .form .formInfo select {
+    width: 93%;
+    height: 34px;
+    line-height: 34px;
+    outline: 0;
+    border: 0;
+    color: #999;
+    margin-left: 7px;
+    margin-top: 2px;
+    font-size: 15px
 }
+
 #appointmentDiv .form {
-	padding: 16px 40px 0 40px
+    padding: 16px 40px 0 40px
 }
+
 #appointmentDiv .form span {
-	display: block;
-	font-size: 14px;
-	padding-top: 15px
+    display: block;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 15px
 }
+
 #appointmentDiv .form input[type="submit"] {
-	display: block;
-	width: 100%;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-	color: #fff;
-	background: #08183a;
-	border-radius: 5px;
-	outline:0 none;
-	border:none;
-	margin: 0 auto;
-	font-size: 20px;
-	background-color: tan;
+    display: block;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background: #08183a;
+    border-radius: 5px;
+    outline: 0 none;
+    border: none;
+    margin: 0 auto;
+    font-size: 16px;
+    background-color: tan;
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- saved from url=(0035)http://eaeducation.net/tf/kecheng1/ -->
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -13,135 +14,152 @@
     <link rel="stylesheet" href="/static/home/css/style.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/home/css/subpage.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/home/css/main.css" type="text/css" media="screen">
-    <link rel="stylesheet" href="/static/home/css/owl.carousel.css">
+
+
+    <!-- <link rel="stylesheet" href="/static/home/css/docs.theme.min.css"> -->
+    <link rel="stylesheet" href="/static/home/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/home/css/owl.theme.default.min.css">
+
     <link rel="stylesheet" href="/static/home/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/home/css/css-news.css">
     <link rel="stylesheet" href="/static/home/css/fz.ttf" type="text/css" media="screen">
     <link rel="shortcut icon" href="http://eaeducation.net/favicon.ico">
     <script src="/static/home/js/pc_nb.js" charset="UTF-8"></script>
-    <link rel="stylesheet" type="text/css" href="/static/home/css/main(1).css">
-    {block name="style"}{/block}
+    <link rel="stylesheet" type="text/css" href="/static/home/css/main(1).css"> {block name="style"}{/block}
 </head>
+
 <body style="">
 
-<!-- Header End -->
-<div class="active111">
-    <!-- Header Start -->
-    <div class="M-header">
-        <div class="row clearfix">
-            <a href="/" class="logo left">EA国际教育</a>
-            <div class="nav left">
-                <ul class="clearfix">
-                    <li class="active"><a href="/">首页</a></li>
-                    <li class="product "><a href="{:url('esl')}">课程</a></li>
-                    <li class="brand "><a href="{:url('studyAbroad')}">低龄留学</a></li>
-                    <li><a href="{:url('cases')}">经典案例</a></li>
-                    <li class="custom "><a href="{:url('about')}">公馆简介</a></li>
-                    <li><a href="{:url('latestNews')}">最新资讯</a></li>
-                    <li class="jiameng"><a href="{:url('merchantsJoin')}">招商加盟</a></li>
-                </ul>
-            </div>
-        </div>
+    <!-- Header End -->
+    <div class="active111">
+        <!-- Header Start -->
+        <div class="M-header">
+            <div class="container">
 
-        <div class="product-subnav" style="display: none;">
-            <div class="subnav row">
-                <ul class="clearfix">
-                    {foreach $header_course as $kk=>$vv}
-                    <li>
-                        <a href="{$vv.link}">
-                            <div class="icon">
-                                <img src="{$vv.thumb}">
-                            </div>
-                            <div class="name">{$vv.title}</div>
-                        </a>
-                    </li>
-                    {/foreach}
-                </ul>
+
+                <div class="row clearfix">
+                    <a href="/" class="logo left">EA国际教育</a>
+                    <div class="nav left">
+                        <ul class="clearfix">
+                            <li class="index active"><a href="/">首页</a></li>
+                            <li class="product"><a href="{:url('esl')}">课程</a></li>
+                            <li class="brand"><a href="{:url('studyAbroad')}">低龄留学</a></li>
+                            <li><a href="{:url('cases')}">经典案例</a></li>
+                            <li class="custom"><a href="{:url('about')}">公馆简介</a></li>
+                            <li><a href="{:url('latestNews')}">最新资讯</a></li>
+                            <li class="jiameng"><a href="{:url('merchantsJoin')}">招商加盟</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="product-subnav" style="display: none;">
+                    <div class="subnav row">
+                        <ul class="clearfix">
+                            {foreach $header_course as $kk=>$vv}
+                            <li>
+                                <a href="{$vv.link}">
+                                    <div class="icon">
+                                        <img src="{$vv.thumb}">
+                                    </div>
+                                    <div class="name">{$vv.title}</div>
+                                </a>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+                <div class="brand-subnav">
+                    <div class="subnav">
+                        <ul class="clearfix">
+                            {foreach $header_study as $k=>$item}
+                            <li>
+                                <a href="{$item.link}">
+                                    <div class="icon">
+                                        <img src="{$item.thumb}"></div>
+                                    <div class="name">{$item.title}</div>
+                                </a>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+                <div class="custom-subnav">
+                    <div class="subnav row">
+                        <ul class="clearfix">
+                            {foreach $header_residence as $k=>$residence}
+                            <li>
+                                <a href="{$residence.link}">
+                                    <div class="icon">
+                                        <img src="{$residence.thumb}"></div>
+                                    <div class="name">{$residence.title}</div>
+                                </a>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="brand-subnav">
-            <div class="subnav">
-                <ul class="clearfix">
-                    {foreach $header_study as $k=>$item}
-                    <li>
-                        <a href="{$item.link}">
-                            <div class="icon">
-                                <img src="{$item.thumb}"></div>
-                            <div class="name">{$item.title}</div>
-                        </a>
-                    </li>
-                    {/foreach}
-                </ul>
-            </div>
-        </div>
-        <div class="custom-subnav">
-            <div class="subnav row">
-                <ul class="clearfix">
-                    {foreach $header_residence as $k=>$residence}
-                    <li>
-                        <a href="{$residence.link}">
-                            <div class="icon">
-                                <img src="{$residence.thumb}"></div>
-                            <div class="name">{$residence.title}</div>
-                        </a>
-                    </li>
-                    {/foreach}
-                </ul>
-            </div>
-        </div>
+        <script charset="utf-8" src="/static/home/js/b.js"></script>
+        <script src="/static/home/js/hm.js"></script>
+
+        <script src="/static/home/js/jquery-1.10.1.min.js"></script>
+        <script src="/static/home/js/owl.carousel.js"></script>
+
+        <script type="text/javascript" src="/static/home/js/common.js"></script>
+        <script type="text/javascript" src="/static/home/js/index.js"></script>
+        <script type="text/javascript">
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                this.location = "/shop";
+            }
+        </script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?629d52dec751cb2b299ba4a40344eaa3";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+        <script>
+            // $(function() {
+            $('.M-header .nav ul li').click(function() {
+                    // alert(window.location.pathname)
+                    console.log('1111')
+                    $(this).addClass('active').siblings().removeClass('active');
+                })
+                // })
+        </script>
+
+        {if isset($banner)}
+        <img src="{$banner}" width="100%" height="100%" class="active_img"> {/if}
     </div>
-    <script charset="utf-8" src="/static/home/js/b.js"></script>
-    <script src="/static/home/js/hm.js"></script>
-    <script src="/static/home/js/jquery-1.10.1.min.js"></script>
-    <script src="/static/home/js/owl.carousel.js"></script>
-    <script type="text/javascript" src="/static/home/js/common.js"></script>
-    <script type="text/javascript" src="/static/home/js/index.js"></script>
-    <script type="text/javascript">
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            this.location = "/shop";
-        }
-    </script>
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?629d52dec751cb2b299ba4a40344eaa3";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
+
+
+    <!-- 这里是内容开始-->
+    {block name="content"}{/block}
+    <!-- 这里是内容结束-->
 
     <script>
-        //检查滚动位置和导航添加/删除背景
-        //function checkScrollPosition() {
-        //if($(window).scrollTop() > 70) {
-        //    $(".M-header").show();
-        //} else {
-        //    $(".M-header").hide();
-        //}
-        //}
-        //判断浏览器高度；当高于50像素时 添加scroll，否则减掉srcoll
-
-        //$(window).on("scroll", function() {
-        //  checkScrollPosition();
-        //});
+        $(document).ready(function() {
+            $(".owl-carousel").owlCarousel({
+                margin: 10,
+                nav: true,
+                loop: true,
+                items: 5,
+                autoplay: true,
+                autoplayTimeout: 3000,
+            });
+        });
     </script>
-    {if isset($banner)}
-    <img src="{$banner}" width="100%" height="100%"
-         class="active_img">
-    {/if}
-</div>
 
+    <div class="M-footer">
+        <div class="foot-nav ">
+            <div class="container">
 
-<!-- 这里是内容开始-->
-{block name="content"}{/block}
-<!-- 这里是内容结束-->
-
-
-<div class="M-footer">
-    <div class="foot-nav">
-        <div class="row clearfix">
-            <!--<ul class="clearfix left">
+                <div class="row clearfix">
+                    <!--<ul class="clearfix left">
                 <li>
                 <div style="height:135px; overflow:hidden;">
                     <a href="http://wpa.qq.com/msgrd?v=3&uin=2124459055&Menu=yes">
@@ -185,147 +203,115 @@
             </ul>-->
 
 
-            <div class="footinfo hasani finl cer">
-                <div class="foot_l">
-                    <!--<h3>{$nav}</h3>-->
-                    <!--<div>-->
-                    {:htmlspecialchars_decode($ours)}
-                    <!--</div>-->
-                    <!--<div class="hotline right">-->
-                    <!--<label>客服热线：</label>400-6692-620-->
-                    <!--<p>周一至周日<span>每日8:00-21:00</span>全年无休</p>-->
-                    <!--</div>-->
+                    <div class="footinfo hasani finl cer">
+                        <div class="foot_l">
+                            <!--<h3>{$nav}</h3>-->
+                            <!--<div>-->
+                            {:htmlspecialchars_decode($ours)}
+                            <!--</div>-->
+                            <!--<div class="hotline right">-->
+                            <!--<label>客服热线：</label>400-6692-620-->
+                            <!--<p>周一至周日<span>每日8:00-21:00</span>全年无休</p>-->
+                            <!--</div>-->
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
-
         </div>
-
+        <div class="M-bottom">Copyright 陕西易诶教育科技有限公司 版权所有 爱学学教育 陕ICP备17012743号 电 话：029-89199266</div>
     </div>
-    <div class="M-bottom">Copyright 陕西易诶教育科技有限公司 版权所有 爱学学教育 陕ICP备17012743号 电 话：029-89199266</div>
-</div>
-<!-- 代码部分begin -->
-<div class="side">
-    <ul>
-        <!-- <li><a href="http://weibo.com/5916864605/manage"target="_blank" ><div class="sidebox"><img src="/images/side_icon03.jpg">新浪微博</div></a></li>-->
-        <li><a href="http://eaeducation.net/#">
-            <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);">
-                <img src="{$left_pic['33'] ?? ''}">400-6692-620
-            </div>
-        </a></li>
-        <li><a href="http://www.dianping.com/search/keyword/17/0_EA%E5%9B%BD%E9%99%85%E6%95%99%E8%82%B2"
-               target="_blank">
-            <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);"><img
-                    src="{$left_pic['34'] ?? ''}">大众点评
-            </div>
-        </a></li>
-        <li>
-            <a class="weixin" href="javascript:void(0);">
-                <img src="{$left_pic['35'] ?? ''}" title="微信客服" alt="微信客服">
-                <div class="wx_erm">
-                    <img src="{$left_pic['36'] ?? ''}" alt="微信客服">
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="http://p.qiao.baidu.com/cps/chat?siteId=12427928&amp;userId=25803422">
-                <div class="sidebox">
-                    <img src="{$left_pic['37'] ?? ''}">在线客服
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="javascript:void(0);" class="play inline-block Gtingke_lj">
-                <div id="form_start" class="sidebox">
-                    <img src="{$left_pic['38'] ?? ''}">在线留言
-                </div>
-            </a>
-        </li>
-        <li style="border:none;">
-            <a href="javascript:goTop();" class="sidetop">
-                <img src="{$left_pic['39'] ?? ''}">
-            </a>
-        </li>
-    </ul>
-</div>
+    <!-- 代码部分begin -->
+    <div class="side">
+        <ul>
+            <!-- <li><a href="http://weibo.com/5916864605/manage"target="_blank" ><div class="sidebox"><img src="/images/side_icon03.jpg">新浪微博</div></a></li>-->
+            <li>
+                <a href="http://eaeducation.net/#">
+                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);">
+                        <img src="{$left_pic['33'] ?? ''}">400-6692-620
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="http://www.dianping.com/search/keyword/17/0_EA%E5%9B%BD%E9%99%85%E6%95%99%E8%82%B2" target="_blank">
+                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);"><img src="{$left_pic['34'] ?? ''}">大众点评
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a class="weixin" href="javascript:void(0);">
+                    <img src="{$left_pic['35'] ?? ''}" title="微信客服" alt="微信客服">
+                    <div class="wx_erm">
+                        <img src="{$left_pic['36'] ?? ''}" alt="微信客服">
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="http://p.qiao.baidu.com/cps/chat?siteId=12427928&amp;userId=25803422">
+                    <div class="sidebox">
+                        <img src="{$left_pic['37'] ?? ''}">在线客服
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" class="play inline-block Gtingke_lj">
+                    <div id="form_start" class="sidebox">
+                        <img src="{$left_pic['38'] ?? ''}">在线留言
+                    </div>
+                </a>
+            </li>
+            <li style="border:none;">
+                <a href="javascript:goTop();" class="sidetop">
+                    <img src="{$left_pic['39'] ?? ''}">
+                </a>
+            </li>
+        </ul>
+    </div>
 
-<link rel="stylesheet" href="/static/home/css/appointmentDiv.css">
-<div id="appointmentDiv" style="left: 50%; top: 50%; margin-top: -140px;">
-    <form action="http://eaeducation.net/" enctype="multipart/form-data" method="post" onsubmit="return false">
-        <div id="hidinput">
-            <input type="hidden" name="action" value="post">
-            <input type="hidden" name="diyid" alue="1">
-            <input type="hidden" name="do" value="2">
-            <input type="hidden" name="dede_fields" value="tel,text;gongguan,text">
-            <input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53">
-        </div>
-        <h2 class="til">
-            <em style="font-size:20px;">预约试听课</em>
-            <span id="closed">×</span>
-        </h2>
-        <div class="info">
-            <!--<p> EA国际教育欢迎你： </p>-->
-            <div id="appBox"></div>
-        </div>
-        <div class="form">
-            <div class="alertTel formInfo">
-                <b class="phone"></b>
-                <input name="tel" id="Gtel" type="text" maxlength="11" placeholder="请输入您的手机号" value="">
+    <link rel="stylesheet" href="/static/home/css/appointmentDiv.css">
+    <div id="appointmentDiv" style="left: 50%; top: 50%; margin-top: -140px;">
+        <form action="http://eaeducation.net/" enctype="multipart/form-data" method="post" onsubmit="return false">
+            <div id="hidinput">
+                <input type="hidden" name="action" value="post">
+                <input type="hidden" name="diyid" alue="1">
+                <input type="hidden" name="do" value="2">
+                <input type="hidden" name="dede_fields" value="tel,text;gongguan,text">
+                <input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53">
             </div>
-            <div class="alertTel formInfo">
-                <b class="name"></b>
-                <select name="branch" id="Ggongguan" size="1">
+            <h2 class="til">
+                <em style="font-size:20px;">预约试听课</em>
+                <span id="closed">×</span>
+            </h2>
+            <div class="info">
+                <!-- <p> EA国际教育欢迎你： </p>
+            <div id="appBox"></div> -->
+            </div>
+            <div class="form">
+                <div class="alertTel formInfo">
+                    <b class="phone"></b>
+                    <input name="tel" id="Gtel" type="text" maxlength="11" placeholder="请输入您的手机号" value="">
+                </div>
+                <div class="alertTel formInfo">
+                    <b class="name"></b>
+                    <select name="branch" id="Ggongguan" size="1">
                     <option value="1">高新总部</option>
                     <option value="5">北郊公馆</option>
                     <option value="4">太白南路公馆</option>
                     <option value="3">曲江公馆</option>
                 </select>
-            </div>
-            <input type="submit" onclick="GetSubmit();" value="确认提交">
-            <span>*EA国际教育尊重并承诺保护您的个人信息</span></div>
-    </form>
-</div>
-{block name="script"}{/block}
-<script>
-    $(function () {
-        type = false;
-        $('#appointmentDiv h2.til em').html('预约试听课');
-//      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
-        $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
-        divH = $("#appointmentDiv").outerHeight() / 2;
-        $("#maskDiv").show();
-        $("#appointmentDiv").animate({
-            left: "50%",
-            top: "50%",
-            marginTop: -divH
-        }, 500);
-    });
-
-    function GetSubmit() {
-        var tel = $('#Gtel');
-        var branch = $('#Ggongguan').val();
-
-        if (tel.val() == '' || tel.val() == '请输入您的手机号') {
-            alert('您的手机号不能为空！');
-            return false;
-        }
-        var myreg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
-        if (!myreg.test(tel.val())) {
-            alert('您输入的手机号码不正确！');
-            return false;
-        }
-        var mobile = tel.val();
-        var url = "http://saas.eaeducation.net/api/v1/Shows/collect";
-        $.post(url, {'mobile': mobile, 'branch': branch, 'source': '15'})
-        alert('预约成功,敬请期待!')
-    }
-
-    $(function () {
-        //预约弹窗事件开始
-        $(".Gtingke").click(function () {
+                </div>
+                <input type="submit" onclick="GetSubmit();" value="确认提交">
+                <span>*EA国际教育尊重并承诺保护您的个人信息</span></div>
+        </form>
+    </div>
+    {block name="script"}{/block}
+    <script>
+        $(function() {
             type = false;
             $('#appointmentDiv h2.til em').html('预约试听课');
-//      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
+            //      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
             $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
             divH = $("#appointmentDiv").outerHeight() / 2;
             $("#maskDiv").show();
@@ -335,110 +321,147 @@
                 marginTop: -divH
             }, 500);
         });
-        $(".Gtingke_lj").click(function () {
-            type = false;
-            $('#appointmentDiv h2.til em').html('预约试听课');
-//      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
-            $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
-            $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
-        });
-        $(".Grencai").click(function () {
-            type = true;
-            $('#appointmentDiv h2.til em').html('人才招聘');
-            $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
-            $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="2" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,text" /><input type="hidden" name="dede_fieldshash" value="95f02a297c1277ebb61e58a0f125a578" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
-            $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
-        });
-        $(".Ghezuo").click(function () {
-            type = true;
-            $('#appointmentDiv h2.til em').html('商务合作');
-            $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
-            $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="3" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,text" /><input type="hidden" name="dede_fieldshash" value="95f02a297c1277ebb61e58a0f125a578" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
-            $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
-        });
-        $(".Gtosu").click(function () {
-            type = true;
-            $('#appointmentDiv h2.til em').html('投诉建议');
-            $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
-            $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="4" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;body,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="1c14b672aca0564f36347567575fed7f" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
-            $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
-        });
-        $(".Glixnxi").click(function () {
-            type = true;
-            $('#appointmentDiv h2.til em').html('联系我们');
-            $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
-            $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="5" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,multitext" /><input type="hidden" name="dede_fieldshash" value="0fbf44be046243c42c0cb883eac960f1" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
-            $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
-        });
-        $("#closed").click(function () {
-            $("#appointmentDiv").animate({
-                left: 1999,
-                top: -999
-            }, 500, function () {
-                $("#maskDiv").hide();
+
+        function GetSubmit() {
+            var tel = $('#Gtel');
+            var branch = $('#Ggongguan').val();
+
+            if (tel.val() == '' || tel.val() == '请输入您的手机号') {
+                alert('您的手机号不能为空！');
+                return false;
+            }
+            var myreg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+            if (!myreg.test(tel.val())) {
+                alert('您输入的手机号码不正确！');
+                return false;
+            }
+            var mobile = tel.val();
+            var url = "http://saas.eaeducation.net/api/v1/Shows/collect";
+            $.post(url, {
+                'mobile': mobile,
+                'branch': branch,
+                'source': '15'
+            })
+            alert('预约成功,敬请期待!')
+        }
+
+        $(function() {
+            //预约弹窗事件开始
+            $(".Gtingke").click(function() {
+                type = false;
+                $('#appointmentDiv h2.til em').html('预约试听课');
+                //      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
             });
-            return false;
+            $(".Gtingke_lj").click(function() {
+                type = false;
+                $('#appointmentDiv h2.til em').html('预约试听课');
+                //      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
+            });
+            $(".Grencai").click(function() {
+                type = true;
+                $('#appointmentDiv h2.til em').html('人才招聘');
+                $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="2" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,text" /><input type="hidden" name="dede_fieldshash" value="95f02a297c1277ebb61e58a0f125a578" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
+            });
+            $(".Ghezuo").click(function() {
+                type = true;
+                $('#appointmentDiv h2.til em').html('商务合作');
+                $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="3" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,text" /><input type="hidden" name="dede_fieldshash" value="95f02a297c1277ebb61e58a0f125a578" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
+            });
+            $(".Gtosu").click(function() {
+                type = true;
+                $('#appointmentDiv h2.til em').html('投诉建议');
+                $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="4" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;body,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="1c14b672aca0564f36347567575fed7f" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
+            });
+            $(".Glixnxi").click(function() {
+                type = true;
+                $('#appointmentDiv h2.til em').html('联系我们');
+                $("#appBox").html('<textarea name="body" id="Gbody" cols="30" rows="10" style="width: 100%;"></textarea>');
+                $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="5" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text;body,multitext" /><input type="hidden" name="dede_fieldshash" value="0fbf44be046243c42c0cb883eac960f1" />');
+                divH = $("#appointmentDiv").outerHeight() / 2;
+                $("#maskDiv").show();
+                $("#appointmentDiv").animate({
+                    left: "50%",
+                    top: "50%",
+                    marginTop: -divH
+                }, 500);
+            });
+            $("#closed").click(function() {
+                $("#appointmentDiv").animate({
+                    left: 1999,
+                    top: -999
+                }, 500, function() {
+                    $("#maskDiv").hide();
+                });
+                return false;
+            });
+            //预约弹窗事件结束
         });
-        //预约弹窗事件结束
-    });
-</script>
+    </script>
 
 
-<script type="text/javascript" src="/static/home/js/jquery-1.10.1.min.js"></script>
-<script src="/static/home/js/owl.carousel.js"></script>
-<script type="text/javascript" src="/static/home/js/common.js"></script>
-<script type="text/javascript" src="/static/home/js/index.js"></script>
-<!-- js兼容性处理 -->
-<!--[if lte IE 8]>
+    <script type="text/javascript" src="/static/home/js/jquery-1.10.1.min.js"></script>
+    <script src="/static/home/js/owl.carousel.js"></script>
+    <script type="text/javascript" src="/static/home/js/common.js"></script>
+    <script type="text/javascript" src="/static/home/js/index.js"></script>
+    <!-- js兼容性处理 -->
+    <!--[if lte IE 8]>
 <script type="text/javascript" src="/static/home/js/ie8_videoplay.js"></script>
 <![endif]-->
-<!--[if (!IE) | (gte IE 9)]><!-->
-<script type="text/javascript" src="/static/home/js/ie8_videoplay.js"></script>
-<!--<![endif]-->
-<!-- 代码部分end -->
+    <!--[if (!IE) | (gte IE 9)]><!-->
+    <script type="text/javascript" src="/static/home/js/ie8_videoplay.js"></script>
+    <!--<![endif]-->
+    <!-- 代码部分end -->
 
 
-<ins id="newBridge"><!-- target: nodeBoard -->
+    <ins id="newBridge"><!-- target: nodeBoard -->
     <ins class="nb-nodeboard-base nb-nodeboard-position-base nb-nodeboard-right-bottom nb-hide" id="nb_nodeboard">
         <ins class="nb-nodeboard-contain-base nb-nodeboard-contain">
             <ins class="nb-nodeboard-top nb-nodeboard-top-0">
                 <ins class="nb-head-title">请您留言</ins>
-                <ins class="nb-nodeboard-close" id="nb_nodeboard_close" data-type="min"></ins>
-            </ins>
-            <form id="nb_nodeboard_form" autocomplete="off" class="nb-board-form"
-                  action="http://p.qiao.baidu.com/cps//bookmanage/saveBook.action?userId=25803422" method="post"
-                  accept-charset="utf-8">
-                <ins id="nb_nodeboard_set" class="nb-nodeboard-set">
+    <ins class="nb-nodeboard-close" id="nb_nodeboard_close" data-type="min"></ins>
+    </ins>
+    <form id="nb_nodeboard_form" autocomplete="off" class="nb-board-form" action="http://p.qiao.baidu.com/cps//bookmanage/saveBook.action?userId=25803422" method="post" accept-charset="utf-8">
+        <ins id="nb_nodeboard_set" class="nb-nodeboard-set">
                     <ins class="nb-nodeboard-content">
                         <textarea id="nb-nodeboard-set-content-js" name="content" data-ph="请在此输入留言内容，我们会尽快与您联系。（必填）"
                                   placeholder="请在此输入留言内容，我们会尽快与您联系。（必填）"
@@ -446,60 +469,56 @@
 
                         </textarea>
                     </ins>
-                    <ins class="nb-nodeboard-name" style="z-index:4;">
+        <ins class="nb-nodeboard-name" style="z-index:4;">
                         <ins class="nb-nodeboard-icon nodeName"></ins>
-                        <input id="nb_nodeboard_set_name" data-write="0" name="visitorName" maxlength="30"
-                               class="nb-nodeboard-input nb-nodeboard-param" type="text" data-ph="姓名" placeholder="姓名">
-                    </ins>
-                    <ins class="nb-nodeboard-name" id="nb_nodeboard_phone" style="z-index:3;">
+        <input id="nb_nodeboard_set_name" data-write="0" name="visitorName" maxlength="30" class="nb-nodeboard-input nb-nodeboard-param" type="text" data-ph="姓名" placeholder="姓名">
+        </ins>
+        <ins class="nb-nodeboard-name" id="nb_nodeboard_phone" style="z-index:3;">
                         <ins class="nb-nodeboard-icon nodePhone"></ins>
-                        <input id="nb_nodeboard_set_phone" name="visitorPhone" maxlength="30"
-                               class="nb-nodeboard-input nb-nodeboard-param" data-write="1" type="text" data-ph="电话（必填）"
-                               placeholder="电话（必填）">
-                    </ins>
-                    <ins class="nb-nodeboard-name" id="nb_nodeboard_mail" style="z-index:2;">
+        <input id="nb_nodeboard_set_phone" name="visitorPhone" maxlength="30" class="nb-nodeboard-input nb-nodeboard-param" data-write="1" type="text" data-ph="电话（必填）" placeholder="电话（必填）">
+        </ins>
+        <ins class="nb-nodeboard-name" id="nb_nodeboard_mail" style="z-index:2;">
                         <ins class="nb-nodeboard-icon nodeMail"></ins>
-                        <input id="nb_nodeboard_set_email" name="visitorEmail" maxlength="50"
-                               class="nb-nodeboard-input nb-nodeboard-param" type="text" data-write="0" data-ph="邮箱"
-                               placeholder="邮箱">
-                    </ins>
-                    <ins class="nb-nodeboard-name" style="z-index:1;">
+        <input id="nb_nodeboard_set_email" name="visitorEmail" maxlength="50" class="nb-nodeboard-input nb-nodeboard-param" type="text" data-write="0" data-ph="邮箱" placeholder="邮箱">
+        </ins>
+        <ins class="nb-nodeboard-name" style="z-index:1;">
                         <ins class="nb-nodeboard-icon nodeAddress"></ins>
-                        <input id="nb_nodeboard_set_address" name="visitorAddress"
-                               class="nb-nodeboard-input nb-nodeboard-param" maxlength="50" type="text" data-write="0"
-                               data-ph="地址" placeholder="地址">
-                    </ins>
-                </ins>
-            </form>
-            <ins class="nb-nodeboard-success" id="nb_nodeboard_success">
+        <input id="nb_nodeboard_set_address" name="visitorAddress" class="nb-nodeboard-input nb-nodeboard-param" maxlength="50" type="text" data-write="0" data-ph="地址" placeholder="地址">
+        </ins>
+        </ins>
+    </form>
+    <ins class="nb-nodeboard-success" id="nb_nodeboard_success">
                 <ins class="nb-success-box">
                     <ins class="nb-success-icon"></ins>
-                    <ins class="nb-success-title" id="nb_node_messagetitle">感谢留言</ins>
-                    <ins class="nb-success-content" id="nb_node_messagecontent">我们会尽快与您联系</ins>
-                    <ins id="nb_nodeboard_return" class="nb-sucess-close">关闭</ins>
-                </ins>
-            </ins>
-            <ins class="nb-nodeboard-send" id="nb_node_contain">
+    <ins class="nb-success-title" id="nb_node_messagetitle">感谢留言</ins>
+    <ins class="nb-success-content" id="nb_node_messagecontent">我们会尽快与您联系</ins>
+    <ins id="nb_nodeboard_return" class="nb-sucess-close">关闭</ins>
+    </ins>
+    </ins>
+    <ins class="nb-nodeboard-send" id="nb_node_contain">
                 <ins id="nb_nodeboard_send" class="nb-nodeboard-send-btn nb-nodeboard-send-btn-0">发送</ins>
-            </ins>
-        </ins>
-    </ins><!-- end --><!-- target: invite -->
-    <ins class="nb-invite-wrap nb-invite-wrap-base nb-position-base nb-middle  " id="nb_invite_wrap"
-         style="width:400px;display:none;margin-left: -200px;margin-top: -88px;">
+    </ins>
+    </ins>
+    </ins>
+    <!-- end -->
+    <!-- target: invite -->
+    <ins class="nb-invite-wrap nb-invite-wrap-base nb-position-base nb-middle  " id="nb_invite_wrap" style="width:400px;display:none;margin-left: -200px;margin-top: -88px;">
         <ins class="nb-invite-body nb-invite-skin-2" style="height:175px;;">
             <ins class="nb-invite-tool nb-invite-tool-base" id="nb_invite_tool" style=""></ins>
-            <ins class="nb-invite-text nb-invite-text-base">
+    <ins class="nb-invite-text nb-invite-text-base">
                 <ins class="nb-invite-welcome nb-invite-welcome-base nb-show" id="nb_invite_welcome"><p>
                     欢迎来到EA国际教育，请问你想咨询什么问题？</p>
                     <p>客服热线：400-6692-620</p>
                     <p><br></p></ins>
-            </ins>
-            <ins class="nb-invite-btn-base nb-invte-btns-2">
+    </ins>
+    <ins class="nb-invite-btn-base nb-invte-btns-2">
                 <ins class="nb-invite-cancel nb-invite-cancel-base" id="nb_invite_cancel">稍后再说</ins>
-                <ins class="nb-invite-ok nb-invite-ok-base" id="nb_invite_ok">现在咨询</ins>
-            </ins>
-        </ins>
-    </ins><!-- end -->
-</ins>
+    <ins class="nb-invite-ok nb-invite-ok-base" id="nb_invite_ok">现在咨询</ins>
+    </ins>
+    </ins>
+    </ins>
+    <!-- end -->
+    </ins>
 </body>
+
 </html>

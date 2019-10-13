@@ -8,9 +8,9 @@
  */
 return [
     'd1' => [
-        'hostname' => '192.168.10.4',
-        'username' => 'dev',
-        'password' => '123456',
+        'hostname' => '192.168.1.183',
+        'username' => 'root',
+        'password' => 'root',
         'hostport' => 3306
     ]
 ];

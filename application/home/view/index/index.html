@@ -1,9 +1,8 @@
-{extend name='home@public/content'}
-{block name="content"}
+{extend name='home@public/content'} {block name="content"}
 
 <!-- Home Start -->
 <div class="M-home row" style="margin-bottom: 100px!important;">
-    <div class="video-module" node-type="video-clear" >
+    <div class="video-module" node-type="video-clear">
         <div class="video-body">
             <div class="pic-wrapper" node-type="video-container">
                 {foreach $banner1 as $k=>$v}
@@ -17,7 +16,7 @@
         </div>
         <!-- banner导航栏开始 -->
         <div class="video-nav">
-           {:htmlspecialchars_decode($nav_text)}
+            {:htmlspecialchars_decode($nav_text)}
         </div>
         <!-- banner导航栏结束 -->
     </div>
@@ -30,10 +29,13 @@
                         <img src="{$v1['thumb']}">
                     </div>
                     <div class="gray"></div>
-                    <div class="content" style="height: 30px; padding-top: 85px;">
-                        <h2>{$v1['title']}</h2>
-                        <div class="line"></div>
-                        <p>{$v1['content']|raw}</p>
+                    <div class="content">
+                        <div class="context">
+                            <h2>{$v1['title']}</h2>
+                            <div class="line"></div>
+                            <p>{$v1['content']|raw}</p>
+                        </div>
+
                     </div>
                 </a>
             </li>
@@ -42,41 +44,28 @@
         </ul>
     </div>
     <!--=== Owl Clients v1 ===-->
-    <div class="container" style="padding-right: 0;padding-left: 0;padding-top: 15px;">
+    <!-- <div class="container" style="padding-right: 0;padding-left: 0;padding-top: 15px;">
         <div style="padding-bottom: 15px;">
             <ul style="list-style-type:none;padding:15px 0;margin:0px;">
                 <li style="float:left; width:33.33333%"><img src="/static/home/images/hr.jpg" width="100%">
                 </li>
-                <li style="float:left; width:33.33333%;text-align:center"><span
-                        style="font-size:22px; font-weight:400;color: #000;">EA国际教育师资力量</span></li>
+                <li style="float:left; width:33.33333%;text-align:center"><span style="font-size:22px; font-weight:400;color: #000;">EA国际教育师资力量</span></li>
                 <li style="float:left; width:33.33333%"><img src="/static/home/images/hr.jpg" width="100%">
                 </li>
             </ul>
         </div>
-        <div class="owl-clients-v1 owl-carousel owl-theme"
-             style="padding-top: 15px; width: 1190px; margin: 0px auto; opacity: 1; display: block;">
-            <div class="">
-                <div class="item"
-                     style="width: 2380px; left: 0px; display: block; transition: all 1000ms ease 0s; transform: translate3d(0px, 0px, 0px);">
-                    {foreach $teachers as $k2=>$v2}
-                    <div class="owl-item" style="width: 170px;">
-                        <div class="item">
-                            <a href="{:url('teacherList')}"><img
-                                    src="{$v2['thumb']}" alt=""></a>
-                        </div>
-                    </div>
-                    {/foreach}
-                </div>
-            </div>
 
-
-            <div class="owl-controls clickable" style="display: none;">
-                <div class="owl-pagination">
-                    <div class="owl-page active"><span class=""></span></div>
-                </div>
-            </div>
+    </div> -->
+    <div class="container faculty">
+        <h3>EA国际教育师资力量</h3>
+        <div class="owl-carousel owl-theme">
+            {foreach $teachers as $k2=>$v2}
+            <!-- <a href="{:url('teacherList')}"><img src="{$v2['thumb']}" alt=""></a> -->
+            <a><img src="{$v2['thumb']}" alt=""></a>
+            {/foreach}
         </div>
     </div>
+
 </div>
 
 
