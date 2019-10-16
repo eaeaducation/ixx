@@ -8,6 +8,7 @@
 
 namespace jwt;
 
+use app\common\model\Customer;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use think\exception\HttpResponseException;
@@ -18,7 +19,7 @@ use Exception;
 
 class JwtHelper
 {
-    public static function fromUser(User $user, $jwt_ttl = 60)
+    public static function fromUser(Customer $user, $jwt_ttl = 60)
     {
         $jwt_secret = config('jwt_secret');
         $payload = [

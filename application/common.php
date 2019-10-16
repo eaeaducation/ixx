@@ -2282,3 +2282,47 @@ function pay_status($status, $selected)
     $html = html_select($data, $status, $selected, '', [], false);
     return $html;
 }
+
+/**
+ * api_encrypt  api加密
+ */
+if (!function_exists("api_encrypt")) {
+
+    function api_encrypt($in, $key = false, $iv = false)
+    {
+        if (!is_string($in)) {
+            $in = \GuzzleHttp\json_encode($in);
+        }
+        $un_encrypt = base64_encode($in);
+        $key = $key === false ? config('api_key') : $key;
+        $iv = $iv === false ? config('api_iv') : $iv;
+        if (!$key || !$iv) {
+            return lang('Interface key not configured');
+        }
+        $encrypted = openssl_encrypt($un_encrypt, 'aes-128-cbc', $key, false, $iv);
+        return base64_encode($encrypted);
+    }
+}
+
+/**
+ * api_decrypt  api解密 ,私钥
+ */
+if (!function_exists("api_decrypt")) {
+
+    function api_decrypt($in, $key = false, $iv = false)
+    {
+        $un_decrypt = base64_decode($in);
+        $key = $key === false ? config('api_key') : $key;
+        $iv = $iv === false ? config('api_iv') : $iv;
+        $decrypted = openssl_decrypt($un_decrypt, 'aes-128-cbc', $key, false, $iv);
+        if ($decrypted) {
+            try {
+                return \GuzzleHttp\json_decode(base64_decode($decrypted), 1);
+            } catch (\Exception $e) {
+                return [];
+            }
+        } else {
+            return [];
+        }
+    }
+}
