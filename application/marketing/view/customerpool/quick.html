@@ -27,7 +27,7 @@
     <div class="layui-form-item" id="cdy" hidden>
         <label class="layui-form-label">选择采单员</label>
         <div class="layui-input-block">
-            {:get_employee_select('', 'cdy', session('user.employee.department'), '', '', [], false)}
+            {:get_employee_select('', 'cdy', session('user.employee.department'), '', '', ['lay-search' => ''], false)}
         </div>
     </div>
     <div class="hr-line-dashed"></div>

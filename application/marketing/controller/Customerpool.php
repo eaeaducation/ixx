@@ -161,7 +161,7 @@ class Customerpool extends BasicAdmin
                     $electricpiners = Db::name("saas_employee")->alias("s")->join("system_user u", "s.userid = u.id", "right")->
                     join("system_auth a", "u.authorize = a.id", "left")->
                     where("s.status", "<>", "3")->where("u.is_deleted", "<>", "1")
-                        ->field("s.id,s.name,s.mobile,s.userid,s.status,s.department,u.authorize,a.title")->order("s.created_at", "desc");
+                        ->field("s.id,s.name,s.mobile,s.userid,s.status,s.department,u.authorize,a.title,s.english_name")->order("s.created_at", "desc");
                     if (!in_array(session('user')['authorize'], [1, 3, 4])) {
                         $electricpiners->where("s.department", "=", $departmentid);
                     }
@@ -171,13 +171,13 @@ class Customerpool extends BasicAdmin
                     $electricpiners = Db::name("saas_employee")->alias("s")->join("system_user u", "s.userid = u.id", "right")->
                     join("system_auth a", "u.authorize = a.id", "left")->
                     where("s.status", "<>", "3")->where("u.is_deleted", "<>", "1")
-                        ->field("s.id,s.name,s.mobile,s.userid,s.status,s.department,u.authorize,a.title")->order("s.created_at", "desc")->select();
+                        ->field("s.id,s.name,s.mobile,s.userid,s.status,s.department,u.authorize,a.title,s.english_name")->order("s.created_at", "desc")->select();
                     Cache::set('electricpin_select' . $userid, $electricpiners, '3600');
                 }
             }
             return view('fpform', [
                 'electricpiners' => $electricpiners,
-                'title' => '选择电销员'
+                'title' => '选择销售员'
             ]);
         }
     }
