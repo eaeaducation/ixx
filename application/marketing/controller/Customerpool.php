@@ -100,6 +100,8 @@ class Customerpool extends BasicAdmin
             } elseif (in_array($authorize, [10, 11])) {
                 $db->where('c.branch', '=', $department);
                 $db->where(['c.collect_id|c.sales_id|c.userid' => $userid]);
+            } elseif (in_array($authorize, [21])) {
+                $db->where('1', '<', '2');
             } else {
                 $db->where('c.branch', '=', $department);
                 $db->where('c.sales_id', '=', $userid);
