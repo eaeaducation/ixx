@@ -100,7 +100,7 @@
             <div class="layui-tab-item layui-show">
                 {if auth("$classuri/consultingRecord")}
                 <a class="layui-btn layui-btn-normal layui-btn-sm"
-                   data-modal='{:url("$classuri/consultingRecord")}?id={$customer->id}' data-title="咨询信息">新建咨询</a>
+                   data-modal='{:url("$classuri/consultingRecord")}?id={$customer->id}&follow_status={$follow_status["follow_status"]}' data-title="咨询信息">新建咨询</a>
                 {/if}
                 {php}
                 $follows = $customer->follows;

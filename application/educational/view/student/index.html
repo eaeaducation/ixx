@@ -1,6 +1,11 @@
 {extend name='admin@public/content'}
 
 {block name="content"}
+<style>
+    .new-table td {
+        border:1px solid #e2e2e2;
+    }
+</style>
 <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" style="height: 60px;">
     <div class="row" style="margin-left:0.4%;float: left">
         <div class="layui-form-item layui-inline">
@@ -62,18 +67,33 @@
     <p class="help-block text-center well">没 有 记 录 哦！</p>
     <!--{else}-->
     <input type="hidden" value="resort" name="action">
-    <table class="layui-table" lay-skin="line">
+    <table class="layui-table">
         <thead>
         <tr>
-            <th class="text-center">姓名</th>
-            <th class="text-center">家长姓名</th>
-            <th class="text-center">昵称</th>
-            <th class="text-center">监护人电话</th>
+            <th class="text-center" style="width: 5%">姓名[name]</th>
+            <th class="text-center">家长关系</th>
+            <th class="text-center">联系人电话</th>
+<!--            <th class="text-center">昵称</th>-->
+            <th class="text-center" style="width: 50%">
+                <table class="layui-table" lay-skin="line" style="border-style: hidden">
+                    <tbody>
+                    <tr>
+                        <th class="text-center" style="width: 25%">课程名称</th>
+                        <th class="text-center">购买课时</th>
+                        <th class="text-center">已用课时</th>
+                        <th class="text-center">剩余课时</th>
+                        <th class="text-center">所在班级</th>
+                        <th class="text-center">班主任</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </th>
+<!--            <th class="text-center">监护人电话</th>-->
             <th class="text-center">经办员</th>
             <th class="text-center">CC</th>
             <th class="text-center">采单员</th>
-            <th class="text-center">学员状态</th>
-            <th class="text-center">创建时间</th>
+<!--            <th class="text-center">学员状态</th>-->
+<!--            <th class="text-center">创建时间</th>-->
             <th class="text-center">校区</th>
             <th class="text-center">渠道</th>
             <th class="text-center">操作</th>
@@ -84,25 +104,35 @@
         <tr>
             <td class="text-center text-nowrap">
                 <a data-open='{:url("marketing/premarketing/customerview")}?id={$vo.id}'>
-                    {$vo.name}【{$vo.gender|convert_category=3|raw}】
+                    {$vo.name}{$vo.nickname}
                 </a>
             </td>
             <td class="text-center text-nowrap">
-                {$vo.parent_name}【{$vo.relation|convert_category=9|raw|default="未知"}】
+                {$vo.relation|convert_category=9|raw|default="未知"}
             </td>
-            <td class="text-center">{$vo.nickname}</td>
             <td class="text-center">{$vo.parent_tel}</td>
+            <td class="text-center">
+                <table class="layui-table new-table">
+                    <tbody>
+                    {:get_student_course($vo.id)}
+                    </tbody>
+                </table>
+<!--                {:get_student_course($vo.id)}-->
+            </td>
+
+<!--            <td class="text-center">{$vo.nickname}</td>-->
+<!--            <td class="text-center">{$vo.parent_tel}</td>-->
             <td class="text-center">{:get_user_realname($vo.userid)}</td>
             <td class="text-center">{:get_user_realname($vo.collect_id)}</td>
             <td class="text-center">{:get_user_realname($vo.sales_id)}</td>
-            {if $vo.status == 0}
-            <td class="text-center nowrap text-blue">停课</td>
-            {elseif $vo.status == -99 /}
-            <td class="text-center nowrap text-red">结课</td>
-            {else /}
-            <td class="text-center nowrap text-green">在读</td>
-            {/if}
-            <td class="text-center nowrap">{$vo.created_at|format_time}</td>
+<!--            {if $vo.status == 0}-->
+<!--            <td class="text-center nowrap text-blue">停课</td>-->
+<!--            {elseif $vo.status == -99 /}-->
+<!--            <td class="text-center nowrap text-red">结课</td>-->
+<!--            {else /}-->
+<!--            <td class="text-center nowrap text-green">在读</td>-->
+<!--            {/if}-->
+<!--            <td class="text-center nowrap">{$vo.created_at|format_time}</td>-->
             <td class="text-center nowrap">{$vo.branch|convert_branch}</td>
             <td class="text-center nowrap">{$vo.source|convert_channel}</td>
             <td class="text-center nowrap">

@@ -69,7 +69,7 @@ legend{width:auto!important;border-bottom:none!important}
 .layui-form-label{padding:9px 15px 9px 0;width:95px}
 .layui-input,.layui-select{line-height:38px}
 .layui-table.notevent tbody tr:hover {background-color: inherit;}
-.layui-table th,.layui-table td{font-size:12px}
+.layui-table th,.layui-table td{font-size:14px; border:1px solid #ccc}
 .layui-table td .text-explode:first-child{opacity:0;display:none}
 .layui-table td .text-explode{color:#ccc!important;font-weight:normal!important;margin:0px 4px!important}
 .layui-table .list-table-image{width:22px;cursor:pointer}
