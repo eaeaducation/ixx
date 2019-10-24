@@ -156,11 +156,11 @@ input[type="reset"] {
 
 .M-header .logo {
     background: url(../images/logo.png) no-repeat;
-    width: 250px;
+    width: 400px;
     background-size: 100%;
-    height: 89px;
+    height: 120px;
     text-indent: -9999em;
-    outline: 0;
+    /* outline: 0; */
 }
 
 .M-header .container {
@@ -369,6 +369,7 @@ input[type="reset"] {
 .video-module {
     width: 100%;
     height: 960px;
+    position: relative;
 }
 
 .video-module .video-body .pic-wrapper {
@@ -443,18 +444,25 @@ input[type="reset"] {
 .video-module .video-nav {
     width: 100%;
     height: 62px;
+    background: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 50px;
+    z-index: 999;
 }
 
 .video-module .video-nav ul {
     margin: 0 auto;
     width: 1199px;
-    border-right: 1px #B2B2B2 dotted;
+    background: transparent;
+    /* border-right: 1px #B2B2B2 dotted; */
 }
 
 .video-module .video-nav ul li {
     width: 238px;
     height: 62px;
+    padding: 10px 0;
     border-left: 1px #B2B2B2 dotted;
+    background: transparent;
     text-align: center;
     color: #d4d4d4;
     float: left;
@@ -465,21 +473,25 @@ input[type="reset"] {
     transition: all .3s;
 }
 
+.video-module .video-nav ul li:first-child {
+    border: none;
+}
+
 .video-module .video-nav ul li .en-text {
     font-size: 14px;
     line-height: 62px;
 }
 
 .video-module .video-nav ul li .cn {
-    padding-top: 14px;
     font-size: 16px;
     line-height: 24px;
-    color: #000000;
+    color: #fff;
+    font-weight: 600;
 }
 
 .video-module .video-nav ul li .en {
     font-size: 10px;
-    color: #000000;
+    color: #fff;
 }
 
 .video-module .video-nav ul li.active {
@@ -490,11 +502,21 @@ input[type="reset"] {
     transition: all .3s cubic-bezier(.55, 0, .1, 1);
 }
 
+.video-module .video-nav ul li.active .cn,
+.video-module .video-nav ul li.active .en {
+    color: #000;
+}
+
 
 /* feature-content */
 
+.feature-content {
+    text-align: center;
+    padding-top: 30px;
+}
+
 .feature-content ul {
-    margin: 120px auto 0;
+    margin: 35px auto 0;
     width: 1020px;
 }
 
@@ -504,71 +526,40 @@ input[type="reset"] {
     width: 320px;
     height: 206px;
     float: left;
-}
-
-.feature-content ul li a {
-    color: #B2B2B2;
-    display: block;
-    width: 320px;
-    -moz-transition: all .3s;
-    -o-transition: all .3s;
-    -webkit-transition: all .3s;
-    transition: all .3s;
-}
-
-.feature-content ul li .icon,
-.feature-content ul li .icon img {
-    width: 320px;
-    height: 206px;
-}
-
-.feature-content ul li a:hover {
-    width: 330px;
-    color: #FFFFFF;
-    /* box-shadow: 0 17px 50px 0 rgba(0, 0, 0, .19);
-    transform: translate3d(0, -5px, 0);
-    transition: all .3s cubic-bezier(.55, 0, .1, 1) */
-}
-
-.feature-content ul li a:hover .gray {
-    background-color: #000000;
-    position: absolute;
-    width: 320px;
-    height: 206px;
-    left: 0;
-    top: 0;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
+    overflow: hidden;
 }
 
 .feature-content ul li .gray {
-    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 320px;
+    height: 206px;
+    background: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
 .feature-content ul li .content {
     position: absolute;
-    padding-top: 85px;
+    left: 0;
+    bottom: -200px;
     width: 320px;
     height: 206px;
-    left: 0;
-    top: 0;
-    text-align: center;
-    opacity: 0;
+    overflow: hidden;
 }
 
-
-/* .feature-content ul li .content{
-    opacity: 0;
-} */
-
-.feature-content ul li .content:hover {
-    opacity: 1;
+.feature-content ul li:first-child .content,
+.feature-content ul li .content.active {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
 }
 
 .feature-content ul li .content h2 {
     font-size: 22px;
     line-height: 30px;
     color: #fff;
+    margin-top: 60px;
 }
 
 .feature-content ul li .content p {
@@ -591,6 +582,56 @@ input[type="reset"] {
     border: none;
     color: #fff;
 }
+
+.feature-content ul li .content button {
+    padding: 3px 20px;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+}
+
+
+/* 一站式留学规划体验中心 */
+
+.container.abroadCenter {
+    text-align: center;
+}
+
+.abroadCenter h3.title {
+    padding: 30px 0;
+}
+
+.abroad-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.abroad-text .abroad-img,
+.abroad-text .abroad-right {
+    flex: 0 0 45%;
+}
+
+.abroad-text .abroad-right {
+    text-align: left;
+    padding-left: 60px;
+}
+
+.abroad-text .abroad-right h3 {
+    line-height: 1.6;
+}
+
+.abroad-text .abroad-right a {
+    display: inline-block;
+    padding: 12px 60px;
+    background: #1A1919;
+    color: #fff;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+
+/* EA国际教育师资力量 */
 
 .faculty {
     text-align: center;

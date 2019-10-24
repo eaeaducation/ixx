@@ -1,16 +1,15 @@
 ﻿#appointmentDiv {
     position: fixed;
+    bottom: 3%;
+    right: 3%;
     z-index: 9999999999;
-    left: 1999px;
-    margin-left: -235px;
-    top: -999px;
     width: 378px;
+    height: 280px;
     padding-bottom: 13px;
     border-radius: 5px;
     background: #fff;
     box-shadow: 1px 4px 20px rgb(56, 56, 56);
     opacity: 0.9;
-    display: none;
 }
 
 #appointmentDiv h2 {

@@ -119,6 +119,17 @@ class Index extends controller
         return $this->fetch();
     }
 
+
+
+    /**
+     * esl 单页模式
+     * @return mixed
+     */
+    public function course()
+    {
+        return $this->fetch('');
+    }
+
     /**
      * esl 单页模式
      * @return mixed

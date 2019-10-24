@@ -1,221 +1,276 @@
-{extend name='shop@public/main'}
-{block name="style"}
+{extend name='shop@public/main'} {block name="style"}
 <link rel="stylesheet" href="/static/home/shop/css/product/product.css">
-    <style>
-        .header{background: #002458;}
-        .header h1{color: #fff;padding: 0 1rem;}
-        #package {height: 200px; border: 1px #888888 solid; box-shadow: 0px 0px 2px 2px #88888840; margin: 15px 15px}
-        .spec {display: flex; flex-direction: row;}
-        .spec li{ width: 87px; background-color: #a0a0a0; height: 40px; line-height: 40px; color: #fff; margin: 0 auto;}
-        .spec span{display: none;}
-        #money {margin-top: 50px; font-size: 31px; color: #e70014; float: right;}
-        .advisory{background-color: #000000;width: 15%}
-        .hui-swipe-item img{width: 80%; margin-top: 8%;}
-        .cart {width: 42%}
-        .review_area img{width: 100%}
-    </style>
-{/block}
-{block name="script"}
+<style>
+    .header {
+        background: #002458;
+    }
+    
+    .header h1 {
+        color: #fff;
+        padding: 0 1rem;
+    }
+    
+    #package {
+        height: 200px;
+        border: 1px #888888 solid;
+        box-shadow: 0px 0px 2px 2px #88888840;
+        margin: 15px 15px
+    }
+    
+    .spec {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .spec li {
+        width: 87px;
+        background-color: #a0a0a0;
+        height: 40px;
+        line-height: 40px;
+        color: #fff;
+        margin: 0 auto;
+    }
+    
+    .spec span {
+        display: none;
+    }
+    
+    #money {
+        margin-top: 20px;
+        margin-right: 20px;
+        font-size: 31px;
+        color: #e70014;
+        float: right;
+    }
+    
+    .advisory {
+        background-color: #000000;
+        width: 15%
+    }
+    
+    .hui-swipe-item img {
+        width: 80%;
+    }
+    
+    .cart {
+        width: 42%
+    }
+    
+    .review_area img {
+        width: 100%
+    }
+</style>
+{/block} {block name="script"}
 <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
-{/block}
-{block name="body"}
+{/block} {block name="body"}
+
 <body class="defwidth" style="background-color: #fff;">
-<header class="header">
-    <a href="javascript:history.back();" class="back"></a>
-    <div class="h_label" style="color:#fff;">商品详情</div>
-</header>
+    <header class="header">
+        <a href="javascript:history.back();" class="back"></a>
+        <div class="h_label" style="color:#fff;">商品详情</div>
+    </header>
 
-<!-- 详情区域开始 -->
-<section class="detail" style=" text-align: center; margin-bottom: 30px;padding-top: unset;">
-    <div class="hui-swipe common" id="system" style="width: 100%">
-        <div class="hui-swipe-items">
-            {foreach $product.goods_image as $key => $vo}
-            <div class="hui-swipe-item"><img onerror="error_img(this)" src="{$vo}"/></div>
-            {/foreach}
-        </div>
-    </div>
-    <div>
-        <!--<img onerror="error_img(this)" src="" style="width: 50%;">-->
-        <h3 style="margin-top:11px;margin-bottom: 3px;">{$product.goods_title}</h3>
-        <p style="color: #000;">{$product.goods_subtitle}</p>
-        {if $low == $high}
-        <p style="font-size: 18px">￥{$low}</p>
-        {else /}
-        <p style="font-size: 18px">￥{$low}——￥{$high}</p>
-        {/if}
-    </div>
-    <div id="package">
-        <p style="font-size: 18px; margin: 15px 0;">——  套餐类型  ——</p>
-        <ul class="spec">
-            {foreach $spec as $key => $vo}
-            <li>{$vo.name}<span style="display: none;" id="number">{$vo.number}</span></li>
-            <span>{$vo.value}</span>
-            {/foreach}
-        </ul>
-        <section class="quantity">
-            <h4>数量：</h4>
-            <div class="number_con">
-                <span class="minus">-</span>
-                <div class="input"><input id="buy_num" type="text" value="1"></div>
-                <span class="plus on">+</span>
+    <!-- 详情区域开始 -->
+    <section class="detail" style=" text-align: center; margin-bottom: 30px;padding-top: unset;">
+        <div class="hui-swipe common" id="system" style="width: 100%;">
+            <div class="hui-swipe-items" style="height: 300px;">
+                {foreach $product.goods_image as $key => $vo}
+                <div class="hui-swipe-item"><img onerror="error_img(this)" src="{$vo}" /></div>
+                {/foreach}
             </div>
-        </section>
-        <p id="money">￥<span style="font-size: 31px; color: #e70014;">{$low}</span></p>
-    </div>
-</section>
+        </div>
+        <div>
+            <!--<img onerror="error_img(this)" src="" style="width: 50%;">-->
+            <h3 style="margin-top:11px;margin-bottom: 3px;">{$product.goods_title}</h3>
+            <p style="color: #000;">{$product.goods_subtitle}</p>
+            {if $low == $high}
+            <p style="font-size: 18px">￥{$low}</p>
+            {else /}
+            <p style="font-size: 18px">￥{$low}——￥{$high}</p>
+            {/if}
+        </div>
+        <div id="package">
+            <p style="font-size: 18px; margin: 15px 0;">—— 套餐类型 ——</p>
+            <ul class="spec">
+                {foreach $spec as $key => $vo}
+                <li>{$vo.name}<span style="display: none;" id="number">{$vo.number}</span></li>
+                <span>{$vo.value}</span> {/foreach}
+            </ul>
+            <section class="quantity">
+                <h4>数量：</h4>
+                <div class="number_con">
+                    <span class="minus">-</span>
+                    <div class="input"><input id="buy_num" type="text" value="1"></div>
+                    <span class="plus on">+</span>
+                </div>
+            </section>
+            <p id="money">￥<span style="font-size: 31px; color: #e70014;">{$low}</span></p>
+        </div>
+    </section>
 
 
 
-<section class="review_area" style="width: 92%">
-    {$product.goods_content|raw}
-</section>
+    <section class="review_area" style="width: 92%">
+        {$product.goods_content|raw}
+    </section>
+    <div style="height: 50px;"></div>
+    <!-- 购物车开始 -->
+    <section class="shopping_cart">
+        <div class="btn_con">
+            <button class="advisory" dd_name="咨询">咨询</button>
+            <button class="add" dd_name="加入购物车" style="width: 43%;">加入购物车</button>
+            <a href='javascript:;' id="buy" class="cart" style="width: 42%">立即购买</a>
+        </div>
+    </section>
+    <!-- 购物车结束 -->
+    <form id="product_form" action="{:url('shop/product/cart')}" method="post">
+        <input type="hidden" name="pro_id" value="{$product.id}">
+    </form>
 
-<!-- 购物车开始 -->
-<section class="shopping_cart">
-    <div class="btn_con">
-        <button class="advisory" dd_name="咨询">咨询</button>
-        <button class="add" dd_name="加入购物车" style="width: 43%;">加入购物车</button>
-        <a href='javascript:;' id="buy" class="cart" style="width: 42%">立即购买</a>
-    </div>
-</section>
-<!-- 购物车结束 -->
-<form id="product_form" action="{:url('shop/product/cart')}" method="post">
-    <input type="hidden" name="pro_id" value="{$product.id}">
-</form>
+    <!-- 购物车占位开始 -->
+    <section class="space"></section>
 
-<!-- 购物车占位开始 -->
-<section class="space"></section>
+    <script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
+    <script src="/static/extend_res/mobile/js/hui.js"></script>
+    <script src="/static/extend_res/mobile/js/hui-swipe.js"></script>
+    <script>
+        $(function() {
 
-<script src="/static/extend_res/jquery/jquery-3.3.1.js"></script>
-<script src="/static/extend_res/mobile/js/hui.js"></script>
-<script src="/static/extend_res/mobile/js/hui-swipe.js"></script>
-<script>
-    $(function () {
+            var system = new huiSwpie('#system');
+            system.autoPlay = true;
+            system.loop = true;
+            system.delay = 3000;
+            system.indicatorOn = false;
+            system.run();
 
-        var system = new huiSwpie('#system');
-        system.autoPlay = true;
-        system.loop = true;
-        system.delay = 3000;
-        system.indicatorOn = false;
-        system.run();
-
-        $('.add').click(function () {
-            var money = $('#money span').html();
-            var gid = $('[name="pro_id"]').val();
-            var num = $('.input input').val();
-            var param = $('.spec li[style="background:red"] #number').html();
-            var url = '{:url("shop/product/add")}';
-            hui.loading();
-            $.post(url, {pro_id: gid, price: money, num: num, param: param}, function (e) {
-                hui.closeLoading();
-                if (e.code == 1) {
-                    hui.iconToast(e.msg, 'success');
-                    setTimeout(function () {
-                        window.location.href = 'cart';
-                    }, 1000)
-                } else {
-                    setTimeout(function () {
-                        window.location.href = 'cart';
-                    }, 200)
-                }
-            })
-        });
-
-        $('.spec').children('li:first-child').attr('style', 'background:red');
-
-        $('.spec').on('click', 'li', function () {
-            var len = $(this).index();
-            $(this).attr('style', 'background:red');
-            $(this).siblings().removeAttr('style', 'background:red');
-            var val = $('.spec').children().eq(len + 1).html(),
-                num = $('.input input').val(),
-                val = num * val;
-            $('#money span').html(val);
-        });
-
-        //增加数量
-        $('.plus').click(function () {
-            var num = $('.input input').val(),
-                price = $('.spec li[style="background:red"]').next('span').html(),
-                total = num*1 + 1,
-                total_money = price * total;
-            $('.input input').val(total);
-            $('#money span').html(total_money);
-            if (total > 1) {
-                $('.minus').attr('style', 'background: url(/static/home/shop/images/product/control.png) #f8f8f8 0 -0.0rem no-repeat;background-size:200%;')
-            }
-        });
-
-        //减少数量
-        $('.minus').click(function () {
-            var num = $('.input input').val();
-            if (num == 1) {
-                return false;
-            }
-            var total = num*1 - 1,
-                price = $('.spec li[style="background:red"]').next('span').html(),
-                total_money = price * total;
-            $('.input input').val(total);
-            $('#money span').html(total_money);
-            if (total == 1) {
-                $('.minus').attr('style', 'background: url(/static/home/shop/images/product/control.png) #f8f8f8 0 -1.4rem no-repeat;background-size:200%;')
-            }
-        });
-
-        //监听数量
-        $('.input input').bind("input propertychange", function () {
-            var num = $(this).val(),
-                price = $('.spec li[style="background:red"]').next('span').html(),
-                total_money = price * num;
-            $('#money span').html(total_money);
-        });
-        
-        //立即购买
-        $('#buy').click(function () {
-            hui.loading();
-            $.post('{:url("product/buy")}', {}, function (e) {
-                if (e.code) {
-                    var data = {};
-                    var money = $('#money span').html();
-                    //var money = 0.01;
-                    data.price = money;
-                    data.gid = $('[name="pro_id"]').val();
-                    data.num = $('.spec li[style="background:red"] #number').html();
-                    data.number = $('#buy_num').val();
-                    var order = {};
-                    order['0'] = data;
-                    var title = $('h3').html();
-                    var small_wx = window.__wxjs_environment === 'miniprogram';
-                    var code = '{$code}';
-                    if (small_wx) {
-                        $.post('/api2/xiaochengxu/getSessionkey', {code: code}, function (e) {
-                            //var res = JSON.parse(e);
-                            $.post('/api2/xiaochengxu/xcxShopPay', {title: title, data: order, price: money}, function (e) {
-                                var data = JSON.parse(e);
-                                if (data.success) {
-                                    hui.closeLoading();
-                                    //点击微信支付后，调取统一下单接口生成微信小程序支付需要的支付参数
-                                    var params = '?timestamp=' + data.data.timeStamp + '&nonceStr=' + data.data.nonceStr + '&' + data.data.package + '&signType=' + data.data.signType + '&paySign=' + data.data.paySign;
-                                    //定义path 与小程序的支付页面的路径相对应
-                                    var path = new Object();
-                                    path.url = "../wxpay/wxpay" + params;
-                                    //通过JSSDK的api使小程序跳转到指定的小程序页面
-                                    wx.miniProgram.navigateTo(path);
-                                }
-                            })
-                        });
+            $('.add').click(function() {
+                var money = $('#money span').html();
+                var gid = $('[name="pro_id"]').val();
+                var num = $('.input input').val();
+                var param = $('.spec li[style="background:red"] #number').html();
+                var url = '{:url("shop/product/add")}';
+                hui.loading();
+                $.post(url, {
+                    pro_id: gid,
+                    price: money,
+                    num: num,
+                    param: param
+                }, function(e) {
+                    hui.closeLoading();
+                    if (e.code == 1) {
+                        hui.iconToast(e.msg, 'success');
+                        setTimeout(function() {
+                            window.location.href = 'cart';
+                        }, 1000)
                     } else {
-                        window.location.href = '/wechat/pay.show/shopPay.html?' + 'order=' + JSON.stringify(order) + '&money=' + money + '&title=' + title;
+                        setTimeout(function() {
+                            window.location.href = 'cart';
+                        }, 200)
                     }
-                } else {
-                    window.location.href = e.data.url;
-                }
-            })
-        });
+                })
+            });
 
-        $('.advisory').click(function () {
-            window.location.href = '/shop/address/index';
+            $('.spec').children('li:first-child').attr('style', 'background:red');
+
+            $('.spec').on('click', 'li', function() {
+                var len = $(this).index();
+                $(this).attr('style', 'background:red');
+                $(this).siblings().removeAttr('style', 'background:red');
+                var val = $('.spec').children().eq(len + 1).html(),
+                    num = $('.input input').val(),
+                    val = num * val;
+                $('#money span').html(val);
+            });
+
+            //增加数量
+            $('.plus').click(function() {
+                var num = $('.input input').val(),
+                    price = $('.spec li[style="background:red"]').next('span').html(),
+                    total = num * 1 + 1,
+                    total_money = price * total;
+                $('.input input').val(total);
+                $('#money span').html(total_money);
+                if (total > 1) {
+                    $('.minus').attr('style', 'background: url(/static/home/shop/images/product/control.png) #f8f8f8 0 -0.0rem no-repeat;background-size:200%;')
+                }
+            });
+
+            //减少数量
+            $('.minus').click(function() {
+                var num = $('.input input').val();
+                if (num == 1) {
+                    return false;
+                }
+                var total = num * 1 - 1,
+                    price = $('.spec li[style="background:red"]').next('span').html(),
+                    total_money = price * total;
+                $('.input input').val(total);
+                $('#money span').html(total_money);
+                if (total == 1) {
+                    $('.minus').attr('style', 'background: url(/static/home/shop/images/product/control.png) #f8f8f8 0 -1.4rem no-repeat;background-size:200%;')
+                }
+            });
+
+            //监听数量
+            $('.input input').bind("input propertychange", function() {
+                var num = $(this).val(),
+                    price = $('.spec li[style="background:red"]').next('span').html(),
+                    total_money = price * num;
+                $('#money span').html(total_money);
+            });
+
+            //立即购买
+            $('#buy').click(function() {
+                hui.loading();
+                $.post('{:url("product/buy")}', {}, function(e) {
+                    if (e.code) {
+                        var data = {};
+                        var money = $('#money span').html();
+                        //var money = 0.01;
+                        data.price = money;
+                        data.gid = $('[name="pro_id"]').val();
+                        data.num = $('.spec li[style="background:red"] #number').html();
+                        data.number = $('#buy_num').val();
+                        var order = {};
+                        order['0'] = data;
+                        var title = $('h3').html();
+                        var small_wx = window.__wxjs_environment === 'miniprogram';
+                        var code = '{$code}';
+                        if (small_wx) {
+                            $.post('/api2/xiaochengxu/getSessionkey', {
+                                code: code
+                            }, function(e) {
+                                //var res = JSON.parse(e);
+                                $.post('/api2/xiaochengxu/xcxShopPay', {
+                                    title: title,
+                                    data: order,
+                                    price: money
+                                }, function(e) {
+                                    var data = JSON.parse(e);
+                                    if (data.success) {
+                                        hui.closeLoading();
+                                        //点击微信支付后，调取统一下单接口生成微信小程序支付需要的支付参数
+                                        var params = '?timestamp=' + data.data.timeStamp + '&nonceStr=' + data.data.nonceStr + '&' + data.data.package + '&signType=' + data.data.signType + '&paySign=' + data.data.paySign;
+                                        //定义path 与小程序的支付页面的路径相对应
+                                        var path = new Object();
+                                        path.url = "../wxpay/wxpay" + params;
+                                        //通过JSSDK的api使小程序跳转到指定的小程序页面
+                                        wx.miniProgram.navigateTo(path);
+                                    }
+                                })
+                            });
+                        } else {
+                            window.location.href = '/wechat/pay.show/shopPay.html?' + 'order=' + JSON.stringify(order) + '&money=' + money + '&title=' + title;
+                        }
+                    } else {
+                        window.location.href = e.data.url;
+                    }
+                })
+            });
+
+            $('.advisory').click(function() {
+                window.location.href = '/shop/address/index';
+            })
         })
-    })
-</script>
-{/block}
+    </script>
+    {/block}

@@ -35,21 +35,20 @@
         <!-- Header Start -->
         <div class="M-header">
             <div class="container">
-
-
                 <div class="row clearfix">
                     <a href="/" class="logo left">EA国际教育</a>
-                    <div class="nav left">
+                    <!-- <div class="nav left">
                         <ul class="clearfix">
                             <li class="index active"><a href="/">首页</a></li>
                             <li class="product"><a href="{:url('esl')}">课程</a></li>
+                            <li class="product"><a href="{:url('course')}">课程</a></li>
                             <li class="brand"><a href="{:url('studyAbroad')}">低龄留学</a></li>
                             <li><a href="{:url('cases')}">经典案例</a></li>
                             <li class="custom"><a href="{:url('about')}">公馆简介</a></li>
                             <li><a href="{:url('latestNews')}">最新资讯</a></li>
                             <li class="jiameng"><a href="{:url('merchantsJoin')}">招商加盟</a></li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="product-subnav" style="display: none;">
@@ -123,13 +122,13 @@
             })();
         </script>
         <script>
-            // $(function() {
-            $('.M-header .nav ul li').click(function() {
-                    // alert(window.location.pathname)
-                    console.log('1111')
-                    $(this).addClass('active').siblings().removeClass('active');
-                })
+            $(function() {
+                // $('.M-header .nav ul li').click(function() {
+                // alert(window.location.pathname)
+                // console.log('1111')
+                // $(this).addClass('active').siblings().removeClass('active');
                 // })
+            })
         </script>
 
         {if isset($banner)}
@@ -153,7 +152,6 @@
             });
         });
     </script>
-
     <div class="M-footer">
         <div class="foot-nav ">
             <div class="container">
@@ -229,14 +227,14 @@
             <!-- <li><a href="http://weibo.com/5916864605/manage"target="_blank" ><div class="sidebox"><img src="/images/side_icon03.jpg">新浪微博</div></a></li>-->
             <li>
                 <a href="http://eaeducation.net/#">
-                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);">
+                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);text-align: center;">
                         <img src="{$left_pic['33'] ?? ''}">400-6692-620
                     </div>
                 </a>
             </li>
             <li>
                 <a href="http://www.dianping.com/search/keyword/17/0_EA%E5%9B%BD%E9%99%85%E6%95%99%E8%82%B2" target="_blank">
-                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);"><img src="{$left_pic['34'] ?? ''}">大众点评
+                    <div class="sidebox" style="width: 54px; opacity: 0.8; background: rgb(0, 0, 0);text-align: center;"><img src="{$left_pic['34'] ?? ''}">大众点评
                     </div>
                 </a>
             </li>
@@ -250,14 +248,14 @@
             </li>
             <li>
                 <a href="http://p.qiao.baidu.com/cps/chat?siteId=12427928&amp;userId=25803422">
-                    <div class="sidebox">
+                    <div class="sidebox" style="text-align: center;">
                         <img src="{$left_pic['37'] ?? ''}">在线客服
                     </div>
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0);" class="play inline-block Gtingke_lj">
-                    <div id="form_start" class="sidebox">
+                    <div id="form_start" class="sidebox" style="text-align: center;">
                         <img src="{$left_pic['38'] ?? ''}">在线留言
                     </div>
                 </a>
@@ -271,7 +269,7 @@
     </div>
 
     <link rel="stylesheet" href="/static/home/css/appointmentDiv.css">
-    <div id="appointmentDiv" style="left: 50%; top: 50%; margin-top: -140px;">
+    <div id="appointmentDiv" style="display: none">
         <form action="http://eaeducation.net/" enctype="multipart/form-data" method="post" onsubmit="return false">
             <div id="hidinput">
                 <input type="hidden" name="action" value="post">
@@ -296,10 +294,13 @@
                 <div class="alertTel formInfo">
                     <b class="name"></b>
                     <select name="branch" id="Ggongguan" size="1">
-                    <option value="1">高新总部</option>
+                    <option value="1">高新公馆</option>
                     <option value="5">北郊公馆</option>
-                    <option value="4">太白南路公馆</option>
+                    <option value="15">中大公馆</option>
                     <option value="3">曲江公馆</option>
+                    <option value="13">上和公馆</option>
+                    <option value="14">金辉公馆</option>
+                    <option value="7">留学中心</option>
                 </select>
                 </div>
                 <input type="submit" onclick="GetSubmit();" value="确认提交">
@@ -313,19 +314,17 @@
             $('#appointmentDiv h2.til em').html('预约试听课');
             //      $("#appBox").html('<div id="appInfo"><p>· 精选主题试听课任选1节</p><p>· 个性化定制语言学习方案</p><p>· 1对1出国留学规划与指导</p><p>· 报名即享1000元现金大礼包</p></div>');
             $('#hidinput').html('<input type="hidden" name="action" value="post" /><input type="hidden" name="diyid" value="1" /><input type="hidden" name="do" value="2" /><input type="hidden" name="dede_fields" value="tel,text;gongguan,text" /><input type="hidden" name="dede_fieldshash" value="43491557cba0f6632c68d83234864d53" />');
-            divH = $("#appointmentDiv").outerHeight() / 2;
+            // divH = $("#appointmentDiv").outerHeight() / 2;
             $("#maskDiv").show();
-            $("#appointmentDiv").animate({
-                left: "50%",
-                top: "50%",
-                marginTop: -divH
-            }, 500);
+            setTimeout(function() {
+                $("#appointmentDiv").show();
+            }, 1000)
+
         });
 
         function GetSubmit() {
             var tel = $('#Gtel');
             var branch = $('#Ggongguan').val();
-
             if (tel.val() == '' || tel.val() == '请输入您的手机号') {
                 alert('您的手机号不能为空！');
                 return false;
@@ -521,4 +520,4 @@
     </ins>
 </body>
 
-</html>
+</html>\

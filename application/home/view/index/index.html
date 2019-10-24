@@ -5,8 +5,7 @@
     <div class="video-module" node-type="video-clear">
         <div class="video-body">
             <div class="pic-wrapper" node-type="video-container">
-                {foreach $banner1 as $k=>$v}
-                {if $k == 0}
+                {foreach $banner1 as $k=>$v} {if $k == 0}
                 <div class="picbox" style="display: block;">
                     <div class="text">
                         <img src="{$v['thumb']}">
@@ -19,21 +18,23 @@
                     </div>
                 </div>
                 {/if}
-<!--                <div class="picbox" style="display: none;">-->
-<!--                    <div class="text">-->
-<!--                        <img src="{$v['thumb']}">-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="picbox" style="display: none;">-->
+                <!--                    <div class="text">-->
+                <!--                        <img src="{$v['thumb']}">-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 {/foreach}
             </div>
         </div>
         <!-- banner导航栏开始 -->
         <div class="video-nav">
+
             {:htmlspecialchars_decode($nav_text)}
         </div>
         <!-- banner导航栏结束 -->
     </div>
     <div class="feature-content">
+        <h3>三大课程体系</h3>
         <ul class="clearfix">
             {foreach $content as $k1=>$v1}
             <li class="first-child">
@@ -43,12 +44,10 @@
                     </div>
                     <div class="gray"></div>
                     <div class="content">
-                        <div class="context">
-                            <h2>{$v1['title']}</h2>
-                            <div class="line"></div>
-                            <p>{$v1['content']|raw}</p>
-                        </div>
-
+                        <h2>{$v1['title']}</h2>
+                        <div class="line"></div>
+                        <p>{$v1['content']|raw}</p>
+                        <button>详情</button>
                     </div>
                 </a>
             </li>
@@ -56,19 +55,20 @@
 
         </ul>
     </div>
-    <!--=== Owl Clients v1 ===-->
-    <!-- <div class="container" style="padding-right: 0;padding-left: 0;padding-top: 15px;">
-        <div style="padding-bottom: 15px;">
-            <ul style="list-style-type:none;padding:15px 0;margin:0px;">
-                <li style="float:left; width:33.33333%"><img src="/static/home/images/hr.jpg" width="100%">
-                </li>
-                <li style="float:left; width:33.33333%;text-align:center"><span style="font-size:22px; font-weight:400;color: #000;">EA国际教育师资力量</span></li>
-                <li style="float:left; width:33.33333%"><img src="/static/home/images/hr.jpg" width="100%">
-                </li>
-            </ul>
+    <div class="container abroadCenter">
+        <h3 class="title">一站式留学成长规划中心</h3>
+        <div class="abroad-text">
+            <div class="abroad-img">
+                <img src="/static/home/images/1-1FS111261U36.jpg" alt="">
+            </div>
+            <div class="abroad-right">
+                <h2>深度助学 独E无二</h2>
+                <h3>目标北美世界名校，<br/>打造留学前中后一站式服务。</h3>
+                <a href="{:url('studyAbroad')}">了解更多</a>
+            </div>
         </div>
 
-    </div> -->
+    </div>
     <div class="container faculty">
         <h3>EA国际教育师资力量</h3>
         <div class="owl-carousel owl-theme">
