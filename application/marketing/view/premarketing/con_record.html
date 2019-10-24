@@ -31,7 +31,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">跟进状态</label>
         <div class="layui-input-block padding-right-20">
-            {:get_category_select(7, 'follow_status', 2, '', ['required'=>'required'])}
+            {:get_category_select(7, 'follow_status', $Think.get.follow_status, '', ['required'=>'required'])}
         </div>
     </div>
     <div class="layui-form-item">

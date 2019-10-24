@@ -59,12 +59,12 @@
         </div>
         <div class="layui-form-item">
             <label class="col-sm-1 control-label">
-                昵称
+                英文名
             </label>
             <div class='col-sm-4'>
                 <input type="text" name="student[nickname]"
                        value="{$vo.nickname|default=''}"
-                       title="请输入昵称" placeholder="请输入昵称" class="layui-input">
+                       title="请输入英文名" placeholder="请输入英文名" class="layui-input">
             </div>
             <label class="col-sm-1 control-label">
                 微信号码
@@ -81,7 +81,7 @@
                 学员卡号
             </label>
             <div class='col-sm-4'>
-                <input type="text" name="student[icard]"
+                <input type="text" name="student[icard]" required="required"
                        value="{$vo.icard|default=''}" class="layui-input" placeholder="学员卡号">
             </div>
             <label class="col-sm-1 control-label">
@@ -90,42 +90,42 @@
             <div class='col-sm-4'>
                 <input type="text" name="student[qq]"
                        value="{$vo.qq|default=''}" class="layui-input" placeholder="请输入QQ号码">
-                <div class="help-block text-right">
-                    <a href="javascript:showMore()">更多信息 >></a>
-                </div>
+<!--                <div class="help-block text-right">-->
+<!--                    <a href="javascript:showMore()">更多信息 >></a>-->
+<!--                </div>-->
             </div>
         </div>
     </div>
-    <div data-consultation-type="other" class="form-item" style="display:none;">
+    <div data-consultation-type="other" class="form-item" style="display:block;">
         <div class="layui-form-item">
             <label class="col-sm-1 control-label">
                 出生日期
             </label>
             <div class='col-sm-4'>
-                <input type="text" name="student[birthday]"
-                       value='{$vo.birthday|default=""|date="Y-m-d"}' class="layui-input">
+                <input type="text" name="student[birthday]" title="请输入出生日期（格式：‘2019-01-01’）"
+                       value='{$vo.birthday|default=""|date="Y-m-d"}' class="layui-input" placeholder="请输入出生日期（格式：‘2019-01-01’）">
             </div>
             <label class="col-sm-1 control-label">
                 居住地址
             </label>
             <div class='col-sm-4'>
-                <input type="text" name="student[address]"
+                <input type="text" name="student[address]" required="required"
                        value="{$vo.address|default=''}" class="layui-input" placeholder="请输入居住地址">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="col-sm-1 control-label">
-                公立学校
+                就读学校
             </label>
             <div class='col-sm-4'>
-                <input type="text" name="student[school]"
+                <input type="text" name="student[school]" required="required"
                        value="{$vo.school|default=''}" class="layui-input" placeholder="请输入公立学校">
             </div>
             <label class="col-sm-1 control-label">
-                公立班级
+                所在班级
             </label>
             <div class='col-sm-4'>
-                <input type="text" name="student[class]"
+                <input type="text" name="student[class]" required="required"
                        value="{$vo.class|default=''}" class="layui-input" placeholder="请输入公立学校班级">
             </div>
         </div>

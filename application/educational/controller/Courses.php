@@ -368,10 +368,11 @@ class Courses extends BasicAdmin
         $employee = Db::name('system_user')->alias('u')
             ->join('saas_employee e', 'e.userid=u.id')
             ->field('e.name,e.id,u.authorize,e.is_teacher')
-            ->where('e.status', '<>', '3')
-            ->where('u.status', '<>', '3')
-            ->whereOr('u.authorize', '=', 22)
+            ->where('e.status', '=', 1)
+            ->where('u.status', '=', 1)
+//            ->where('u.authorize', '=', 22)
             ->where('e.is_teacher', '=', 1)
+            ->where('u.is_deleted', '=', 0)
             ->where('e.department', '=', $branch)
             ->select();
         $teacher = [];

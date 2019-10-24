@@ -195,13 +195,22 @@ class Premarketing extends BasicAdmin
             ->field('course_id,created_at,course_hour,status')->order('created_at desc')->select();
         $log = Db::name('SystemLog')->where('cid', '=', $id)->order('id', 'desc')->limit('20')->select();
         $introducer = Db::name('saas_customer_introducer')->where('customer_id', $id)->field('introducer_id')->find();
+        $follow_status = Db::name('saas_customer_follow')->where('customer_id', '=', $id)->order('id desc')->find();
+        $courses = Db::name('saas_order o')
+            ->join('saas_order_log l', 'l.order_id=o.id', 'left')
+            ->join('saas_courses c', 'l.goods_id=c.id', 'left')
+            ->where('o.student_id', '=', $id)
+            ->field('o.id orderid, o.status ostatus, l.class_id, l.goods_id, c.title, l.price')
+            ->select();
         return view('', [
             'customer' => $customer,
             'title' => $this->title,
             'order' => $order,
             'record' => $course_record,
             'log' => $log,
-            'introducer' => $introducer
+            'introducer' => $introducer,
+            'follow_status' => $follow_status,
+            'courses' => $courses
         ]);
     }
 
