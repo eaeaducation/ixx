@@ -2282,3 +2282,36 @@ function pay_status($status, $selected)
     $html = html_select($data, $status, $selected, '', [], false);
     return $html;
 }
+
+
+function get_student_course($student_id)
+{
+    $courses = Db::name('saas_order o')
+        ->field('l.goods_num, l.consume_num, c.title, l.class_id, cl.teacher_id')
+        ->join('saas_order_log l', 'o.id = l.order_id', 'left')
+        ->join('saas_courses c', 'c.id = l.goods_id', 'left')
+        ->join('saas_class cl', 'cl.id = l.class_id', 'left')
+        ->where('o.student_id', '=', $student_id)
+        ->where('o.status', '<>', 3)
+        ->select();
+        $html_table = '';
+        if ($courses) {
+            foreach ($courses as $value) {
+                $remaining_course = $value['goods_num']-$value['consume_num'];
+                $html_table .= "<tr>
+                        <td class='text-center' style='width: 25%;'>".$value['title']."</td>
+                        <td class='text-center' style='width: 15%;'>".$value['goods_num']."课时</td>
+                        <td class='text-center' style='width: 15%;'>".$value['consume_num']."课时</td>
+                        <td class='text-center' style='width: 15%;'>".$remaining_course."课时</td>
+                        <td class='text-center' style='width: 17%;'>".convert_class($value['class_id'])."</td>
+                        <td class='text-center' style='width: 15%;'>".get_employee_name($value['teacher_id'])."</td>
+                    </tr>";
+//                $html_table .= '课程:'.$value['title'].';&nbsp&nbsp&nbsp总课时:'.$value['goods_num'].';&nbsp&nbsp&nbsp剩余课时:'.$remaining_course.'<br />';
+            }
+        } else {
+            $html_table .= "<tr><td>未分班</td></tr>";
+//            $html_table .= '暂无课时记录';
+        }
+
+    return $html_table;
+}

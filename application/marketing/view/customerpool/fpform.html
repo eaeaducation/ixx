@@ -5,14 +5,14 @@
 </style>
 <form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
     <div class="layui-form-item">
-        <label class="layui-form-label">分配人员</label>
+        <label class="layui-form-label">销售员</label>
         <div class="layui-input-block">
-            <select name="tel_user" class="input-sm form-control" required="required" title="请输入类目名称"  placeholder="请输入类目名称" >
+            <select name="tel_user" class="input-sm form-control" lay-search required="required" title="请输入类目名称"  placeholder="请输入类目名称" >
 
                 <option value="">--选择销售(CC)--</option>
                     {volist name="electricpiners" id="vo"}
                     {if $vo.authorize == '11' || $vo.authorize == '9' || $vo.authorize == '5'}
-                    <option value="{$vo.authorize}-{$vo.userid}"> {$vo.name}</option>
+                    <option value="{$vo.authorize}-{$vo.userid}"> {$vo.name}-{$vo.english_name}</option>
                     {/if}
                     {/volist}
             </select>

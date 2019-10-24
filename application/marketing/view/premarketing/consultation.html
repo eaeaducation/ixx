@@ -200,7 +200,7 @@
             <td class="text-nowrap text-right">
                 {if auth("$classuri/consultingRecord")}
                 <span class="text-explode">|</span>
-                <a data-modal='{:url("$classuri/consultingRecord")}?id={$vo.id}' data-title="咨询信息">新建咨询</a>
+                <a data-modal='{:url("$classuri/consultingRecord")}?id={$vo.id}&follow_status={$vo.follow_status}' data-title="咨询信息">新建咨询</a>
                 {/if}
                 {if auth("educational/student/add")}
                 <span class="text-explode">|</span>
