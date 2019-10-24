@@ -208,6 +208,32 @@
             </div>
             <div class="layui-tab-item">
                 <blockquote class="layui-elem-quote">课程</blockquote>
+                <form onsubmit="return false;" data-auto="true" method="post">
+                    <!--{empty name='courses'}-->
+                    <p class="help-block text-center well">没 有 记 录 哦！</p>
+                    <!--{else}-->
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th class="text-center">课程名称</th>
+                            <th class="text-center">课程价格</th>
+                            <th class="text-center">支付状态</th>
+                            <th class="text-center">所在班级</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--{foreach $courses as $key=>$vo}-->
+                        <tr>
+                            <td class="text-center">{$vo.title}</td>
+                            <td class="text-center">{$vo.price}</td>
+                            <td class="text-center">{$vo.ostatus|convert_category=35|raw}</td>
+                            <td class="text-center">{$vo.class_id|convert_class|raw|default='<font style="color:red">未分班</font>'}</td>
+                        </tr>
+                        <!--{/foreach}-->
+                        </tbody>
+                    </table>
+                    <!--{/empty}-->
+                </form>
             </div>
             <div class="layui-tab-item">
                 <blockquote class="layui-elem-quote">上课记录</blockquote>
