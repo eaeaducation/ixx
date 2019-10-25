@@ -103,7 +103,7 @@ class Index extends controller
             ->select();
         //老师列表
         $teachers = Db::name($this->table)
-            ->field('thumb')
+            ->field('thumb,content')
             ->where('catid', '=', '4')
             ->select();
         //首页轮播图导航栏文字

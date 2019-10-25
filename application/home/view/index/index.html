@@ -74,7 +74,14 @@
         <div class="owl-carousel owl-theme">
             {foreach $teachers as $k2=>$v2}
             <!-- <a href="{:url('teacherList')}"><img src="{$v2['thumb']}" alt=""></a> -->
-            <a><img src="{$v2['thumb']}" alt=""></a>
+            <div class="teacher">
+                <img src="{$v2['thumb']}" alt="">
+                <div class="teacher-intro">
+                    <p>{:htmlspecialchars_decode($v2['content'])}</p>
+                </div>
+                <div class="gray_bg"></div>
+            </div>
+
             {/foreach}
         </div>
     </div>
