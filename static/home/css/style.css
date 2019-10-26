@@ -128,7 +128,7 @@ input[type="reset"] {
 .M-home.row {
     width: 100%;
     max-width: 100%;
-    margin-top: -100px;
+    /* margin-top: -100px; */
 }
 
 .inline-block {
@@ -660,6 +660,50 @@ input[type="reset"] {
 
 .faculty .owl-dots {
     display: none;
+}
+
+.faculty .teacher {
+    position: relative;
+}
+
+.faculty .owl-item {
+    height: 328px;
+    overflow: hidden;
+    position: relative;
+}
+
+.faculty .owl-item .teacher-intro {
+    position: absolute;
+    top: 140px;
+    width: 100%;
+    color: #fff;
+    opacity: 0;
+    z-index: 9999;
+}
+
+.faculty .owl-item .teacher-intro p {
+    line-height: 1.8;
+    font-size: 13px;
+    margin: 0;
+    color: #fff;
+}
+
+.faculty .owl-item .teacher-intro p:nth-of-type(2) {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.faculty .owl-item:hover .gray_bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 232px;
+    height: 328px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.faculty .owl-item:hover .teacher-intro {
+    opacity: 1;
 }
 
 
