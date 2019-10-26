@@ -1,0 +1,158 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">打卡学员</label>
+        <div class="layui-input-block">
+            <input type="text" name="" value='{$students|default="未知"}' required="required" readonly  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">授课教师</label>
+        <div class="layui-input-inline" style="width: 16%">
+            <input type="text" name="" required value='{$class["teacher_id"]|get_employee_name|raw|default="未知"}' required="required" readonly  class="layui-input">
+        </div>
+        <label class="layui-form-label">主教授课课时</label>
+        <div class="layui-input-inline" style="width: 16%">
+            <input type="number" required name="teacher_hour" value="0" title="消耗课时" class="layui-input" />
+        </div>
+        <label class="layui-form-label">助教授课课时</label>
+        <div class="layui-input-inline" style="width: 16%">
+            <input type="number" required name="assistant_teacher_hour" value="0" title="消耗课时" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">请假/旷课</label>
+        <div class="layui-input-inline" style="width: 270px;">
+            <input type="radio" name="status" value="3" title="请假" checked="" style="display: none !important;" required lay-filter="status">
+            <input type="radio" name="status" value="1" title="上课" style="display: none !important;" required lay-filter="status">
+            <input type="radio" name="status" value="2" title="补课" style="display: none !important;" required lay-filter="status">
+        </div>
+        <label class="layui-form-label">学生消耗课时</label>
+        <div class="layui-input-inline">
+            <input type="number" required name="student_hour" value="0" title="消耗课时" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">当前课程</label>
+        <div class="layui-input-block">
+            <select name="course" lay-filter="course" lay-verify="course" required>
+                <option value="">-请选择课程-</option>
+                <!--{foreach $courses as $k=>$v}-->
+                <option value="{$v['course_id']}">{$v.course_id|get_courses_title=$v.course_id}</option>
+                <!--{/foreach}-->
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item select-time2">
+        <label class="layui-form-label" id="label1">操作日期</label>
+        <div class="layui-input-block">
+            <input type="text" id="date_range" name="date" value="" style="display: inline-block"
+                   placeholder="选择补课日期（1970-01-01）" class="input-sm form-control layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item select-time2">
+        <label class="layui-form-label" id="label2">操作时间</label>
+        <div class="layui-input-block time_range">
+            <input type="text" id="time_range" name="time" value="" style="display: inline-block"
+                   placeholder="选择补课时间（00:00:00 - 02:00:00）" class="input-sm form-control layui-input">
+        </div>
+        <div class="layui-input-block hour" style="display: none">
+            <select name="time1" lay-filter="hour" id="hour" name="time">
+                <option value="">-请选择上课时间段-</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block" >
+            <!--            <textarea name="remark" id="" class="layui-textarea"></textarea>-->
+            <input type="text" name="remark" value="" title="备注" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item text-center">
+        <input type='hidden' value='{$class_id}' name='class_id'>
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '-',
+            type: 'time',
+            theme: '#0099CC',
+            format: 'HH:mm:ss',
+            value: "09:00:00 - 11:00:00"
+        })
+        var laydate1 = layui.laydate
+        laydate1.render({
+            elem: '#date_range',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            value: "{:date('Y-m-d')}"
+        })
+    })
+</script>
+
+<script>
+    window.form.render();
+    layui.use(['laydate','form'], function () {
+        var form = layui.form;
+        var class_id = $('input[name="class_id"]').val();
+        var course = $('input[name="course"]').val();
+        form.on('select(course)', function (data) {
+            course = data.value;
+            tool();
+        });
+        form.on('radio(status)', function (data) {
+            //如果选择为补课，必须判断是否有请假或旷课记录
+            if (data.value == 3) {
+                $('input[name="teacher_hour"]').val(0);
+                $('input[name="student_hour"]').val(0);
+                $('#label1').html('请假日期');
+                $('#label2').html('请假时间');
+                $('.hour').hide();
+                $('.time_range').show();
+            } else if (data.value == 2) {
+                var teacher_hour = $('input[name="teacher_hour"]').val();
+                var student_hour = $('input[name="student_hour"]').val();
+                // if (teacher_hour == 0 || student_hour == 0) {
+                //     layer.msg('请填写课时', {icon: 2});
+                // }
+                $('#label1').html('补课日期');
+                $('#label2').html('补课时间');
+                $('.hour').hide();
+                $('.time_range').show();
+            } else if (data.value == 1) {
+                $('#label1').html('上课日期');
+                $('#label2').html('上课时间');
+                $('.hour').show();
+                $('.time_range').hide();
+            }
+            window.form.render();
+        })
+        function tool() {
+            $.post('{:url("educational/punch/get_course_time")}', {class_id: class_id, course: course}, function (res) {
+                if (res.code == 1) {
+                    $('input[name="teacher_hour"]').val(res.data[0].thour);
+                    $('input[name="student_hour"]').val(res.data[0].hour);
+                    var hour_html = '';
+                    if (res.code == 1) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            hour_html += '<option value="' + res.data[i].begin + '-' + res.data[i].end + '">' + res.data[i].begin + ' - ' + res.data[i].end + '</option>'
+                        }
+                        $("#hour").html(hour_html);
+                    } else {
+                        $("#hour").html(hour_html);
+                    }
+                    window.form.render();
+                }
+                window.form.render();
+            })
+        }
+    });
+</script>

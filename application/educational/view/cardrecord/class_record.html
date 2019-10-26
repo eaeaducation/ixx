@@ -71,9 +71,15 @@
             <td class="text-center text-red">{$vo.course_hour}</td>
             <td class="text-center">{$vo.icard}</td>
             {if $vo.status == 1}
-            <td class="text-center text-blue">正常</td>
+            <td class="text-center text-green">正常</td>
+            {elseif $vo.status == 2}
+            <td class="text-center text-blue">补课</td>
+            {elseif $vo.status == 3}
+            <td class="text-center text-orange">请假</td>
+            {elseif $vo.status == 4}
+            <td class="text-center text-orange">旷课</td>
             {else /}
-            <td class="text-center text-red">补课</td>
+            <td class="text-center text-red">删除</td>
             {/if}
             <td class="text-center">{$vo.created_at|format_time}</td>
             <td class="text-center">

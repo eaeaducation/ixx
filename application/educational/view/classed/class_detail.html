@@ -10,6 +10,9 @@
     #basic tbody th {
         background-color: #F2F2F2;
     }
+    .layui-form-checkbox {
+        display: none;
+    }
 </style>
 <form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
       class='form-horizontal layui-form padding-top-20'>
@@ -31,7 +34,7 @@
             <th>开班时间</th>
             <td>{$detail['begin_time']|format_date}</td>
             <th>班主任</th>
-            <td>{$detail['teacher_id']|convert_category=25|raw}</td>
+            <td>{$detail['teacher_id']|get_employee_name|raw}</td>
         </tr>
         <tr>
             <th>预招人数</th>
@@ -62,6 +65,9 @@
                 <table class="layui-table" lay-even lay-skin="line">
                     <thead>
                     <tr style="background-color: #F2F2F2;">
+                        <th class='list-table-check-td'>
+                            <input data-none-auto="" data-check-target='.list-check-box' type='checkbox' value="id"/>
+                        </th>
                         <th class="text-center">学员ID</th>
                         <th class="text-center">学生姓名</th>
                         <th class="text-center">性别</th>
@@ -75,6 +81,9 @@
                     <tbody>
                     {foreach $student as $item}
                     <tr>
+                        <td class='list-table-check-td'>
+                            <input class="list-check-box" value='{$item.id}' type='checkbox'>
+                        </td>
                         <td class="text-center nowrap">{$item.id}</td>
                         <td class="text-center nowrap"><a  data-open="{:url('marketing/premarketing/customerview')}?id={$item.id}">{$item.name}</a></td>
                         <td class="text-center nowrap">{$item.gender|convert_category=3|raw}</td>
@@ -90,9 +99,9 @@
                         </th>
                         <td class="text-center nowrap">
                             {if auth("$classuri/vacate_truancy")}
-                            <span class="text-explode">|</span>
-                            <a data-title="请假/旷课"
-                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>请假/旷课</a>
+<!--                            <span class="text-explode">|</span>-->
+<!--                            <a data-title="记上课/请假/旷课/补课" data-area="['30%','60%']"-->
+<!--                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>记上课/请假/旷课/补课</a>-->
                             {/if}
 
                             {if auth("$classuri/replace_class")}
@@ -119,6 +128,9 @@
                     </tbody>
                 </table>
                 <!--{/empty}-->
+                <button class="layui-btn layui-btn-warm layui-btn-sm" type="button" data-multi-modal
+                        data-action='{:url("$classuri/batchPunchCard")}?class_id={$detail.id}' data-title="批量打卡上课/补课" data-area="['40%', '60%']">批量打卡上课/补课
+                </button>
             </div>
 
             <div class="layui-tab-item">

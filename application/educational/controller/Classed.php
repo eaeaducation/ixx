@@ -8,10 +8,12 @@
 
 namespace app\educational\controller;
 
+use app\common\model\Customer;
 use controller\BasicAdmin;
 use Naixiaoxin\ThinkWechat\Facade;
 use think\Db;
 use service\DataService;
+use think\Exception;
 use think\facade\Log;
 use QRCode;
 use service\LogService;
@@ -746,9 +748,50 @@ class Classed extends BasicAdmin
             $status = $this->request->post('status');
             $course = $this->request->post('course');
             $created_at = $this->request->post('created_at');
-            $time = $this->request->post('time');
+            $time1 = $this->request->post('time1');
+            $time2 = $this->request->post('time2');
             $remark = $this->request->post('remark');
-            list($begin, $end, $hour) = explode('-', $time);
+//            list($begin, $end) = explode('-', $time);
+            $hour = intval(trim($this->request->post('hour')));
+            $batch_code = $course . '~' . strtotime(date('Y-m-d', time())) . "~" . $status;
+            if (($status == 1 || $status == 2) && $hour == 0) {
+                $this->error('添加上课/补课记录消耗课时不能为0');
+            }
+            if (in_array($status , [3,4])) {
+                if (!$time1) {
+                    $this->error('请选择时间');
+                }
+                list($begin, $end) = explode('-', $time1);
+                //请假旷课消耗课时为0
+                $hour = 0;
+            } elseif (in_array($status, [1,2])) {
+                if (!$time2) {
+                    $this->error('请选择时间');
+                }
+                $t = $this->request->post('date');
+                list($begin, $end) = explode('-', $time2);
+                //更新用户课程课时
+                $order = Db::name('saas_order')
+                    ->where('student_id', '=', $student_id)
+                    ->where('class_id', '=', $get['class_id'])
+                    ->field('id')
+                    ->find();
+                $row = Db::name('saas_order_log')
+                    ->where('order_id', '=', $order['id'])
+                    ->where('goods_id', '=', $course)
+                    ->where('goods_type', '=', 1)
+                    ->find();
+                if (($row['consume_num'] + $hour) > $row['goods_num']) {
+                    $this->error('学员课时不足,请购买课程!');
+                }
+                Db::name('saas_order_log')
+                    ->where('order_id', '=', $order['id'])
+                    ->where('goods_id', '=', $course)
+                    ->setInc('consume_num', $hour);
+
+                //同步course_teacher_log表给老师添加课时记录
+//                $this->teacher_course_log($batch_code, $status, $course);
+            }
             $class_course_no = Db::name('saas_courses_detail')
                 ->where('courses_id', '=', $course)
                 ->where('class_id', '=', $get['class_id'])
@@ -774,10 +817,204 @@ class Classed extends BasicAdmin
                 $this->error('添加失败', '');
             }
         }
+        $student = Customer::get(['id' => $get['id']]);
+        $this->assign('student', $student);
         $this->assign(['student_id' => $get['id']]);
         $this->assign(['class_id' => $get['class_id']]);
         $this->assign(['courses' => $courses]);
         return $this->fetch();
+    }
+
+    /**
+     * 班级批量手动打卡
+     * @return mixed
+     */
+    public function batchPunchCard()
+    {
+        $get = $this->request->get();
+        $student_ids = explode(',', $get['id']);
+        //查询该班级所有课程
+        $class = Db::name('saas_class')->where('id', $get['class_id'])->find();
+        $courses = Db::name('saas_class_course')
+            ->field('course_id')
+            ->where('class_id', '=', $get['class_id'])
+            ->select();
+        $student = Db::name('saas_customer')->where('id', 'in', $student_ids)->select();
+        $students = '';
+        foreach ($student as $value) {
+            $students .= $value['name'] . ', ';
+        }
+        if ($this->request->isPost()) {
+            $student_ids = explode(',', $this->request->get('id'));
+            $status = $this->request->post('status');
+            $course_id = $this->request->post('course');
+            $created_at = strtotime(date('Y-m-d H:i:s'));
+            $date = $this->request->post('date');
+            $time = $this->request->post('time');
+            $remark = $this->request->post('remark');
+            $teacher_hour = intval(trim($this->request->post('teacher_hour')));
+            $student_hour = intval(trim($this->request->post('student_hour')));
+            $ta_teacher_hour = intval(trim($this->request->post('ta_teacher_hour')));
+            if (in_array($status , [3,4])) {
+                if (!$date || !$time) {
+                    $this->error('请选择时间');
+                }
+                list($begin, $end) = explode('-', $time);
+                //请假旷课消耗课时为0
+                $teacher_hour = 0;
+                $student_hour = 0;
+                $ta_teacher_hour = 0;
+            } elseif (in_array($status, [1,2])) {
+                if ($student_hour == 0 || $teacher_hour == 0) {
+                    $this->error('上课/补课课时值不能为0');
+                }
+                if (!$date || !$time) {
+                    $this->error('请选择时间');
+                }
+                list($begin, $end) = explode('-', $time);
+                Db::startTrans();
+                try {
+                    //更新用户课程课时
+                    foreach ($student_ids as $item) {
+                        $order = Db::name('saas_order')
+                            ->where('student_id', '=', $item)
+                            ->where('class_id', '=', $get['class_id'])
+                            ->field('id')
+                            ->find();
+                        $row = Db::name('saas_order_log')
+                            ->where('order_id', '=', $order['id'])
+                            ->where('goods_id', '=', $course_id)
+                            ->where('goods_type', '=', 1)
+                            ->find();
+                        if (!isset($row['goods_num']) || $row['goods_num'] == 0){
+                            $user = Customer::get(['id'=>$item]);
+                            throw new Exception("学员 ".$user->name." 订单异常,打卡失败");
+                        } elseif (($row['consume_num'] + $student_hour) > $row['goods_num']) {
+                            $user = Customer::get(['id'=>$item]);
+                            throw new Exception("学员 ".$user->name." 课时不足,批量打卡失败");
+                        }
+                        Db::name('saas_order_log')
+                            ->where('order_id', '=', $order['id'])
+                            ->where('goods_id', '=', $course_id)
+                            ->setInc('consume_num', $student_hour);
+                    }
+                    $class_course_no = Db::name('saas_courses_detail')
+                        ->where('courses_id', '=', $course_id)
+                        ->where('class_id', '=', $get['class_id'])
+                        ->where('status', '<>', 3)
+                        ->find();
+                    //同步course_teacher_log表给老师添加课时记录
+                    $batch_code = $class_course_no['class_course_no'] . '~' . strtotime(date('Y-m-d', time())) . "~" . $status;
+                    $this->teacher_course_log($batch_code, $status, $class_course_no['class_course_no'], $teacher_hour, $ta_teacher_hour);
+                    Db::commit();
+                } catch (Exception $exception) {
+                    Db::rollback();
+                    $this->error($exception->getMessage());
+                }
+            }
+            $class_course_no = Db::name('saas_courses_detail')
+                ->where('courses_id', '=', $course_id)
+                ->where('class_id', '=', $get['class_id'])
+                ->where('status', '<>', 3)
+                ->find();
+            $data = [];
+            foreach ($student_ids as $item) {
+                $data[] = [
+                    'student_id' => $item,
+                    'status' => $status,
+                    'course_id' => $course_id,
+                    'created_at' => $created_at,
+                    'course_hour' => $student_hour,
+                    'remark' => $remark,
+                    'begin_time' => strtotime($date . $begin),
+                    'end_time' => strtotime($date . $end),
+                    'class_course_no' => $class_course_no['class_course_no'],
+                    'batch_code' => $class_course_no['class_course_no'] . '~'.$status
+                ];
+            }
+            $res = Db::name('saas_course_log')
+                ->insertAll($data);
+            if ($res) {
+                $this->success('添加成功！', '');
+            } else {
+                $this->error('添加失败', '');
+            }
+        }
+        $this->assign([
+            'class' => $class,
+            'courses' => $courses,
+            'class_id' => $get['class_id'],
+            'students' => $students,
+        ]);
+        return $this->fetch();
+    }
+
+    /**
+     * @param $batch_code
+     * @param $status
+     * @param $did
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    private function teacher_course_log($batch_code, $status, $did, $teacher_hour, $ta_teacher_hour)
+    {
+        $course_sub_info = Db::name('saas_courses_detail')->where('class_course_no', '=', $did)->find();
+        if ($course_sub_info) {
+            if ($ta_teacher_hour == '0') {
+                $data = [
+                    ['course_sub_id' => $course_sub_info['id'],
+                        'course_id' => $course_sub_info['courses_id'],
+                        'teacher_id' => $course_sub_info['teacher_id'],
+                        'status' => $status,
+                        'created_at' => time(),
+                        'class_course_no' => $did,
+                        'batch_code' => $batch_code]
+                ];
+                if ($status == 1) {
+                    $data[0]['course_hour'] = $teacher_hour;
+                } elseif ($status == 2) {
+                    $data[0]['course_hour'] = $teacher_hour;
+                } else {
+                    $data[0]['course_hour'] = 1;
+                }
+            } else {
+                $data = [
+                    ['course_sub_id' => $course_sub_info['id'],
+                        'course_id' => $course_sub_info['courses_id'],
+                        'teacher_id' => $course_sub_info['teacher_id'],
+                        'status' => $status,
+                        'created_at' => time(),
+                        'class_course_no' => $did,
+                        'batch_code' => $batch_code
+                    ],
+                    ['course_sub_id' => $course_sub_info['id'],
+                        'course_id' => $course_sub_info['courses_id'],
+                        'teacher_id' => $course_sub_info['ta_id'],
+                        'status' => $status,
+                        'created_at' => time(),
+                        'class_course_no' => $did,
+                        'batch_code' => $batch_code
+                    ]
+                ];
+                if ($status == 1) {
+                    $data[0]['course_hour'] = $teacher_hour;
+                    $data[1]['course_hour'] = $ta_teacher_hour;
+                } elseif ($status == 2) {
+                    $data[0]['course_hour'] = $teacher_hour;
+                    $data[1]['course_hour'] = $ta_teacher_hour;
+                } else {
+                    $data[0]['course_hour'] = 1;
+                    $data[1]['course_hour'] = 1;
+                }
+            }
+            Db::name('saas_course_teacher_log')->insertAll($data);
+            return true;
+        } else {
+            Log::error('未查询到课程详情');
+            return false;
+        }
     }
 
     /**
@@ -971,5 +1208,21 @@ class Classed extends BasicAdmin
             }
         }
         return $this->fetch('', ['info' => $info]);
+    }
+
+    public function find_leave_record()
+    {
+        $student_id = $this->request->post('student_id');
+        $data = Db::name('saas_course_log')
+            ->field("sum(IF(status=2,1,0)) as bk_num, sum(IF(status=3,1,0)) as qj_num, sum(IF(status=4,1,0)) as kk_num")
+            ->where('status', 'in', [2, 3, 4])
+            ->where('student_id', '=', $student_id)
+            ->order('created_at desc')
+            ->find();
+        if ($data['bk_num'] < $data['qj_num'] + $data['kk_num']) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
