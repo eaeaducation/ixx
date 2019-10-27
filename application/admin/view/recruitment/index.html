@@ -151,9 +151,9 @@
         var laydate = layui.laydate
         laydate.render({
             elem: '#time_range',
+            range: '~',
             theme: '#0099CC',
             format: 'yyyy-MM-dd',
-            max: '<?= date("Y-m-d")?>',
             done: function (value, date, endDate) {
                 var date = new Date(date.year + '-' + date.month + '-' + date.date)
                 var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
