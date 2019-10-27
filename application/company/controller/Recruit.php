@@ -139,7 +139,7 @@ class Recruit
                 ]);
             }
         } else {
-            return $this->fetch('form');
+            return view('form');
         }
     }
 }
