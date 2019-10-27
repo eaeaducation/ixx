@@ -7,20 +7,32 @@ header('Access-Control-Allow-Origin:*');//允许所有来源访问
 header('Access-Control-Allow-Method:POST,GET');//允许访问的方式
 
 use app\admin\controller\Log;
-use controller\BasicAdmin;
-use GuzzleHttp\Psr7\UploadedFile;
 use service\FileService;
 use think\Db;
 use think\Request;
 
-class Recruit extends BasicAdmin
+class Recruit
 {
+    /**
+     * @var \think\Request Request实例
+     */
+    protected $request;
+
+    /**
+     * 构造方法
+     * @param Request $request Request对象
+     * @access public
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
     /**
      *
      */
     public function index()
     {
-        return $this->fetch('');
+        return view('');
     }
 
     /**
