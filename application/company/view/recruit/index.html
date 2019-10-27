@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>EA国际教育</title>
+    <link rel="stylesheet" href="/static/recruit/css/animate.min.css">
+    <link type="text/css" rel="stylesheet" href="/static/recruit/css/style.css">
+    <!-- <script src="js/prefixfree.min.js"></script> -->
+</head>
+
+<body class="index">
+    <div class="container">
+        <!-- p1 -->
+        <section class="page p1">
+            <a href="javascript:;" class="slide down" id="down"></a>
+        </section>
+        <!-- p2 -->
+<!--        <section class="page p2">-->
+
+<!--        </section>-->
+    </div>
+    <script src="/static/recruit/js/zepto.min.js"></script>
+    <script src="/static/recruit/js/jquery-1.10.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            setInterval(function() {
+                $('#down').addClass('animated bounce');
+            }, 1000);
+            $('#down').click(function() {
+                location.href = "{:url('company/recruit/form')}"
+            })
+            // $(document).on("touchmove", function(event) {
+            //     event.preventDefault();
+            //     location.href = "{:url('company/recruit/form')}"
+            // })
+            $('body').on('touchstart', function(e) {
+                var touch = e.originalEvent,
+                    startX = touch.changedTouches[0].pageX;
+                startY = touch.changedTouches[0].pageY;
+                $('body').on('touchmove', function(e) {
+                    touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+                    console.log(touch)
+                    if (touch.pageY - startY < -10) {
+                        console.log("上划");
+                        $('body').off('touchmove');
+                        location.href = "form.html";
+                    };
+                });
+                return false;
+            }).on('touchend', function() {
+                $('body').off('touchmove');
+            });
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标记查看状态</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="is_read" value="1" title="已查看" {if $vo.status==1}checked{/if} style="display: none !important;" required lay-filter="status">
+            <input type="radio" name="is_read" value="0" title="未查看" style="display: none !important;" required lay-filter="status" {if $vo.status==0}checked{/if}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">标记审阅状态</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="status" value="1" title="待审查" {if $vo.status==1}checked{/if} style="display: none !important;" required lay-filter="status">
+            <input type="radio" name="status" value="2" title="笔试通过" style="display: none !important;" {if $vo.status==2}checked{/if}>
+            <input type="radio" name="status" value="3" title="笔试淘汰" style="display: none !important;" {if $vo.status==3}checked{/if}>
+            <input type="radio" name="status" value="4" title="面试通过" style="display: none !important;" {if $vo.status==4}checked{/if}>
+            <input type="radio" name="status" value="5" title="面试淘汰" style="display: none !important;" {if $vo.status==5}checked{/if}>
+            <input type="radio" name="status" value="6" title="被弃用" style="display: none !important;" {if $vo.status==6}checked{/if}>
+            <input type="radio" name="status" value="7" title="被录用" style="display: none !important;" {if $vo.status==7}checked{/if}>
+        </div>
+    </div>
+
+
+
+    <div class="hr-line-dashed"></div>
+    <input type="hidden" name="update_time" value="{:time()}">
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>确认</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消</button>
+    </div>
+    <script>
+        window.form.render();
+    </script>
+
+</form>

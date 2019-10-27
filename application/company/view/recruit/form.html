@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>EA国际教育</title>
+    <link type="text/css" rel="stylesheet" href="/static/recruit/css/style.css">
+</head>
+
+<body>
+    <div class="form_div">
+        <h3>EA国际教育网申入口</h3>
+        <p>提交您的应聘申请后<br/>人力资源部将在两个工作日内联系你哦~</p>
+        <form role="activeForm" id="activeForm" enctype="multipart/form-data" method="post" onsubmit="return false">
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">您的姓名：</label>
+                <div class="input_div"><img src="/static/recruit/images/username.png" alt=""><input type="text" id="username" name="username" value="" placeholder="请输入您的姓名"></div>
+            </div>
+
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">性别：</label>
+                <div class="input_radio">
+                    <input type="radio" value="0" name="sex" id="sex" checked> <label for="0">男</label>
+                    <input type="radio" value="1" name="sex" id="sex"><label for="1">女</label>
+                </div>
+            </div>
+
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">手机号：</label>
+                <div class="input_div"><img src="/static/recruit/images/tel.png" alt=""><input type="number" name="mobile" id="tel" value="" placeholder="请输入您的手机号码"></div>
+            </div>
+
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">毕业院校：</label>
+                <div class="input_div"><input type="text" id="graduation" name="graduation" value="" placeholder="请输入您的毕业院校"></div>
+            </div>
+
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">所学专业：</label>
+                <div class="input_div"><input type="text" id="major" name="major" value="" placeholder="请输入您的专业"></div>
+            </div>
+
+            <div class="input_item">
+                <label for=""><img src="/static/recruit/images/xing.png" alt="">学历：</label>
+                <div class="input_div" style="padding:0;">
+                    <select name="branch" id="education">
+                            <option value="大专">大专</option>
+                            <option value="本科">本科</option>
+                            <option value="研究生">研究生</option>
+                            <option value="博士">博士</option>
+                        </select>
+                </div>
+            </div>
+
+            <div class="input_item">
+                <label for="">电子版简历：</label>
+                <div class="input_file">
+                    <input type="file" name="filename" id="activeFile" value="" accept="doc,docx"/>
+                </div>
+            </div>
+
+            <button class="btn" >提交</button>
+        </form>
+    </div>
+    <script src="/static/recruit/js/jquery-1.10.1.min.js"></script>
+    <script>
+            var url = "/company/recruit/form";
+            $('.btn').click(function(){
+                if ($('#username').val() == '') {
+                    alert('请输入您的姓名');
+                    return false;
+                } else if ($('#tel').val() == '') {
+                    alert('您的手机号不能为空！');
+                    return false;
+                } else if ($('#graduation').val() == '') {
+                    alert('请输入您的毕业学校');
+                    return false;
+                } else if ($('#major').val() == '') {
+                    alert('请输入您的专业');
+                    return false;                }
+                var myreg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+                if (!myreg.test($('#tel').val())) {
+                    alert('您输入的手机号码不正确！');
+                    return false;
+                }
+                var data = new FormData($('#activeForm')[0]);//[0]必须要
+                data.append('file', document.getElementById('activeFile').files[0]);
+                $.ajax({
+                    type:'POST',
+                    url:url,
+                    data:data,
+                    async:false,
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    success:function(res) {
+                        if (res.code) {
+                            alert(res.msg)
+                        } else {
+                            alert(res.msg)
+                        }
+                        window.location.reload()
+                    },
+                    error:function() {
+                        alert('系统繁忙，稍后重试');
+                    }
+
+                })
+            });
+    </script>
+</body>
+
+</html>

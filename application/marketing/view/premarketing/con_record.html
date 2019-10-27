@@ -30,8 +30,8 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">跟进状态</label>
-        <div class="layui-input-block padding-right-20">
-            {:get_category_select(7, 'follow_status', $Think.get.follow_status, '', ['required'=>'required'])}
+        <div class="layui-input-block padding-right-20 follow_status">
+            {:get_category_select(7, 'follow_status', $Think.get.follow_status, '', ['required'=>'required','lay-filter'=>"follow_status"])}
         </div>
     </div>
     <div class="layui-form-item">
@@ -80,5 +80,16 @@
                 return this.getAttribute('data-path');
             }
         });
+    })
+    window.form.render();
+    var follow_status = "{$Think.get.follow_status}";
+    form.on('select(follow_status)', function (data) {
+        if (data.value < follow_status) {
+            layer.msg('跟进状态选择错误', {icon: 2});
+            var select = 'dd[lay-value=' + follow_status + ']';// 设置value
+            $('.layui-form .follow_status').find('dl').find(select).click();// 查找点击
+            window.form.render();// 再次渲染select
+            return;
+        }
     })
 </script>

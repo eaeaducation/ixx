@@ -7,15 +7,15 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">授课教师</label>
-        <div class="layui-input-inline" style="width: 16%">
+        <div class="layui-input-inline" style="width: 15%">
             <input type="text" name="" required value='{$class["teacher_id"]|get_employee_name|raw|default="未知"}' required="required" readonly  class="layui-input">
         </div>
         <label class="layui-form-label">主教授课课时</label>
-        <div class="layui-input-inline" style="width: 16%">
+        <div class="layui-input-inline" style="width: 13%">
             <input type="number" required name="teacher_hour" value="0" title="消耗课时" class="layui-input" />
         </div>
         <label class="layui-form-label">助教授课课时</label>
-        <div class="layui-input-inline" style="width: 16%">
+        <div class="layui-input-inline" style="width: 13%">
             <input type="number" required name="assistant_teacher_hour" value="0" title="消耗课时" class="layui-input" />
         </div>
     </div>
@@ -28,7 +28,7 @@
             <input type="radio" name="status" value="2" title="补课" style="display: none !important;" required lay-filter="status">
         </div>
         <label class="layui-form-label">学生消耗课时</label>
-        <div class="layui-input-inline">
+        <div class="layui-input-inline" style="width: 13%">
             <input type="number" required name="student_hour" value="0" title="消耗课时" class="layui-input" />
         </div>
     </div>
@@ -45,14 +45,14 @@
         </div>
     </div>
     <div class="layui-form-item select-time2">
-        <label class="layui-form-label" id="label1">操作日期</label>
+        <label class="layui-form-label" id="label1">请假日期</label>
         <div class="layui-input-block">
             <input type="text" id="date_range" name="date" value="" style="display: inline-block"
                    placeholder="选择补课日期（1970-01-01）" class="input-sm form-control layui-input">
         </div>
     </div>
     <div class="layui-form-item select-time2">
-        <label class="layui-form-label" id="label2">操作时间</label>
+        <label class="layui-form-label" id="label2">请假时间</label>
         <div class="layui-input-block time_range">
             <input type="text" id="time_range" name="time" value="" style="display: inline-block"
                    placeholder="选择补课时间（00:00:00 - 02:00:00）" class="input-sm form-control layui-input">
@@ -138,8 +138,15 @@
         function tool() {
             $.post('{:url("educational/punch/get_course_time")}', {class_id: class_id, course: course}, function (res) {
                 if (res.code == 1) {
-                    $('input[name="teacher_hour"]').val(res.data[0].thour);
-                    $('input[name="student_hour"]').val(res.data[0].hour);
+                    var status = $('input[type="radio"]:checked').val();
+                    if (status == 3) {
+                        $('input[name="teacher_hour"]').val(0);
+                        $('input[name="student_hour"]').val(0);
+                    } else {
+                        $('input[name="teacher_hour"]').val(res.data[0].thour);
+                        $('input[name="student_hour"]').val(res.data[0].hour);
+                    }
+
                     var hour_html = '';
                     if (res.code == 1) {
                         for (var i = 0; i < res.data.length; i++) {
