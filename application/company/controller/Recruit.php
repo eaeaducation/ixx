@@ -96,24 +96,27 @@ class Recruit
                     'data' => [],
                 ]);
             }
-            //上传word文件
-            $ext = strtolower(pathinfo($file->getInfo('name'), 4));
-            if (!in_array($ext, ['doc', 'docx', 'pdf'])) {
-                return json([
-                    'code' => 0,
-                    'msg' => '请选择上传doc,pdf,docx格式的文档',
-                    'data' => [],
-                ]);
+            //上传word文件\
+            $filePath = '';
+            if ($file) {
+                $ext = strtolower(pathinfo($file->getInfo('name'), 4));
+                if (!in_array($ext, ['doc', 'docx', 'pdf'])) {
+                    return json([
+                        'code' => 0,
+                        'msg' => '请选择上传doc,pdf,docx格式的文档',
+                        'data' => [],
+                    ]);
+                }
+                $names = md5(time());
+                $filename = date('ymd/') . "{$names}.{$ext}";
+                $fileContent = '';
+                while (!$file->eof()) {
+                    $fileContent .= $file->current();
+                    $file->next();
+                }
+                $res = FileService::save($filename, $fileContent);
+                $filePath = $res['url'];
             }
-            $names = md5(time());
-            $filename = date('ymd/') . "{$names}.{$ext}";
-            $fileContent = '';
-            while (!$file->eof()) {
-                $fileContent .= $file->current();
-                $file->next();
-            }
-            $res = FileService::save($filename, $fileContent);
-            $filePath = $res['url'];
             $data = [
                 'name' => $post['username'],
                 'mobile' => $post['mobile'],
