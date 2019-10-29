@@ -28,35 +28,48 @@
         </div>
         {/if}
         <div class="layui-form-item layui-inline">
-            <label class="layui-form-label">招生状态</label>
+            <label class="layui-form-label">班级状态</label>
             <div class="layui-input-inline">
-                {:get_category_select(31,'status', $Think.get.status, '', [],false)}
+                <select name="status">
+                    <option value="">开课中</option>
+                    <option value="4" {if $Think.get.status == '4'}selected{/if}>已停课</option>
+<!--                    <option value="1" {if $Think.get.status == '1'}selected{/if}>开放招生</option>-->
+<!--                    <option value="2" {if $Think.get.status == '2'}selected{/if}>停止招生</option>-->
+                    <option value="5" {if $Think.get.status == '5'}selected{/if}>全部</option>
+                </select>
             </div>
         </div>
+<!--        <div class="layui-form-item layui-inline">-->
+<!--            <label class="layui-form-label">招生状态</label>-->
+<!--            <div class="layui-input-inline">-->
+<!--                {:get_category_select(31,'status', $Think.get.status, '', [],false)}-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">班级名称</label>
             <div class="layui-input-inline">
                 <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
             </div>
         </div>
+
         <div class="layui-form-item layui-inline">
             <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
         </div>
     </div>
-    <div class="row" style="margin-right:0.4%;float: right">
-        <div>
-            <div class="layui-btn-group">
-                <a class="layui-btn {eq name='Think.get.status' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
-                   data-open="{$classuri}/index">
-                    开课班
-                </a>
-                <a class="layui-btn {eq name='Think.get.status' value='4'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
-                   data-open="{$classuri}/index?status=4">
-                    停课班
-                </a>
-            </div>
-        </div>
-    </div>
+<!--    <div class="row" style="margin-right:0.4%;float: right">-->
+<!--        <div>-->
+<!--            <div class="layui-btn-group">-->
+<!--                <a class="layui-btn {eq name='Think.get.status' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"-->
+<!--                   data-open="{$classuri}/index">-->
+<!--                    开课班-->
+<!--                </a>-->
+<!--                <a class="layui-btn {eq name='Think.get.status' value='4'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"-->
+<!--                   data-open="{$classuri}/index?status=4">-->
+<!--                    停课班-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </form>
 <script>
     window.form.render();

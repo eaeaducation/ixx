@@ -60,6 +60,12 @@ class Classed extends BasicAdmin
         //停课班分类
         if (isset($get['status']) && $get['status'] == 4) {
             $db->where('status', '=', 4);
+        } elseif (isset($get['status']) && $get['status'] == 1) {
+            $db->where('status', '=', 1);
+        } elseif (isset($get['status']) && $get['status'] == 2) {
+            $db->where('status', '=', 2);
+        } elseif (isset($get['status']) && $get['status'] == 5) {
+//            $db->where('1=0');
         } else {
             $db->where('status', '<>', 4);
         }

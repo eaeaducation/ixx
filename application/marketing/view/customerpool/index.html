@@ -31,26 +31,26 @@
 <form class="layui-form layui-form-pane form-search" action="{:url('marketing/customerpool/index')}"
       onsubmit="return false" method="get">
 
+<!--    <div class="row">-->
+<!--        <div style="margin-left:1%;float: left">-->
+<!--            <div class="layui-btn-group">-->
+<!--                <a class="layui-btn {eq name='Think.get.isfp' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"-->
+<!--                   data-open="{$classuri}/index">-->
+<!--                    全部-->
+<!--                </a>-->
+<!--                <a class="layui-btn {eq name='Think.get.isfp' value='fp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"-->
+<!--                   data-open="{$classuri}/index?isfp=fp">-->
+<!--                    已分配-->
+<!--                </a>-->
+<!--                <a class="layui-btn {eq name='Think.get.isfp' value='dfp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"-->
+<!--                   data-open="{$classuri}/index?isfp=dfp">-->
+<!--                    待分配-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="row">
-        <div style="margin-left:1%;float: left">
-            <div class="layui-btn-group">
-                <a class="layui-btn {eq name='Think.get.isfp' value=''}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
-                   data-open="{$classuri}/index">
-                    全部
-                </a>
-                <a class="layui-btn {eq name='Think.get.isfp' value='fp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
-                   data-open="{$classuri}/index?isfp=fp">
-                    已分配
-                </a>
-                <a class="layui-btn {eq name='Think.get.isfp' value='dfp'}layui-btn-success{else/} layui-btn-primary {/eq} layui-btn-small"
-                   data-open="{$classuri}/index?isfp=dfp">
-                    待分配
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div style="margin-left: 1%;margin-top: 1%">
+        <div style="margin-left: 1%;">
             <div class="layui-form-item layui-inline">
                 <label class="layui-form-label">关键字</label>
                 <div class="layui-input-inline">
@@ -119,6 +119,17 @@
                 <div class="layui-input-inline">
                     <input type="text" id="follow_time" name="follow_time" value="{$Think.get.follow_time|default=''}"
                            placeholder="选择创建时间" class="input-sm form-control">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">分配状态</label>
+                <div class="layui-input-inline">
+                    <select name="isfp">
+                        <option value="">全部</option>
+                        <option value="fp" {if $Think.get.isfp == 'fp'}selected{/if}>已分配</option>
+                        <option value="dfp" {if $Think.get.isfp == 'dfp'}selected{/if}>待分配</option>
+                    </select>
                 </div>
             </div>
 
