@@ -927,6 +927,17 @@ class Classed extends BasicAdmin
                 //请假旷课消耗课时为0
                 $teacher_hour = 0;
                 $ta_teacher_hour = 0;
+                foreach ($student_ids as $item) {
+                    $order = Db::name('saas_order')
+                        ->where('student_id', '=', $item)
+                        ->where('class_id', '=', $get['class_id'])
+                        ->field('id')
+                        ->find();
+                    Db::name('saas_order_log')
+                        ->where('order_id', '=', $order['id'])
+                        ->where('goods_id', '=', $course_id)
+                        ->setInc('consume_num', $student_hour);
+                }
             }
             $class_course_no = Db::name('saas_courses_detail')
                 ->where('courses_id', '=', $course_id)
