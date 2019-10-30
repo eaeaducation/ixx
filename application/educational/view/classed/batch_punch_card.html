@@ -16,16 +16,17 @@
         </div>
         <label class="layui-form-label">助教授课课时</label>
         <div class="layui-input-inline" style="width: 13%">
-            <input type="number" required name="assistant_teacher_hour" value="0" title="消耗课时" class="layui-input" />
+            <input type="number" required name="ta_teacher_hour" value="0" title="消耗课时" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">请假/旷课</label>
-        <div class="layui-input-inline" style="width: 270px;">
+        <div class="layui-input-inline" style="width: 340px;">
             <input type="radio" name="status" value="3" title="请假" checked="" style="display: none !important;" required lay-filter="status">
             <input type="radio" name="status" value="1" title="上课" style="display: none !important;" required lay-filter="status">
             <input type="radio" name="status" value="2" title="补课" style="display: none !important;" required lay-filter="status">
+            <input type="radio" name="status" value="5" title="补卡" style="display: none !important;" required lay-filter="status">
         </div>
         <label class="layui-form-label">学生消耗课时</label>
         <div class="layui-input-inline" style="width: 13%">
@@ -145,6 +146,7 @@
                     } else {
                         $('input[name="teacher_hour"]').val(res.data[0].thour);
                         $('input[name="student_hour"]').val(res.data[0].hour);
+                        $('input[name="ta_teacher_hour"]').val(res.data[0].tahour);
                     }
 
                     var hour_html = '';

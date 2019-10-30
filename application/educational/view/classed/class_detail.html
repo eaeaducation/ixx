@@ -106,8 +106,8 @@
 
                             {if auth("$classuri/replace_class")}
                             <span class="text-explode">|</span>
-                            <a data-title="学员转班"
-                               data-modal='{:url("$classuri/replace_class")}?id={$item.id}&class_id={$detail.id}' data-area="['40%','50%']">转班</a>
+                            <a data-title="学员转班/当前班级：{$detail.id|convert_class}"
+                               data-modal='{:url("$classuri/replace_class")}?id={$item.id}&class_id={$detail.id}' data-area="['50%','60%']">转班</a>
                             {/if}
 
                             {if auth("$classuri/student_score")}
@@ -241,11 +241,11 @@
                             </a>
                         </th>
                         <td class="text-center nowrap">
-                            {if auth("$classuri/vacate_truancy")}
-                            <span class="text-explode">|</span>
-                            <a data-title="请假/旷课"
-                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>请假/旷课</a>
-                            {/if}
+<!--                            {if auth("$classuri/vacate_truancy")}-->
+<!--                            <span class="text-explode">|</span>-->
+<!--                            <a data-title="请假/旷课"-->
+<!--                               data-modal='{:url("$classuri/vacate_truancy")}?id={$item.id}&class_id={$detail.id}'>请假/旷课</a>-->
+<!--                            {/if}-->
 
                             {if auth("$classuri/replace_class")}
                             <span class="text-explode">|</span>

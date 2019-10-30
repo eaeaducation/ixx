@@ -613,7 +613,7 @@ class Punch extends BasicAdmin
                 ->where('status', '<>', 3)
                 ->where('class_id', '=', $class_id)
                 ->where('courses_id', '=', $course)
-                ->field('begin_time_each as begin, end_time_each as end, school_hour_student as hour, class_course_no as id, school_hour_teacher as thour')
+                ->field('begin_time_each as begin, end_time_each as end, school_hour_student as hour, class_course_no as id, school_hour_teacher as thour, is_ta_hour as tahour')
                 ->select();
             if ($result) {
                 $this->success('', '', $result);

@@ -894,6 +894,7 @@ class Classed extends BasicAdmin
                             ->find();
                         if (!isset($row['goods_num']) || $row['goods_num'] == 0){
                             $user = Customer::get(['id'=>$item]);
+                            Log::error('异常订单信息:客户id-'.$item.';订单id-'.$order['id'].';当前班级课程id-'.$course_id.';当前班级id-'.$get['class_id']);
                             throw new Exception("学员 ".$user->name." 订单异常,打卡失败");
                         } elseif (($row['consume_num'] + $student_hour) > $row['goods_num']) {
                             $user = Customer::get(['id'=>$item]);
@@ -911,12 +912,21 @@ class Classed extends BasicAdmin
                         ->find();
                     //同步course_teacher_log表给老师添加课时记录
                     $batch_code = $class_course_no['class_course_no'] . '~' . strtotime(date('Y-m-d', time())) . "~" . $status;
-                    $this->teacher_course_log($batch_code, $status, $class_course_no['class_course_no'], $teacher_hour, $ta_teacher_hour);
+                    $this->teacher_course_log($batch_code, $status, $class_course_no['class_course_no'], $teacher_hour, $ta_teacher_hour, $date);
                     Db::commit();
                 } catch (Exception $exception) {
                     Db::rollback();
                     $this->error($exception->getMessage());
                 }
+            } elseif ($status == 5) {
+                $status = 1;
+                if (!$date || !$time) {
+                    $this->error('请选择时间');
+                }
+                list($begin, $end) = explode('-', $time);
+                //请假旷课消耗课时为0
+                $teacher_hour = 0;
+                $ta_teacher_hour = 0;
             }
             $class_course_no = Db::name('saas_courses_detail')
                 ->where('courses_id', '=', $course_id)
@@ -929,7 +939,7 @@ class Classed extends BasicAdmin
                     'student_id' => $item,
                     'status' => $status,
                     'course_id' => $course_id,
-                    'created_at' => $created_at,
+                    'created_at' => strtotime($date . date('H:i:s')),
                     'course_hour' => $student_hour,
                     'remark' => $remark,
                     'begin_time' => strtotime($date . $begin),
@@ -964,7 +974,7 @@ class Classed extends BasicAdmin
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    private function teacher_course_log($batch_code, $status, $did, $teacher_hour, $ta_teacher_hour)
+    private function teacher_course_log($batch_code, $status, $did, $teacher_hour, $ta_teacher_hour, $date)
     {
         $course_sub_info = Db::name('saas_courses_detail')->where('class_course_no', '=', $did)->find();
         if ($course_sub_info) {
@@ -974,7 +984,7 @@ class Classed extends BasicAdmin
                         'course_id' => $course_sub_info['courses_id'],
                         'teacher_id' => $course_sub_info['teacher_id'],
                         'status' => $status,
-                        'created_at' => time(),
+                        'created_at' => strtotime($date . date('H:i:s')),
                         'class_course_no' => $did,
                         'batch_code' => $batch_code]
                 ];
@@ -991,7 +1001,7 @@ class Classed extends BasicAdmin
                         'course_id' => $course_sub_info['courses_id'],
                         'teacher_id' => $course_sub_info['teacher_id'],
                         'status' => $status,
-                        'created_at' => time(),
+                        'created_at' => strtotime($date . date('H:i:s')),
                         'class_course_no' => $did,
                         'batch_code' => $batch_code
                     ],
@@ -999,7 +1009,7 @@ class Classed extends BasicAdmin
                         'course_id' => $course_sub_info['courses_id'],
                         'teacher_id' => $course_sub_info['ta_id'],
                         'status' => $status,
-                        'created_at' => time(),
+                        'created_at' => strtotime($date . date('H:i:s')),
                         'class_course_no' => $did,
                         'batch_code' => $batch_code
                     ]
@@ -1082,15 +1092,14 @@ class Classed extends BasicAdmin
     public function replace_class()
     {
         if ($this->request->isPost()) {
-            $class = $this->request->post('class');  //要转入班的ID
             $student = $this->request->post('student_id'); //学生id
             $old_class_id = $this->request->post('old_class'); //转出班的id
-            $course_id = $this->request->post('course_id'); //转出班的课程id
-            //验证一下下
+            $course_id = $this->request->post('cu_course_id'); //转出班的课程id
+            $branch_id = $this->request->post('cu_branch_id'); //转入的校区
+            $class = $this->request->post('class');  //要转入班的ID
             if (empty($class)) $this->error('请选择要转入的班级');
-            if (empty($student)) $this->error('请在要转班的学生后面点击转班操作');
-            if (empty($old_class_id)) $this->error('请返回重新尝试');
-            if (empty($course_id)) $this->error('请返回重新尝试');
+            if (empty($course_id)) $this->error('参数错误');
+            if (empty($branch_id)) $this->error('参数错误');
 
             $order_id = Db::name('saas_order')->alias('o')
                 ->join('saas_order_log l', 'o.id = l.order_id')
@@ -1102,8 +1111,12 @@ class Classed extends BasicAdmin
             // 启动事务
             Db::startTrans();
             try {
+                //更改用户校区
+                Db::name('saas_customer')->where('id', $student)->update(['branch' => $branch_id]);
+                //查询班级课程id
+                $new_class_course_id = Db::name('saas_class_course')->where('class_id', $class)->value('course_id');
                 //订单详情表   order
-                Db::name('saas_order_log')->where('order_id', $order_id)->where('goods_id', '=', $course_id)->where('goods_type', '=', 1)->update(['class_id' => $class]);
+                Db::name('saas_order_log')->where('order_id', $order_id)->where('goods_id', '=', $course_id)->where('goods_type', '=', 1)->update(['class_id' => $class, 'goods_id' => $new_class_course_id]);
                 //订单表
                 Db::name('saas_order')->where('id', $order_id)->where('student_id', '=', $student)->update(['class_id' => $class]);
                 //  学生班级   class_student
@@ -1121,41 +1134,74 @@ class Classed extends BasicAdmin
             $get = $this->request->get();
             $student = $get['id'];
             $class_id = $get['class_id'];
-            $class_courses_array = Db::name('saas_class_course')->field('course_id')->where('class_id', $class_id)->select();
-            //取该班级下的课程
-            $class_courses = [];//班级的课程
-            foreach ($class_courses_array as $v) {
-                $class_courses[] = $v['course_id'];
+//            $class_courses_array = Db::name('saas_class_course')->field('course_id')->where('class_id', $class_id)->select();
+//            //取该班级下的课程
+//            $class_courses = [];//班级的课程
+//            foreach ($class_courses_array as $v) {
+//                $class_courses[] = $v['course_id'];
+//            }
+            $class_courses_ids = Db::name('saas_class_course')->where('class_id', $class_id)->column('course_id');
+            //查询该班级所有课程所属分类
+            $course_detail = Db::name('saas_courses')
+                ->field('id,title,type,category,subject')
+                ->where('id', 'in', $class_courses_ids)
+                ->select();
+            $ok_courses_ids = [];
+            //筛选符合条件的课程
+            foreach ($course_detail as $item) {
+                $ok_courses = Db::name('saas_courses')
+                    ->where('type', $item['type'])
+                    ->whereIn('category', $item['category'])
+                    ->whereIn('subject', $item['subject'])
+                    ->column('id');
+                $ok_courses_ids = array_merge($ok_courses_ids, $ok_courses);
             }
-            //查询合适的班
-            $ok_class_array = Db::name('saas_class_course')->field('class_id')->whereIn('course_id', $class_courses)->group('class_id')->select();
-            $ok_class = [];
-            foreach ($ok_class_array as $v) {
-                $ok_class[] = $v['class_id'];
-            }
-            //查适合的班中的课程
-            $ok_class_courses = Db::name('saas_class_course')->whereIn('class_id', $ok_class)->select();
-            $data = [];
-            foreach ($ok_class_courses as &$v) {
-                foreach ($ok_class as $v1) {
-                    if ($v['class_id'] == $v1) {
-                        $data[$v1][] = $v['course_id'];
-                    }
-                }
-            }
-            unset($data[$class_id]);//去除掉自己
-            $SatisfyClass = [];
-            foreach ($data as $key => $item) {
-                if (empty(array_diff($class_courses, $item)) && empty(array_diff($item, $class_courses))) {
-                    $SatisfyClass[] = $key;
-                }
-            }
-            empty($SatisfyClass) && $this->error('没有课程一样的班可以转');
-            $branch_arr = Db::name('saas_class')->field('branch')->where('id', $class_id)->find();
-            $branch = $branch_arr['branch'];
-            $SatisfyClassInfo = Db::name('saas_class')->where('branch', $branch)->where('status', '<>', 3)->whereIn('id', $SatisfyClass)->select();
-            empty($SatisfyClassInfo) && $this->error('本校区下没有课程一样的班可以转');
-            return $this->fetch('', ['class' => $SatisfyClassInfo, 'student_id' => $student, 'old_class_id' => $class_id, 'course' => $class_courses]);
+            //当前班级所在校区
+            $current_branch = Db::name('saas_class')->field('branch')->where('id', $class_id)->value('branch');
+            //查询当前校区适合该生转班的班级
+            $ok_class_arr = Db::name('saas_class_course')->whereIn('course_id', $ok_courses_ids)->group('class_id')->column('class_id');
+            $key = array_search($class_id ,$ok_class_arr);
+            array_splice($ok_class_arr,$key,1);
+            //查询具体班级信息
+            $ok_class_details = Db::name('saas_class')
+                ->where('branch', '=', $current_branch)
+                ->whereIn('id', $ok_class_arr)
+                ->select();
+//            //查询合适的班
+//            $ok_class_array = Db::name('saas_class_course')->field('class_id')->whereIn('course_id', $class_courses)->group('class_id')->select();
+//            $ok_class = [];
+//            foreach ($ok_class_array as $v) {
+//                $ok_class[] = $v['class_id'];
+//            }
+//            //查适合的班中的课程
+//            $ok_class_courses = Db::name('saas_class_course')->whereIn('class_id', $ok_class)->select();
+//            $data = [];
+//            foreach ($ok_class_courses as &$v) {
+//                foreach ($ok_class as $v1) {
+//                    if ($v['class_id'] == $v1) {
+//                        $data[$v1][] = $v['course_id'];
+//                    }
+//                }
+//            }
+//            unset($data[$class_id]);//去除掉自己
+//            $SatisfyClass = [];
+//            foreach ($data as $key => $item) {
+//                if (empty(array_diff($class_courses, $item)) && empty(array_diff($item, $class_courses))) {
+//                    $SatisfyClass[] = $key;
+//                }
+//            }
+//            empty($SatisfyClass) && $this->error('没有课程一样的班可以转');
+//            $branch_arr = Db::name('saas_class')->field('branch')->where('id', $class_id)->find();
+//            $branch = $branch_arr['branch'];
+//            $SatisfyClassInfo = Db::name('saas_class')->where('branch', $branch)->where('status', '<>', 3)->whereIn('id', $SatisfyClass)->select();
+//            empty($SatisfyClassInfo) && $this->error('本校区下没有课程一样的班可以转');
+            return $this->fetch('', [
+                'student_id' => $student,
+                'old_class_id' => $class_id,
+                'course_detail' => $course_detail,//课程详情
+                'current_branch' => $current_branch,
+                'ok_class_details' => $ok_class_details
+            ]);
         }
     }
 
@@ -1229,6 +1275,47 @@ class Classed extends BasicAdmin
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function get_change_class()
+    {
+        $course_id = $this->request->post('course_id');
+        $branch = $this->request->post('branch');
+        $class = $this->request->post('class');
+        $course_arr = explode('-', $course_id);
+        $ok_courses = Db::name('saas_courses')
+            ->where('type', $course_arr[1])
+            ->whereIn('category', $course_arr[2])
+            ->whereIn('subject', $course_arr[3])
+            ->column('id');
+        $ok_class_arr = Db::name('saas_class_course')
+            ->whereIn('course_id', $ok_courses)
+            ->group('class_id')
+            ->column('class_id');
+        $key = array_search($class ,$ok_class_arr);
+        array_splice($ok_class_arr,$key,1);
+        //查询具体班级信息
+        $ok_class_details = Db::name('saas_class')
+            ->where('branch', '=', $branch)
+            ->whereIn('id', $ok_class_arr)
+            ->select();
+        foreach ($ok_class_details as &$value) {
+            $value['begin_time'] = date("Y-m-d", $value['begin_time']);
+            $value['teacher_id'] = get_employee_name($value['teacher_id']);
+        }
+        if ($ok_class_details) {
+            return json([
+                'code' => 1,
+                'data' => $ok_class_details,
+                'msg' => '获取成功'
+            ]);
+        } else {
+            return json([
+                'code' => 0,
+                'data' => [],
+                'msg' => '无数据'
+            ]);
         }
     }
 }
