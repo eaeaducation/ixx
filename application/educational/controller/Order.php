@@ -231,7 +231,7 @@ class Order extends BasicAdmin
 
             Db::name('saas_order')->where('id', '=', $post['order_id'])->update(['price' => $price]);
             $res = Db::name('saas_order_log')->where('id', '=', $post['id'])->update($data);
-
+            LogService::write('订单续费', '订单【'.$order['orderno'].'】续费成功', $order['student_id']);
             if ($res) {
                 $this->success('数据修改成功！', '');
             } else {
