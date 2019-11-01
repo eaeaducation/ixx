@@ -42,7 +42,7 @@
                 <option value="">-请选择-</option>
             </select>
             {else}
-            {:get_teacher_select('teacher_id', isset($vo.teacher_id)?$vo.teacher_id:'', '', ["lay-filter"=>"teacher_id"],false)}
+            {:get_teacher_select('teacher_id', isset($vo.teacher_id)?$vo.teacher_id:'', '', ["lay-filter"=>"teacher_id", 'required' => 'required'],false)}
             {/if}
         </div>
         <label class="layui-form-label">
@@ -57,11 +57,11 @@
     <div class="layui-form-item">
             <label class="layui-form-label">开课日期</label>
             <div class="col-sm-4">
-                <input type="text" class="layui-input" id="test5" placeholder="请选择日期" name="date">
+                <input type="text" class="layui-input" title="请选择开课日期" id="test5" placeholder="请选择日期" name="date" required>
             </div>
         <label class="layui-form-label">上课时间</label>
         <div class="col-sm-4">
-            <input type="text" class="layui-input" id="test6" placeholder="请选择时间" name="time">
+            <input type="text" class="layui-input" title="请选择上课时间" id="test6" placeholder="请选择时间" name="time" required>
         </div>
     </div>
     <div class="hr-line-dashed"></div>

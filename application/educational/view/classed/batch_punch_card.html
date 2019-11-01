@@ -110,6 +110,7 @@
             tool();
         });
         form.on('radio(status)', function (data) {
+            tool();
             //如果选择为补课，必须判断是否有请假或旷课记录
             if (data.value == 3) {
                 $('input[name="teacher_hour"]').val(0);
@@ -143,6 +144,10 @@
                     if (status == 3) {
                         $('input[name="teacher_hour"]').val(0);
                         $('input[name="student_hour"]').val(0);
+                    } else if (status == 5) {
+                        $('input[name="teacher_hour"]').val(0);
+                        $('input[name="student_hour"]').val(res.data[0].hour);
+                        $('input[name="ta_teacher_hour"]').val(0);
                     } else {
                         $('input[name="teacher_hour"]').val(res.data[0].thour);
                         $('input[name="student_hour"]').val(res.data[0].hour);
