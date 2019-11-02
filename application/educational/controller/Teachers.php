@@ -53,10 +53,12 @@ class Teachers extends BasicAdmin
             ->order('e.created_at desc')
             ->field('e.name, e.english_name, e.id, e.mobile, c.total_hour, e.department');
         empty($source) || $db->where('e.source', '=', $source);
-        empty($branch) || $db->where('e.department', '=', $branch);
+//        empty($branch) || $db->where('e.department', '=', $branch);
+        empty($branch) || $db->where('s.branch', '=', $branch);
         empty($keyword) || $db->where(['e.name|e.english_name' => $keyword]);
         if (!in_array($this->user['authorize'], [1, 3, 4, 22])) {
-            $db->where('e.department', '=', $this->user['employee']['department']);
+//            $db->where('e.department', '=', $this->user['employee']['department']);
+            $db->where('s.branch', '=', $this->user['employee']['department']);
         }
         return parent::_list($db, true);
     }

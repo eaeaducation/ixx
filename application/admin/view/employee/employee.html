@@ -33,7 +33,7 @@
                 <label class="col-sm-1 control-label">
                     姓名
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="name" required="required"
                            pattern="^.{2,}$"
                            value='{$vo.name|default=""}'
@@ -43,22 +43,36 @@
                 <label class="col-sm-1 control-label">
                     是否是教师
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     {if empty($vo.is_teacher)}
-                    <input type='radio' name='is_teacher' value='1' title='是' style="display: none !important;"/>
-                    <input type='radio' name='is_teacher' value='0' checked title='否'
+                    <input type='radio' name='is_teacher' value='1' title='是' style="display: none !important;" lay-filter="is_teacher" />
+                    <input type='radio' name='is_teacher' value='0' checked title='否' lay-filter="is_teacher"
                            style="display: none !important;"/>
                     {else/}
-                    <input type='radio' name='is_teacher' value='1' checked title='是'
+                    <input type='radio' name='is_teacher' value='1' checked title='是' lay-filter="is_teacher"
                            style="display: none !important;"/>
-                    <input type='radio' name='is_teacher' value='0' title='否' style="display: none !important;"/>
+                    <input type='radio' name='is_teacher' value='0' title='否' style="display: none !important;" lay-filter="is_teacher"/>
+                    {/if}
+                </div>
+                <label class="col-sm-1 control-label cross_campus" style="display: none;">
+                    跨校区上课
+                </label>
+                <div class='col-sm-2 cross_campus' style="display: none">
+                    {if empty($vo.is_cross_campus)}
+                    <input type='radio' name='is_cross_campus' value='1' title='是' style="display: none !important;"/>
+                    <input type='radio' name='is_cross_campus' value='0' checked title='否'
+                           style="display: none !important;"/>
+                    {else/}
+                    <input type='radio' name='is_cross_campus' value='1' checked title='是'
+                           style="display: none !important;"/>
+                    <input type='radio' name='is_cross_campus' value='0' title='否' style="display: none !important;"/>
                     {/if}
                 </div>
 
                 <label class="col-sm-1 control-label">
                     性别
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     {:get_category_radio(3, 'gender', isset($vo.gender)?$vo.gender:'', '')}
                 </div>
             </div>
@@ -398,6 +412,20 @@
         if (is_manager != '') {
             isManagers();
         }
+        layui.use(['laydate','form'], function () {
+            var form = layui.form;
+            var is_teacher = $('input[name="is_teacher"]:checked').val();
+            if (is_teacher == 1) {
+                $('.cross_campus').show();
+            }
+            form.on('radio(is_teacher)', function (data) {
+                if (data.value == 1) {
+                    $('.cross_campus').show();
+                } else {
+                    $('.cross_campus').hide();
+                }
+            });
+        })
     });
 </script>
 {/block}

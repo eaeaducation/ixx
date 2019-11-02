@@ -322,6 +322,12 @@ function html_select(array $data, $name, $selected = '', $class = '', array $opt
             } else {
                 $html .= "<option value='{$k}'>{$v}</option>";
             }
+        } else {
+            if ($selected == $k) {
+                $html .= "<option value='{$k}' selected>{$v['name']} {$v['english_name']}</option>";
+            } else {
+                $html .= "<option value='{$k}'>{$v['name']} {$v['english_name']}</option>";
+            }
         }
     }
     return $html .= "</select>";
@@ -925,9 +931,9 @@ function get_employee($user_id, $department)
     $db = Db::name('saas_employee')->where('status', '=', 1)->whereIn('userid', $user_id);
     if ($department == '' || session('user.id') == 10000) {
 
-        $res = $db->column('name', 'userid');
+        $res = $db->column('name,english_name', 'userid');
     } else {
-        $res = $db->where('department', '=', $department)->column('name', 'userid');
+        $res = $db->where('department', '=', $department)->column('name,english_name', 'userid');
     }
     return $res;
 }
@@ -1161,7 +1167,7 @@ function get_sellers($type = '')
             if (!in_array(session('user')['authorize'], [1, 3, 4])) {
                 $db->where("s.department", "=", $departmentid);
             }
-            $electricpiners = $db->column('s.name', 's.userid');
+            $electricpiners = $db->column('s.name,s.english_name', 's.userid');
             Cache::set('electricpin_select' . $userid . $type, $electricpiners, '2592000');
         } else {
             $db = Db::name("saas_employee")->alias("s");
@@ -1169,7 +1175,7 @@ function get_sellers($type = '')
             join("system_auth a", "u.authorize = a.id", "left")->
             where("s.status", "<>", "3")->where("u.authorize", "in", $type_auth)->where("u.is_deleted", "<>", "1")
                 ->order("s.created_at", "desc");
-            $electricpiners = $db->column('s.name', 's.userid');
+            $electricpiners = $db->column('s.name,s.english_name', 's.userid');
             Cache::set('electricpin_select' . $userid . $type, $electricpiners, '2592000');
         }
     }

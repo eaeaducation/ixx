@@ -69,7 +69,7 @@ class Cardrecord extends BasicAdmin
         }
         if (isset($get['course']) && $get['course'] != '') {
             $db->where('co.title', 'like', '%' . $get['course'] . '%');
-            $countDb->where('co.title', 'like', '%' . $get['name'] . '%');
+            $countDb->where('co.title', 'like', '%' . $get['course'] . '%');
         }
         $count = $countDb->sum('l.course_hour');
         $this->assign('count', $count);

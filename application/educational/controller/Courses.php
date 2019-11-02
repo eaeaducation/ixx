@@ -374,6 +374,7 @@ class Courses extends BasicAdmin
             ->where('e.is_teacher', '=', 1)
             ->where('u.is_deleted', '=', 0)
             ->where('e.department', '=', $branch)
+            ->whereOr('e.is_cross_campus', '=', 1)
             ->select();
         $teacher = [];
         $ta = [];
