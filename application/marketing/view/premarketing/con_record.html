@@ -84,7 +84,7 @@
     window.form.render();
     var follow_status = "{$Think.get.follow_status}";
     form.on('select(follow_status)', function (data) {
-        if (data.value < follow_status) {
+        if (parseInt(data.value) < parseInt(follow_status)) {
             layer.msg('跟进状态选择错误', {icon: 2});
             var select = 'dd[lay-value=' + follow_status + ']';// 设置value
             $('.layui-form .follow_status').find('dl').find(select).click();// 查找点击
