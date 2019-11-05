@@ -46,6 +46,8 @@
                 <option value=''>--请选择--</option>
                 <option value='1' {if $Think.get.type == 1}selected{/if}>PC端</option>
                 <option value='2' {if $Think.get.type == 2}selected{/if}>移动端</option>
+                <option value='3' {if $Think.get.type == 3}selected{/if}>商城</option>
+                <option value='4' {if $Think.get.type == 4}selected{/if}>小程序</option>
             </select>
         </div>
     </div>
@@ -92,6 +94,8 @@
             <td class="text-center color-green">移动端</td>
             {elseif $vo.type == 3}
             <td class="text-center color-red">商城</td>
+            {elseif $vo.type == 4}
+            <td class="text-center color-0a58cc">小程序</td>
             {else}
             <td class="text-center">--</td>
             {/if}

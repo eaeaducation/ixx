@@ -2027,6 +2027,8 @@ function getSelectList($data, $name, $key = 'id', $title, $label, $default = nul
                         $str .= "<option selected  value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【移动端】' . "</option>";
                     } elseif ($v['type'] == 3) {
                         $str .= "<option selected  value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【商城】' . "</option>";
+                    } elseif ($v['type'] == 4) {
+                        $str .= "<option selected  value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【小程序】' . "</option>";
                     }
                 } else {
                     $str .= "<option selected  value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . "</option>";
@@ -2039,6 +2041,8 @@ function getSelectList($data, $name, $key = 'id', $title, $label, $default = nul
                         $str .= "<option selected  value='" . $v[$key] . "'>" . $v[$title] . '【移动端】' . "</option>";
                     } elseif ($v['type'] == 3) {
                         $str .= "<option selected  value='" . $v[$key] . "'>" . $v[$title] . '【商城】' . "</option>";
+                    } elseif ($v['type'] == 4) {
+                        $str .= "<option selected  value='" . $v[$key] . "'>" . $v[$title] . '【小程序】' . "</option>";
                     }
                 } else {
                     $str .= "<option selected  value='" . $v[$key] . "'>" . $v[$title] . "</option>";
@@ -2053,6 +2057,8 @@ function getSelectList($data, $name, $key = 'id', $title, $label, $default = nul
                         $str .= "<option value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【移动端】' . "</option>";
                     } elseif ($v['type'] == 3) {
                         $str .= "<option value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【商城】' . "</option>";
+                    } elseif ($v['type'] == 4) {
+                        $str .= "<option value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . '【小程序】' . "</option>";
                     }
                 } else {
                     $str .= "<option value='" . $v[$key] . "'>" . $v['spl'] . $v[$title] . "</option>";
@@ -2066,6 +2072,8 @@ function getSelectList($data, $name, $key = 'id', $title, $label, $default = nul
                         $str .= "<option value='" . $v[$key] . "'>" . $v[$title] . '【移动端】' . "</option>";
                     } elseif ($v['type'] == 3) {
                         $str .= "<option value='" . $v[$key] . "'>" . $v[$title] . '【商城】' . "</option>";
+                    } elseif ($v['type'] == 4) {
+                        $str .= "<option value='" . $v[$key] . "'>" . $v[$title] . '【小程序】' . "</option>";
                     }
                 } else {
                     $str .= "<option value='" . $v[$key] . "'>" . $v[$title] . "</option>";
@@ -2100,6 +2108,8 @@ function getContentCategory($key)
                 return $data[$key]['name'] . '(' . $data[$pid]['name'] . ')【移动端】';
             } elseif ($type == 3) {
                 return $data[$key]['name'] . '(' . $data[$pid]['name'] . ')【商城】';
+            } elseif ($type == 4) {
+                return $data[$key]['name'] . '(' . $data[$pid]['name'] . ')【小程序】';
             }
         }
         if ($type == 1) {
@@ -2108,6 +2118,8 @@ function getContentCategory($key)
             return $data[$key]['name'] . '【移动端】';
         } elseif ($type == 3) {
             return $data[$key]['name'] . '【商城】';
+        } elseif ($type == 4) {
+            return $data[$key]['name'] . '【小程序】';
         }
     }
     return 'not set';

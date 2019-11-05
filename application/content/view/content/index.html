@@ -32,6 +32,8 @@
                 <option selected value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【移动端】</option>
                 {elseif $menu.type == 3}
                 <option selected value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【商城】</option>
+                {elseif $menu.type == 4}
+                <option selected value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【小程序】</option>
                 {/if}
                 <!--{else}-->
                 {if $menu.type == 1}
@@ -40,6 +42,8 @@
                 <option value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【移动端】</option>
                 {elseif $menu.type == 3}
                 <option value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【商城】</option>
+                {elseif $menu.type == 4}
+                <option value='{$menu.ids}'>{$menu.spl|raw}{$menu.name}【小程序】</option>
                 {/if}
                 <!--{/eq}-->
                 <!--{/foreach}-->
