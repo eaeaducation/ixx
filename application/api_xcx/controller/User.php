@@ -16,7 +16,8 @@ class User extends BasicXcx
      */
     public function getOpenid()
     {
-        $code = $this->request->post('code');
+        $code = $this->request->request('code');
+        Log::error($code);
         if (!$code) return $this->error('登录认证code错误');
         $request_url = $this->wxapi_url.'sns/jscode2session?appid='.$this->app_id.'&secret='.$this->app_secret.'&js_code='.$code.'&grant_type=authorization_code';
         $res = HttpService::get($request_url,[]);
