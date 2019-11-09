@@ -1,0 +1,113 @@
+{extend name='admin@public/content'}
+
+{block name="style"}
+{/block}
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+    <!--表单start-->
+    <div style="padding: 15px;" class="col-md-6">
+
+        <form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠券主题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="activity_title" value='{$vo.activity_title|default=""}' required="required" title="请输入活动主题"
+                           placeholder="请输入活动主题" class="layui-input" maxlength="20">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动举办校区</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="school_id" value="0" title="全部校区" checked="" style="display: none !important;" required lay-filter="status">
+                    {php}$school = get_branches();{/php}
+                    {foreach $school as $key => $item}
+                    <input type="checkbox" name="school_id" value="{$key}" title="{$item}" style="display: none !important;" required lay-filter="status">
+                    {/foreach}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动时间</label>
+                <div class="layui-input-block">
+                    <input required type="text" class="layui-input" name="activity_time" id="activity_time" placeholder=" - ">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠券发放量</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="coupon_num" value='{$vo.coupon_num|default="1"}' title="请输入活动优惠券发放量"
+                           placeholder="请输入活动优惠券发放量" class="layui-input">
+                </div>
+                <label class="layui-form-label">优惠券面额</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="coupon_price" value='{$vo.coupon_price|default="0"}' title="请输入活动优惠券发放量"
+                           placeholder="请输入活动优惠券面额" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户最多可领</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="user_coupon_limit_num" value='{$vo.user_coupon_limit_num|default="1"}' title="用户单次优惠券活动最多领取张数"
+                           placeholder="用户单次优惠券活动最多领取张数" class="layui-input">
+                </div>
+                <label class="layui-form-label" style="width: 100px">使用最大金额限制</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="max_money_limit" value='{$vo.max_money_limit|default="0"}' title="用户消费金额满多少元优惠券可抵用"
+                           placeholder="用户消费金额满多少元优惠券可抵用" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠券有效期</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="1" title="永久可用" checked="" style="display: none !important;"lay-filter="status">
+                    <input type="radio" name="status" value="2" title="活动期可用" style="display: none !important;"lay-filter="status">
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <input type="hidden" name="created_at" value="{:time()}">
+            <div class="layui-form-item text-center">
+                {if isset($vo['id'])}
+                <input type='hidden' value='{$vo.id}' name='id'>
+                {else}
+                <input type="hidden" name="created_at" value="{:time()}">
+                {/if}
+                <button class="layui-btn" type='submit'>保存</button>
+                <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消吗？" data-close>取消</button>
+            </div>
+            <script>
+                window.form.render();
+            </script>
+
+        </form>
+
+    </div>
+
+    <div style="padding: 15px;" class="col-md-6">
+        <form class="layui-form" id="answerform" onsubmit="return false" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">优惠券主题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="activity_title" value='{$vo.activity_title|default=""}' required="required" title="请输入活动主题"
+                           placeholder="请输入活动主题" class="layui-input" maxlength="20" ng-model="a">
+                    <label class="layui-form-label" ng-bind="a">优惠券有效期</label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    require(['jquery', 'angular'], function () {
+
+    })
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#activity_time'
+            ,range: true,
+            value: ''
+        });
+    })
+</script>
+{/block}

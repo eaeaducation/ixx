@@ -27,27 +27,31 @@ class Product extends BasicXcx
     public function index()
     {
         $get = $this->request->get();
+        $cate = Db::name('store_goods_cate')->field('id,cate_title')->where('is_deleted', '=', 0)->select();
         $get['cate_id'] = isset($get['cate_id']) ? $get['cate_id'] : 1;
-        $data = Db::name('store_goods')
+        $res = Db::name('store_goods')
             ->where('is_deleted', '=', 0)
             ->where('status', '=', 1)
+            ->where('cate_id', '=', $get['cate_id'])
             ->field('id,goods_title,goods_subtitle,goods_logo');
-        if (isset($get['cate']) && !empty($get['cate'])) {
-            $data->where('cate_id', '=', $get['cate_id']);
-        }
         if (isset($get['keyword']) && !empty($get['keyword'])) {
-            $data->where('goods_title', 'like', '%' . $get['keyword'] . '%');
+            $res->where('goods_title', 'like', '%' . $get['keyword'] . '%');
         }
-        $product = $data->select();
-        if (!$data) {
+        $product = $res->select();
+        if (!$product) {
             return $this->error('数据获取失败');
         }
-        return $this->success('数据获取成功', $product);
+        $data = [
+            'product_list' => $product,
+            'product_type' => $cate
+        ];
+        return $this->success('数据获取成功', $data);
     }
 
     public function detail()
     {
         $get = $this->request->get();
+        if (!isset($get['id'])) return $this->error('参数错误');
         $product = Db::name('store_goods')
             ->where('id', '=', $get['id'])
             ->where('is_deleted', '=', 0)
@@ -65,9 +69,15 @@ class Product extends BasicXcx
             ->where('id', '=', $product['spec_id'])
             ->value('spec_param');
         $spec = json_decode($money, true);
+        $len = count($spec);
+        $low_price = $spec[0]['value'];
+        $high_price = $spec[$len - 1]['value'];
+        $product['goods_content'] = base64_encode($product['goods_content']);
         $data = [
             'detail' => $product,
-            'spec' => $spec
+            'spec' => $spec,
+            'lowe_price' => $low_price,
+            'high_price' => $high_price
         ];
         return $this->success('数据获取成功', $data);
     }

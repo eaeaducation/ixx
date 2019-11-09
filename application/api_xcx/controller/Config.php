@@ -5,6 +5,7 @@ namespace app\api_xcx\controller;
 
 
 use controller\BasicXcx;
+use think\Db;
 
 class Config extends BasicXcx
 {
@@ -19,8 +20,24 @@ class Config extends BasicXcx
             'xcx_appid' => sysconf('wxxcx_app_id'),
             'xcx_secret' => sysconf('wxxcx_secret'),
             'site_copy' => sysconf('site_copy'),
-            'miitbeian' => sysconf('miitbeian')
+            'miitbeian' => sysconf('miitbeian'),
         ];
         return $this->success('数据获取成功', $data);
+    }
+
+    /**
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function schoolinfo()
+    {
+        $res = Db::name('saas_school_branch')
+            ->order('id desc')
+            ->select();
+        if ($res) {
+            return $this->success('获取成功', $res);
+        }
+        return $this->error('', '');
     }
 }

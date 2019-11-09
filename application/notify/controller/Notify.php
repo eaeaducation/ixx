@@ -49,4 +49,23 @@ class Notify extends Controller
         });
         $response->send();
     }
+
+    public function xcxNotify()
+    {
+        $app = Facade::payment('wxxcx');
+        $response = $app->handlePaidNotify(function ($message, $fail) {
+            Log::error($message);
+            if (isset($message['result_code']) && $message['result_code'] == 'SUCCESS') {
+                $has_order = Db::name("saas_order")->where("orderno", "=", $message['out_trade_no'])->find();
+                if ($has_order) {
+                    $param['status'] = 5;
+                    Db::name("saas_order")->where("orderno", "=", $message['out_trade_no'])->update($param);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+        $response->send();
+    }
 }

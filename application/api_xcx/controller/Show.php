@@ -47,6 +47,7 @@ class Show extends BasicXcx
             $row['brand_cover'] = [];
             $row['brand_cover'][0] = $url;
         }
+        $row['brand_detail'] = base64_encode($row['brand_detail']);
         return $this->success('数据获取成功', $row);
     }
 }

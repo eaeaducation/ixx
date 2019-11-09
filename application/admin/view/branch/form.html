@@ -24,6 +24,14 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区经纬度</label>
+        <div class="layui-input-block">
+            <input type="text" name="lon_lat" value='{$vo.lon_lat|default=""}' title="请输入校区经度纬度"
+                   placeholder="校区经度纬度格式：经度值,纬度值" class="layui-input" maxlength="50">
+        </div>
+    </div>
+
 
     <div class="layui-form-item">
         <label class="layui-form-label">负责人</label>
@@ -46,6 +54,14 @@
             <input type="text" name="service_tel" value='{$vo.service_tel|default=""}'
                    title="请输入校区客服电话"
                    placeholder="请输入校区客服电话" class="layui-input" maxlength="15">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">营业时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="business_hours" value='{$vo.business_hours|default=""}'
+                   title="请输入校区营业时间"
+                   placeholder="请输入校区营业时间" class="layui-input">
         </div>
     </div>
 
