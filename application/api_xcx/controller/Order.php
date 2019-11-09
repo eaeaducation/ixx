@@ -92,6 +92,29 @@ class Order extends BasicXcx
         }
     }
 
+    /**
+     * 用户订单列表
+     */
+    public function orderList()
+    {
+        $user = $this->getUser();
+        $get = $this->request->get();
+        $order = Db::name('saas_order')->alias('o')
+            ->join('saas_order_log l', 'o.id = l.order_id', 'right')
+            ->join('store_goods g', 'l.goods_id = g.id', 'left');
+        if (isset($get['status']) && !empty($get['statsu'])) {
+            $order->where('o.status', '=', $get['statsu']);
+        } else {
+            $order->where('o.status', '<>', 3);
+        }
+        $order->where('l.goods_type', '=', 1)
+            ->where('o.student_id', '=', $user->id)
+            ->order('o.id desc')
+            ->field('o.status, l.id, l.goods_id, l.price, o.id as oid, o.orderno, g.goods_title')
+            ->select();
+        return $this->success('订单列表获取成功', $order);
+    }
+
 
     /**
      * 小程序统一下单
@@ -117,7 +140,7 @@ class Order extends BasicXcx
         ];
         ksort($param);
         $params = post_str($param, false);
-        $sign = strtoupper(md5($params . "&key=" . $this->key));
+        $sign = strtoupper(md5($params . "&key=" . $this->app_mch_key));
         //封装统一支付xml参数
         $param['sign'] = $sign;
         $form_data = $this->arrayToxml($param);

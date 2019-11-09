@@ -39,7 +39,7 @@ class User extends BasicXcx
     /**
      * 保存用户xinx
      */
-    public function register()
+    public function userInfo()
     {
         $post = $this->request->post();
         $query_user = Customer::get(['xcxopenid' => $post['open_id']]);
@@ -52,7 +52,7 @@ class User extends BasicXcx
             $user->source = 22;
             $user->save();
         }
-        return $this->success('用户信息保存成功', []);
+        return $this->success('用户信息保存成功', $query_user);
     }
 
     /**
