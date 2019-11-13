@@ -127,13 +127,13 @@ function local_image($url)
  */
 function send_sms($mobiles, $content, $sign = '', $type = 1)
 {
-    $zhishen = new Zhishen($type);
+    $zhishen = new \sms\Lingkai($type);
     return $zhishen->send($mobiles, $content, $sign);
 }
 
 function send_all_sms($mobiles, $content, $sign = '', $type = 1)
 {
-    $zhishen = new Zhishen($type);
+    $zhishen = new \sms\Lingkai($type);
     if (is_array($mobiles)) {
         $count = count($mobiles);
         if ($count > 2) {
