@@ -29,7 +29,7 @@ class User extends BasicXcx
             $value['open_id'] = $row['openid'];
             $value['session_key'] = $row['session_key'];
             $sessionid = md5($row['openid']);
-            \cache($sessionid, $value);
+            \cache($sessionid, $value, 2592000);
             $data = [
                 'open_id' => $row['openid'],
                 'sessionid' => $sessionid

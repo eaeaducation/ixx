@@ -30,6 +30,7 @@ class Order extends BasicXcx
             ->order('c.created_at desc')
             ->field('c.id as cart_id, c.price, g.goods_title, g.goods_image, c.number, c.param, g.id, c.selected')
             ->select();
+        Log::error($order);
         return $this->success('', $order);
     }
 
@@ -44,9 +45,9 @@ class Order extends BasicXcx
         $post = $this->request->post();
         $res = Db::name('store_cart')->where('id', '=', $post['cart_pid'])->delete();
         if ($res) {
-            return $this->success('取消成功', '');
+            return $this->success('删除成功', '');
         } else {
-            return $this->error('取消失败，请稍候再试');
+            return $this->error('删除失败，请稍候再试');
         }
     }
 
@@ -136,7 +137,7 @@ class Order extends BasicXcx
             'nonce_str' => $this->getRandom(32),
             'notify_url' => $this->request->domain() . '/notify/notify/xcxNotify',
             'spbill_create_ip' => $this->request->ip(),
-            'out_trade_no' => isset($post['orderno']) ? $post['orderno'] : generate_order_no(),
+            'out_trade_no' => generate_order_no(),
             'total_fee' => intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
@@ -150,9 +151,10 @@ class Order extends BasicXcx
         $res = Httpservice::raw($url, $form_data);
         $res = $this->xmlToarray($res);
         if ($res['result_code'] == "SUCCESS") {
-            if (!isset($post['orderno']) && empty($post['orderno'])) {
-
-                $this->shopOrder($user, $post, $param['out_trade_no']);
+            if (isset($post['data']) && !empty($post['data'])) {
+                $this->shopOrder($user, $post, $post['out_trade_no']);
+            } else {
+                return $this->error('参数异常', $res);
             }
             //微信支付数据
             $data = [
@@ -180,31 +182,29 @@ class Order extends BasicXcx
      */
     public function shopOrder($user, $post, $orderno)
     {
-        $order = [
-            'student_id' => $user->id,
-            'class_id' => 0,
-            'price' => $post['price'],
-            'status' => 4,
-            'created_at' => time(),
-            'pay_type' => 2,
-            'orderno' => $orderno
-        ];
-        $order_id = Db::name('saas_order')->insertGetId($order);
-        $order_log = [];
         foreach ($post['data'] as $key => $v) {
-            $order_log[$key]['order_id'] = $order_id;
-            $order_log[$key]['goods_id'] = $v['gid'];
-            $order_log[$key]['goods_type'] = 1;
-            $order_log[$key]['old_price'] = $v['price'];
-            $order_log[$key]['price'] = $v['price'];
-            $order_log[$key]['consume_num'] = 0;
-            $order_log[$key]['goods_num'] = $v['num'] * $v['number'];
-            $order_log[$key]['created_at'] = time();
-            $order_log[$key]['class_id'] = 0;
+            $order['student_id'] = $user->id;
+            $order['class_id'] = 0;
+            $order['price'] = $v['price'];
+            $order['status'] = 4;
+            $order['created_at'] = time();
+            $order['pay_type'] = 2;
+            $order['orderno'] = $orderno;
+            $order_id = Db::name('saas_order')->insertGetId($order);
+
+            $order_log['order_id'] = $order_id;
+            $order_log['goods_id'] = $v['gid'];
+            $order_log['goods_type'] = 1;
+            $order_log['old_price'] = $v['price'];
+            $order_log['price'] = $v['price'];
+            $order_log['consume_num'] = 0;
+            $order_log['goods_num'] = $v['num'] * $v['number'];
+            $order_log['created_at'] = time();
+            $order_log['class_id'] = 0;
+            Db::name('saas_order_log')->insert($order_log);
             //更新购物车物品状态
             Db::name('store_cart')->where('cid', $user->id)->where('gid', $v['gid'])->update(['status' => 2]);
         }
-        Db::name('saas_order_log')->insertAll($order_log);
         return true;
     }
 
