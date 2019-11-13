@@ -7,7 +7,9 @@ namespace app\api_xcx\controller;
 use controller\BasicXcx;
 use service\HttpService;
 use think\Db;
+use think\facade\Log;
 use think\facade\Request;
+use think\facade\Session;
 
 class Order extends BasicXcx
 {
@@ -18,7 +20,7 @@ class Order extends BasicXcx
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function cart()
+    public function cartList()
     {
         $user = $this->getUser();
         $order = Db::name('store_cart')->alias('c')
@@ -26,7 +28,7 @@ class Order extends BasicXcx
             ->where('c.status', '=', 1)
             ->where('c.cid', '=', $user->id)
             ->order('c.created_at desc')
-            ->field('c.id as cart_id, c.price, g.goods_title, g.goods_image, c.number, c.param, g.id')
+            ->field('c.id as cart_id, c.price, g.goods_title, g.goods_image, c.number, c.param, g.id, c.selected')
             ->select();
         return $this->success('', $order);
     }
@@ -36,11 +38,11 @@ class Order extends BasicXcx
      * @throws \think\Exception
      * @throws \think\exception\PDOException
      */
-    public function cancelGoods()
+    public function cancelCart()
     {
         $user = $this->getUser();
-        $post = $this->request->post('oid');
-        $res = Db::name('store_cart')->where('id', '=', $post['id'])->delete();
+        $post = $this->request->post();
+        $res = Db::name('store_cart')->where('id', '=', $post['cart_pid'])->delete();
         if ($res) {
             return $this->success('取消成功', '');
         } else {
@@ -98,21 +100,21 @@ class Order extends BasicXcx
     public function orderList()
     {
         $user = $this->getUser();
-        $get = $this->request->get();
+        $post = $this->request->post();
         $order = Db::name('saas_order')->alias('o')
             ->join('saas_order_log l', 'o.id = l.order_id', 'right')
             ->join('store_goods g', 'l.goods_id = g.id', 'left');
-        if (isset($get['status']) && !empty($get['statsu'])) {
-            $order->where('o.status', '=', $get['statsu']);
+        if (isset($post['status']) && !empty($post['status'])) {
+            $order->where('o.status', '=', $post['status']);//未付款4；已付款5
         } else {
             $order->where('o.status', '<>', 3);
         }
+
         $order->where('l.goods_type', '=', 1)
             ->where('o.student_id', '=', $user->id)
             ->order('o.id desc')
-            ->field('o.status, l.id, l.goods_id, l.price, o.id as oid, o.orderno, g.goods_title')
-            ->select();
-        return $this->success('订单列表获取成功', $order);
+            ->field('o.status, l.id, l.goods_id, l.price, o.id as oid, o.orderno, g.goods_title,g.goods_image');
+        return $this->success('订单列表获取成功', $order->select());
     }
 
 

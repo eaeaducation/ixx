@@ -81,7 +81,7 @@ class BasicXcx
     public function __construct()
     {
         // Cors跨域Options请求处理
-//        Session::init(config('session.'));
+        Session::init(config('session.'));
 //        ToolsService::corsOptionsHandler();
         // Cors跨域会话切换及初始化
         $this->request = app('request');
@@ -167,15 +167,15 @@ class BasicXcx
     public function getUser()
     {
         $user = null;
-        $sessionid = $this->request->request('sessionid');
+        $sessionid = $this->request->header('sessionid');
         if ($sessionid) {
-            $sessioninfo = \session($sessionid);
-            $user = Customer::get(['xcxopenid' => $sessioninfo['open_id']]);
+            $sessioninfo = cache($sessionid);
+            if ($sessioninfo) $user = Customer::get(['xcxopenid' => $sessioninfo['open_id']]);
         }
         if ($user !== null) {
             return $user;
         }
-        return $this->error('未登录');
+        return $this->error('登录已过期');
 
     }
 

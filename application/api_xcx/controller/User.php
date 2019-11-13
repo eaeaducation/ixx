@@ -7,7 +7,10 @@ namespace app\api_xcx\controller;
 use app\common\model\Customer;
 use controller\BasicXcx;
 use service\HttpService;
+use think\Db;
+use think\facade\Cache;
 use think\facade\Log;
+use think\facade\Session;
 
 class User extends BasicXcx
 {
@@ -16,8 +19,7 @@ class User extends BasicXcx
      */
     public function getOpenid()
     {
-        $code = $this->request->request('code');
-        Log::error($code);
+        $code = $this->request->post('code');
         if (!$code) return $this->error('登录认证code错误');
         $request_url = $this->wxapi_url.'sns/jscode2session?appid='.$this->app_id.'&secret='.$this->app_secret.'&js_code='.$code.'&grant_type=authorization_code';
         $res = HttpService::get($request_url,[]);
@@ -26,8 +28,8 @@ class User extends BasicXcx
             //登录成功（随机生成登录token返回给小程序，用以验证身份）
             $value['open_id'] = $row['openid'];
             $value['session_key'] = $row['session_key'];
-            $sessionid = session_id($row['openid']);
-            session($sessionid, $value);
+            $sessionid = md5($row['openid']);
+            \cache($sessionid, $value);
             $data = [
                 'open_id' => $row['openid'],
                 'sessionid' => $sessionid
@@ -43,15 +45,19 @@ class User extends BasicXcx
     public function userInfo()
     {
         $post = $this->request->post();
-        $query_user = Customer::get(['xcxopenid' => $post['open_id']]);
+        $query_user = Db::name('saas_customer')
+            ->where('status', '<>', 3)
+            ->where('xcxopenid', '=', $post['open_id'])
+            ->find();
         if (!$query_user) {
-            $user = new Customer();
-            $user->xcxopenid = $post['open_id'];
-            $user->nickname = $post['nickName'];
-            $user->created_at = time();
-            $user->avatar_url = $post['avatarUrl'];
-            $user->source = 22;
-            $user->save();
+            $data['xcxopenid'] = $post['open_id'];
+            $data['nickname'] = $post['nickName'];
+            $data['parnet_name'] = $post['nickName'];
+            $data['name'] = $post['nickName'];
+            $data['created_at'] = time();
+            $data['avatar_url'] = $post['avatarUrl'];
+            $data['source'] = 22;
+            Db::name('saas_customer')->insert($data);
         }
         return $this->success('用户信息保存成功', $query_user);
     }
@@ -63,10 +69,16 @@ class User extends BasicXcx
     {
         $user = $this->getUser();
         $post = $this->request->post();
-        $sessionid = $this->request->request('sessionid');
-        $sessioninfo = session($sessionid);
-        $decrypt = $this->decryptData($post['encryptedData'], $post['iv'], $sessioninfo['session_key']);
-        $user->parent_tel = $decrypt['phoneNumber'];
+        $verify_code = Cache::get('customer_' . $post['mobile']. '_code');
+        if (!$verify_code) {
+            return $this->error('验证码已过期，请重新获取', '', '0');
+        } elseif ($verify_code != $post['code']) {
+            return $this->error('验证码不正确', '', '1');
+        }
+//        $sessionid = $this->request->request('sessionid');
+//        $sessioninfo = session($sessionid);
+//        $decrypt = $this->decryptData($post['encryptedData'], $post['iv'], $sessioninfo['session_key']);
+        $user->parent_tel = trim($post['mobile']);
         $user->save();
         return $this->success('手机号绑定成功', []);
     }
