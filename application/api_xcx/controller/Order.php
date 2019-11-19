@@ -162,11 +162,10 @@ class Order extends BasicXcx
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
         Log::error($post);
-//        $coupon_id = [];
-//        if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
-//            $coupon_id = explode(',', $coupon_id);
-//        }
-        $coupon_id = $post['coupon_ids'];
+        $coupon_id = '';
+        if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
+            $coupon_id = $post['coupon_ids'];
+        }
         //统一支付签名
         $param = [
             'appid' => $this->app_id,//appid
@@ -176,10 +175,11 @@ class Order extends BasicXcx
             'nonce_str' => $this->getRandom(32),
             'notify_url' => $this->request->domain() . '/notify/notify/xcxNotify',
             'spbill_create_ip' => $this->request->ip(),
-            'out_trade_no' => isset($post['orderno']) ? $post['orderno'] : generate_order_no(),
+            'out_trade_no' => isset($post['orderno']) && !empty($post['orderno']) ? $post['orderno'] : generate_order_no(),
             'total_fee' => 10,//intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
+        Log::error($param);
         ksort($param);
         $params = post_str($param, false);
         $sign = strtoupper(md5($params . "&key=" . $this->app_mch_key));
@@ -239,7 +239,7 @@ class Order extends BasicXcx
             //更新优惠券状态
             if ($couponid) {
                 Db::name('saas_xcx_activity_detail')
-                    ->where('id', 'in', $couponid)
+                    ->where('id', '=', $couponid)
                     ->where('cid', '=', $user->id)
                     ->update(['oid' => $order_id,'status' => 1]);
             }
