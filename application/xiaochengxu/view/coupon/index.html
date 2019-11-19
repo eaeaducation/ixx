@@ -39,7 +39,6 @@
             <th class="text-center nowrap">优惠券主题</th>
             <th class="text-center nowrap">活动时间</th>
             <th class="text-center nowrap">活动状态</th>
-            <th class="text-center nowrap">活动校区</th>
             <th class="text-center nowrap">预览</th>
             <th class="text-center nowrap">操作</th>
         </tr>
@@ -65,18 +64,15 @@
                 {/if}
             </td>
             <td class="text-center nowrap">
-                校区
-            </td>
-            <td class="text-center nowrap">
                 <a class="layui-btn layui-btn-primary layui-btn-xs" data-area="['50%','50%']" data-title="查看二维码"
                    data-modal='{:url("$classuri/qrcode")}?id={$vo.id}'>
                     <i class="fa fa-qrcode"></i>
                 </a>
             </td>
             <td class="text-center nowrap">
-                <a data-title="编辑问卷" data-open='{:url("design/edit")}?id={$vo.id}'>编辑</a>
+                <a data-title="编辑活动" data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
                 <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}'>删除</a>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
             </td>
         </tr>
         {/foreach}

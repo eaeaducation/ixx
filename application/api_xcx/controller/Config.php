@@ -67,4 +67,16 @@ class Config extends BasicXcx
             return $this->error("验证码发送失败");
         }
     }
+
+    /**
+     * 系统消息
+     */
+    public function sysMessage()
+    {
+        $res = Db::name('saas_xcx_message')
+            ->where('deleted', '=', 0)
+            ->order('id desc')
+            ->select();
+        return $this->success("成功!", $res);
+    }
 }

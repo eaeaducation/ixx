@@ -147,13 +147,13 @@ class BasicXcx
         }
         $aesIV = base64_decode($iv);
         $aesCipher = base64_decode($encryptedData);
-        $result = openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+        $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
         $dataObj = json_decode($result);
-        if($dataObj == NULL ) {
+        if($dataObj == NULL) {
             \think\facade\Log::error('aes 解密失败');
             return $this->error('数据异常');
         }
-        if($dataObj['watermark']['appid'] != $this->app_id ) {
+        if($dataObj->watermark->appid != $this->app_id ) {
             \think\facade\Log::error('解密后得到的buffer非法');
             return $this->error('数据异常');
         }
