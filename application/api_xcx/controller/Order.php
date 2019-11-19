@@ -176,7 +176,7 @@ class Order extends BasicXcx
             'notify_url' => $this->request->domain() . '/notify/notify/xcxNotify',
             'spbill_create_ip' => $this->request->ip(),
             'out_trade_no' => isset($post['orderno']) && !empty($post['orderno']) ? $post['orderno'] : generate_order_no(),
-            'total_fee' => 10,//intval($post['price'] * 100),
+            'total_fee' => 1,//intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
         Log::error($param);
@@ -188,10 +188,10 @@ class Order extends BasicXcx
         $form_data = $this->arrayToxml($param);
         $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         $res = Httpservice::raw($url, $form_data);
-        Log::error($res);
         $res = $this->xmlToarray($res);
+        Log::error($res);
         if ($res['result_code'] == "SUCCESS") {
-            if (!isset($post['orderno']) && empty($post['orderno'])) {
+            if (empty($post['orderno'])) {
                 if (isset($post['data']) && !empty($post['data'])) {
                     $this->shopOrder($user, $post, $post['out_trade_no'], $coupon_id);
                 } else {
