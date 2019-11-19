@@ -242,7 +242,6 @@ class Order extends BasicXcx
                     ->update(['oid' => $order_id,'status' => 1]);
             }
             $order_log = [];
-            Log::error($post['data']);
             foreach ($post['data'] as $key => $v) {
                 $order_log[$key]['order_id'] = $order_id;
                 $order_log[$key]['goods_id'] = $v['gid'];
@@ -254,9 +253,13 @@ class Order extends BasicXcx
                 $order_log[$key]['created_at'] = time();
                 $order_log[$key]['class_id'] = 0;
                 //更新购物车物品状态
-                Db::name('store_cart')->where('cid', $user->id)->where('gid', $v['gid'])->update(['status' => 2]);
+                $res = Db::name('store_cart')
+                    ->where('cid', '=', $user->id)
+                    ->where('gid', '=', $v['gid'])
+                    ->update(['status' => 2]);
+                Log::error($res);
             }
-            Db::name('saas_order_log')->insertAll($order_log);
+            $result = Db::name('saas_order_log')->insertAll($order_log);
             Db::commit();
         } catch (Exception $e) {
             Db::rollback();
