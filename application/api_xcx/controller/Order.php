@@ -161,6 +161,7 @@ class Order extends BasicXcx
         $sessionid = $this->request->header('sessionid');
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
+        Log::error($post);
         $coupon_id = [];
         if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
             $coupon_id = explode(',', $coupon_id);
@@ -186,6 +187,7 @@ class Order extends BasicXcx
         $form_data = $this->arrayToxml($param);
         $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         $res = Httpservice::raw($url, $form_data);
+        Log::error($res);
         $res = $this->xmlToarray($res);
         if ($res['result_code'] == "SUCCESS") {
             if (!isset($post['orderno']) && empty($post['orderno'])) {
