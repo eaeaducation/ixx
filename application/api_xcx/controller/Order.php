@@ -161,7 +161,6 @@ class Order extends BasicXcx
         $sessionid = $this->request->header('sessionid');
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
-        Log::error($post);
         $coupon_id = '';
         if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
             $coupon_id = $post['coupon_ids'];
@@ -179,7 +178,6 @@ class Order extends BasicXcx
             'total_fee' => 1,//intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
-        Log::error($param);
         ksort($param);
         $params = post_str($param, false);
         $sign = strtoupper(md5($params . "&key=" . $this->app_mch_key));
