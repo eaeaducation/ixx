@@ -242,6 +242,7 @@ class Order extends BasicXcx
                     ->update(['oid' => $order_id,'status' => 1]);
             }
             $order_log = [];
+            Log::error($post['data']);
             foreach ($post['data'] as $key => $v) {
                 $order_log[$key]['order_id'] = $order_id;
                 $order_log[$key]['goods_id'] = $v['gid'];
