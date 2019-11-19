@@ -162,10 +162,11 @@ class Order extends BasicXcx
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
         Log::error($post);
-        $coupon_id = [];
-        if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
-            $coupon_id = explode(',', $coupon_id);
-        }
+//        $coupon_id = [];
+//        if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
+//            $coupon_id = explode(',', $coupon_id);
+//        }
+        $coupon_id = $post['coupon_ids'];
         //统一支付签名
         $param = [
             'appid' => $this->app_id,//appid
