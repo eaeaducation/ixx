@@ -250,7 +250,7 @@ class Order extends BasicXcx
                 $order_log[$key]['old_price'] = $v['price'];
                 $order_log[$key]['price'] = $v['price'];
                 $order_log[$key]['consume_num'] = 0;
-                $order_log[$key]['goods_num'] = $v['p_num'] * $v['b_num'];
+                $order_log[$key]['goods_num'] = (intval($v['p_num']) * intval($v['b_num']));
                 $order_log[$key]['created_at'] = time();
                 $order_log[$key]['class_id'] = 0;
                 //更新购物车物品状态
