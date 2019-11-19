@@ -193,7 +193,7 @@ class Order extends BasicXcx
         if ($res['result_code'] == "SUCCESS") {
             if (empty($post['orderno'])) {
                 if (isset($post['data']) && !empty($post['data'])) {
-                    $this->shopOrder($user, $post, $post['out_trade_no'], $coupon_id);
+                    $this->shopOrder($user, $post, $param['out_trade_no'], $coupon_id);
                 } else {
                     return $this->error('参数异常', $res);
                 }
