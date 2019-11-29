@@ -25,9 +25,9 @@ class Home extends BasicXcx
         //精品课图
         $boutique = Db::name($this->table)->field('title, thumb, link')->where('status', '=', 99)->where('catid', '=', '84')->select();
         //合作院校
-        $cooperative_colleges = Db::name($this->table)->field('title, thumb')->where('status', '=', 99)->where('catid', '=', '85')->select();
+        $cooperative_colleges = Db::name($this->table)->field('title, thumb, link')->where('status', '=', 99)->where('catid', '=', '85')->select();
         //首页弹出图片
-        $act = Db::name($this->table)->field('title, thumb,link')->where('status', '=', 99)->where('catid', '=', '77')->order('id', 'desc')->find();
+        $act = Db::name($this->table)->field('title, thumb,link')->where('status', '=', 99)->where('catid', '=', '92')->order('id', 'desc')->find();
         //活动弹出（优惠券，领红包系别入口）
         $data = [
             'banner' => $banner,

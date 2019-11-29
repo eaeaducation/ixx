@@ -5,10 +5,13 @@ namespace app\xiaochengxu\controller;
 
 
 use controller\BasicAdmin;
+use service\DataService;
 use think\Db;
 
 class Message extends BasicAdmin
 {
+
+    public $table = "saas_xcx_message";
 
     public function  index()
     {
@@ -21,6 +24,19 @@ class Message extends BasicAdmin
 
     public function addMessage()
     {
+        return $this->_form('saas_xcx_message', 'form');
+    }
 
+    public function edit()
+    {
+        return $this->_form('saas_xcx_message', 'form');
+    }
+
+    public function del()
+    {
+        if (DataService::update($this->table)) {
+            $this->success("删除成功!", '');
+        }
+        $this->error("删除失败, 请稍候再试!");
     }
 }

@@ -1,0 +1,214 @@
+
+<div class="layui-tab layui-tab-card">
+    <!--表单start-->
+    <div style="padding: 15px;">
+
+        <form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动主题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="activity_title" value='{$vo.title|default=""}' required="required" title="请输入活动主题"
+                           placeholder="请输入活动主题" class="layui-input" maxlength="20" ng-model="activity_title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label layui-form-label">
+                    活动主题图
+                </label>
+                <div class='col-sm-8'>
+                    <img data-tips-image style="height:auto;max-height:32px;min-width:32px" src="{$vo.activity_theme_img|default=''}"/>
+                    <input type="hidden" name="activity_theme" onchange="$(this).prev('img').attr('src', this.value)"
+                           value="{$vo.activity_theme_img|default=''}" class="layui-input" required>
+                    <a class="btn btn-link" data-file="one" data-uptype="local" data-type="jpg,png,jpeg"
+                       data-field="activity_theme">上传图片</a>
+                    <p class="help-block">建议上传尺寸为206x60px（格式暂定）</p>
+                </div>
+            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">活动举办校区</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="checkbox" name="school_id" value="0" title="全部校区" checked="" style="display: none !important;" required lay-filter="status">-->
+<!--                    {php}$school = get_branches();{/php}-->
+<!--                    {foreach $school as $key => $item}-->
+<!--                    <input type="checkbox" name="school_id" value="{$key}" title="{$item}" style="display: none !important;" required lay-filter="status">-->
+<!--                    {/foreach}-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动时间</label>
+                <div class="layui-input-block">
+                    <input required type="text" class="layui-input" name="activity_time" id="activity_time" placeholder=""
+                           value="{if isset($vo.beg_time)}{$vo.beg_time|format_date} ~ {$vo.end_time|format_date}{else}{/if}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动发放名额</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="activity_num" value='{$vo.activity_num|default="1"}' title="请输入活动优惠券发放量"
+                           placeholder="请输入活动优惠券发放量" class="layui-input">
+                </div>
+                <label class="layui-form-label">活动奖励金额</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="activity_price" value='{$vo.single_amount|default="0"}' title="请输入活动优惠券面额"
+                           placeholder="请输入活动优惠券面额" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户最多参与次数</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="user_activity_limit_num" value='{if isset($vo.activity_rule)}{:json_decode($vo.activity_rule, 1)["user_activity_limit_num"]}{else}1{/if}' title="用户单次活动最多参与次数"
+                           placeholder="用户单次活动最多参与次数" class="layui-input">
+                </div>
+                <label class="layui-form-label" style="width: 100px">转发分享次数</label>
+                <div class="layui-input-inline" style="width: 33%">
+                    <input type="number" name="max_share_num_limit" value='{if isset($vo.activity_rule)}{:json_decode($vo.activity_rule, 1)["max_share_num_limit"]}{else}1{/if}' title="用户转发分享达次数可领取奖励"
+                           placeholder="用户转发分享达次数可领取奖励" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动参与方式</label>
+                <div class="layui-input-block">
+                    {if isset($vo.operate_type) && $vo.operate_type == 1}
+                    <input type="radio" name="operate_type" value="1" title="领取" checked="" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" style="display: none !important;" lay-filter="operate_type">
+                    {elseif isset($vo.operate_type) && $vo.operate_type  == 2}
+                    <input type="radio" name="operate_type" value="1" title="领取"style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享" checked="" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" style="display: none !important;" lay-filter="operate_type">
+                    {elseif isset($vo.operate_type) && $vo.operate_type  == 3}
+                    <input type="radio" name="operate_type" value="1" title="领取"style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" checked="" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" style="display: none !important;" lay-filter="operate_type">
+                    {elseif isset($vo.operate_type) && $vo.operate_type  == 4}
+                    <input type="radio" name="operate_type" value="1" title="领取"style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享"  style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" checked="" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" style="display: none !important;" lay-filter="operate_type">
+                    {elseif isset($vo.operate_type) && $vo.operate_type  == 5}
+                    <input type="radio" name="operate_type" value="1" title="领取"style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" checked="" style="display: none !important;" lay-filter="operate_type">
+                    {else /}
+                    <input type="radio" name="operate_type" value="1" title="领取" checked="" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="2" title="分享" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="3" title="转发" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="4" title="购买" style="display: none !important;" lay-filter="operate_type">
+                    <input type="radio" name="operate_type" value="5" title="跳转网页" style="display: none !important;" lay-filter="operate_type">
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item" id="h5_url" style="display: none">
+                <label class="layui-form-label">H5_URL</label>
+                <div class="layui-input-block">
+                    <input type="text" name="h5_url" value='{$vo.h5_url|default=""}' title="活动方式为跳转网页时必填"
+                           placeholder="活动参与方式为跳转网页时必填" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" id="product" style="display: none">
+                <label class="layui-form-label">产品ID</label>
+                <div class="layui-input-inline" style="width: 20%">
+                    <input type="text" name="product_id" value='{$vo.product_id|default=""}' title="本次参与活动的产品id"
+                           placeholder="本次参与活动的产品id" class="layui-input">
+                </div>
+                <label class="layui-form-label">秒杀价</label>
+                <div class="layui-input-inline" style="width: 20%">
+                    <input type="text" name="product_price" value='{$vo.product_price|default=""}' title="产品秒杀价格"
+                           placeholder="产品秒杀价格" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">奖励金额有效期</label>
+                <div class="layui-input-block">
+                    {if (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["term_of_validity"] == 1)}
+                    <input type="radio" name="term_of_validity" value="1" title="永久可用" checked="" style="display: none !important;">
+                    <input type="radio" name="term_of_validity" value="2" title="活动期可用" style="display: none !important;">
+                    {elseif (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["term_of_validity"] == 2)}
+                    <input type="radio" name="term_of_validity" value="1" title="永久可用" style="display: none !important;">
+                    <input type="radio" name="term_of_validity" value="2" title="活动期可用" checked style="display: none !important;">
+                    {else /}
+                    <input type="radio" name="term_of_validity" value="1" title="永久可用" checked="" style="display: none !important;">
+                    <input type="radio" name="term_of_validity" value="2" title="活动期可用" style="display: none !important;">
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">活动规则说明</label>
+                <div class="layui-input-block">
+                    <textarea class="weui-textarea" name="rule_detail" placeholder="活动规则详细说明" cols="90" rows="5">{$vo.rule_detail|default=""}</textarea>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <input type="hidden" name="created_at" value="{:time()}">
+            <div class="layui-form-item text-center">
+                {if isset($vo['id'])}
+                <input type='hidden' value='{$vo.id}' name='id'>
+                {else}
+                <input type="hidden" name="created_at" value="{:time()}">
+                {/if}
+                <button class="layui-btn" type='submit'>保存</button>
+                <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消吗？" data-close>取消</button>
+            </div>
+            <script>
+                window.form.render();
+            </script>
+
+        </form>
+
+    </div>
+
+<!--    <div style="padding: 15px; text-align: center" class="col-md-6" ng-app="ClassForm">-->
+<!--        同步显示页面效果待开发-->
+<!--        <p>{{name}}</p>-->
+<!--    </div>-->
+</div>
+<script>
+    $(function () {
+        require(['angular'], function () {
+            var app = angular.module('ClassForm', []);
+            console.log(app)
+            app.controller('form', function ($scope) {
+                console.log(111)
+                $scope.name = 'dafads';
+            })
+        })
+    })
+
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        laydate.render({
+            range: '~',
+            elem: '#activity_time',
+            value: ''
+        });
+    })
+    layui.use(['laydate','form'], function () {
+        var form = layui.form;
+        form.on('radio(operate_type)', function (data) {
+            if (data.value == 4) {
+                $('#product').show();
+                $('#h5_url').hide();
+            } else if (data.value == 5) {
+                $('#h5_url').show();
+                $('#product').hide();
+            } else {
+                $('#h5_url').hide();
+                $('#product').hide();
+            }
+        })
+    })
+</script>

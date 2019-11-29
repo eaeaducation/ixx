@@ -113,7 +113,49 @@ class Order extends BasicXcx
         $order->where('o.student_id', '=', $user->id)
             ->order('o.id desc')
             ->field('o.id, o.status, o.price, o.orderno, o.created_at');
-        return $this->success('订单列表获取成功', $order->select());
+        $data = [];
+        foreach ($order->select() as $key => $item) {
+            $data[$key]['id'] = $item['id'];
+            $data[$key]['status'] = $item['status'];
+            $data[$key]['total_price'] = $item['price'];
+            $data[$key]['orderno'] = $item['orderno'];
+            $data[$key]['created'] = date('Y-m-d H:i:s', $item['created_at']);
+            //优惠券
+            $coupon = Db::name('saas_xcx_coupon_detail')
+                ->where('cid', '=', $user->id)
+                ->where('oid', '=', $item['id'])
+                ->where('type', '=', 1)
+                ->where('status', '=', 1)
+                ->sum('amount');
+            $data[$key]['coupon_price'] = $coupon;
+            $detail = Db::name('saas_order_log l')
+                ->join('store_goods g', 'l.goods_id = g.id', 'left')
+                ->field('g.goods_title, g.goods_logo, l.goods_num, l.price')
+                ->where('l.order_id', '=', $item['id'])
+                ->select();
+            if ($detail) {
+                foreach ($detail as $k => $v) {
+                    $data[$key]['goods'][$k]['goods_name'] = $v['goods_title'];
+                    $data[$key]['goods'][$k]['goods_logo'] = $v['goods_logo'];
+                    $data[$key]['goods'][$k]['lesson_num'] = $v['goods_num'];
+                    $data[$key]['goods'][$k]['goods_price'] = $v['price'];
+                }
+            }
+        }
+        return $this->success('订单列表获取成功', $data);
+    }
+
+    public function delOrder()
+    {
+        $this->getUser();
+        $post = $this->request->post();
+        if (!isset($post['id'])) {
+            return $this->error('订单参数错误');
+        }
+        $res = Db::name('saas_order')
+            ->where('id', '=', $post['id'])
+            ->update(['status' => 3]);
+        return $this->success('删除成功', $res);
     }
 
     /**
@@ -123,21 +165,29 @@ class Order extends BasicXcx
     {
         $user = $this->getUser();
         $post = $this->request->post();
-        if (!$post['pids']) {
+        if (!isset($post['pids']) || empty($post['pids'])) {
             return $this->error('请先选择要支付的商品');
         }
         $pids = explode(',', $post['pids']);
         //查询用户购物车需要支付的商品详情
-        $order = Db::name('store_cart')->alias('c')
-            ->join('store_goods g', 'c.gid = g.id', 'left')
-            ->where('c.gid', 'in', $pids)
-            ->where('c.status', '=', 1)
-            ->where('c.cid', '=', $user->id)
-            ->order('c.created_at desc')
-            ->field('c.price, g.goods_title, g.goods_image, c.number, c.param, g.id as gid')
-            ->select();
+        if ($post['type'] == 'cart') {
+            $order = Db::name('store_cart')->alias('c')
+                ->join('store_goods g', 'c.gid = g.id', 'left')
+                ->where('c.gid', 'in', $pids)
+                ->where('c.status', '=', 1)
+                ->where('c.cid', '=', $user->id)
+                ->order('c.created_at desc')
+                ->field('c.price, g.goods_title, g.goods_image, c.number, c.param, g.id as gid')
+                ->select();
+        } else {
+            $order = Db::name('store_goods')->alias('g')
+                ->where('g.id', 'in',  $pids)
+                ->field('g.goods_title, g.goods_image, g.id as gid')
+                ->find();
+        }
+
         //查询用户可用的优惠券
-        $can_use_coupon = Db::name('saas_xcx_activity_detail xad')
+        $can_use_coupon = Db::name('saas_xcx_coupon_detail xad')
             ->join('saas_xcx_activity xa', 'xad.aid = xa.id')
             ->where('xad.cid', '=', $user->id)
             ->where('xad.is_can_use', '=', 1)
@@ -161,6 +211,7 @@ class Order extends BasicXcx
         $sessionid = $this->request->header('sessionid');
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
+        Log::error($post);
         $coupon_id = '';
         if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
             $coupon_id = $post['coupon_ids'];
@@ -178,6 +229,7 @@ class Order extends BasicXcx
             'total_fee' => 1,//intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
+        Log::error($param);die;
         ksort($param);
         $params = post_str($param, false);
         $sign = strtoupper(md5($params . "&key=" . $this->app_mch_key));
@@ -236,10 +288,10 @@ class Order extends BasicXcx
             $order_id = Db::name('saas_order')->insertGetId($order);
             //更新优惠券状态
             if ($couponid) {
-                Db::name('saas_xcx_activity_detail')
+                Db::name('saas_xcx_coupon_detail')
                     ->where('id', '=', $couponid)
                     ->where('cid', '=', $user->id)
-                    ->update(['oid' => $order_id,'status' => 1]);
+                    ->update(['oid' => $orderno,'status' => 1]);
             }
             $order_log = [];
             foreach ($post['data'] as $key => $v) {

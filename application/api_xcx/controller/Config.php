@@ -4,7 +4,9 @@
 namespace app\api_xcx\controller;
 
 
+use app\admin\controller\Log;
 use controller\BasicXcx;
+use service\HttpService;
 use think\Db;
 
 class Config extends BasicXcx
@@ -77,6 +79,32 @@ class Config extends BasicXcx
             ->where('deleted', '=', 0)
             ->order('id desc')
             ->select();
+        foreach ($res as $key=>$item) {
+            $res[$key]['content'] = base64_encode($item['content']);
+        }
         return $this->success("成功!", $res);
+    }
+
+    /**
+     * 获取小程序二维码
+     */
+    public function getQr()
+    {
+        $mobile = $this->request->post('phone');
+        $aid = $this->request->post('activity_id');
+        $access_token = $this->getAccessToken();
+        if ($access_token['access_token']) {
+            $qr_url = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token='.$access_token['access_token'];
+            $data = [
+                'scene' => "phone=$mobile&aid=$aid",
+            ];
+            $header = [
+                'content-type' => 'image/png'
+            ];
+            $res = HttpService::json($qr_url, $data, 30, $header);
+            //分享页头部效果图
+            $share = Db::name('saas_content')->field('title, thumb, content')->where('status', '=', 99)->where('catid', '=', '94')->order('id', 'desc')->find();
+            return $this->success('二维码生成', ['qrcode_url' => base64_encode($res), 'share_picture' => $share['thumb'], 'content' => strip_tags($share['content'])]);
+        }
     }
 }

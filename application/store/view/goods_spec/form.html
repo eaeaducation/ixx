@@ -22,7 +22,7 @@
                             <input required placeholder="价格" title="请输入课程价格" ng-model="x.value" class="layui-input">
                         </td>
                         <td class="param-input-td three nowrap">
-                            <input required placeholder="数量" title="请输入课时数量" ng-model="x.number" class="layui-input">
+                            <input required placeholder="课时" title="请输入课时数量" ng-model="x.number" class="layui-input">
                         </td>
                         <td class="param-input-td thr nowrap">
                             <a ng-if="$index<1" class="color-desc">删除</a>
@@ -187,7 +187,7 @@
         }
 
         .param-input-td.three:before {
-            content: '数量'
+            content: '课时'
         }
 
         .param-input-td:before {

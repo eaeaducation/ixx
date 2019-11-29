@@ -1,5 +1,12 @@
 {extend name="admin@public/content"}
+{block name="style"}
+<style>
+    .layui-form-checkbox {
+        display: none;
+    }
+</style>
 
+{/block}
 {block name="content"}
 <form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
       class='form-horizontal layui-form padding-top-20' id="class-form" lay-filter="class">
@@ -181,6 +188,47 @@
             </table>
         </div>
     </div>
+    <fieldset class="layui-elem-field">
+        <legend>订单信息<span style="font-size: 12px">(若有已支付未分班的订单，请优先选择订单)</span></legend>
+        <div class="layui-field-box">
+            <table class="layui-table" lay-skin="line">
+                <thead>
+                <tr>
+                    <th class="text-center">
+                        <input data-auto-none="" data-check-target='.list-check-box' type='checkbox' style="display: none !important;">
+                    </th>
+                    <th class='text-center nowrap'>订单ID</th>
+                    <th class="text-center nowrap">订单号</th>
+                    <th class="text-center nowrap">支付金额</th>
+                    <th class="text-center nowrap">购买课时</th>
+                    <th class="text-center nowrap">支付方式</th>
+                    <th class="text-center nowrap">下单时间</th>
+                </tr>
+                </thead>
+                <tbody id="orderinfo">
+                <!--{empty name='orderinfo'}-->
+                <tr>
+                    <td style="color: red; text-align: center;" colspan="7">未查询到已支付订单</td>
+                </tr>
+                <!--{else}-->
+                <!--{foreach $orderinfo as $key=>$vo}-->
+                    <tr>
+                        <td class='list-table-check-td'>
+                            <input class="list-check-box" name="oid" value='{$vo.id}' type='radio' style="display: none !important;">
+                        </td>
+                        <td class='text-center nowrap'>{$vo.id}</td>
+                        <td class="text-center nowrap">{$vo.orderno}</td>
+                        <td class="text-center nowrap">{$vo.price}</td>
+                        <td class="text-center nowrap">{$vo.goods_num}</td>
+                        <td class="text-center nowrap">{$vo.pay_type}</td>
+                        <td class="text-center nowrap">{$vo.created_at}</td>
+                    </tr>
+                <!--{/foreach}-->
+                <!--{/empty}-->
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
 
     <fieldset class="layui-elem-field">
         <legend>结算信息</legend>
@@ -303,6 +351,27 @@
                     $('input[name="student[address]"]').val(res.address);
                     $('input[name="student[other_info]"]').val(res.other_info);
                     $('input[name="student[tags]"]').val(res.tags);
+                    $.post('{:url("$classuri/query_orderinfo")}', {id: id}, function (res) {
+                        $("#orderinfo").html('');
+                        var orderhtml = '';
+                        if (res.length > 0) {
+                            for (var i=0; i<res.length; i++) {
+                                orderhtml += '<tr><td class="list-table-check-td">' +
+                                    '                        <input class="list-check-box" name="oid" value='+res[i]["id"]+' type="radio" style="display: none !important;">' +
+                                    '                    </td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["id"]+'</td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["orderno"]+'</td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["price"]+'</td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["goods_num"]+'</td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["pay_type"]+'</td>\n' +
+                                    '                    <td class="text-center nowrap">'+res[i]["created_at"]+'</td></tr>tr>';
+                            }
+                        } else {
+                            orderhtml += '<tr><td colspan="7" style="text-align: center; color: red">未查询到已支付订单</td></tr>'
+                        }
+                        $("#orderinfo").append(orderhtml);
+                        window.form.render();
+                    })
                 });
             };
 

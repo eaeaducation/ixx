@@ -1,8 +1,8 @@
 {extend name='admin@public/content'}
 
 {block name="button"}
-<button data-modal='{:url("$classuri/addcoupon")}' data-title="创建优惠券"
-        class='layui-btn layui-btn-sm layui-btn-primary' data-area="['50%','60%']">创建优惠券
+<button data-modal='{:url("$classuri/addactivity")}' data-title="创建活动"
+        class='layui-btn layui-btn-sm layui-btn-primary' data-area="['40%','60%']">创建活动
 </button>
 {/block}
 
@@ -30,18 +30,18 @@
     <p class="help-block text-center well">没 有 记 录 哦！</p>
     <!--{else}-->
     <input type="hidden" value="resort" name="action">
-    <table class="layui-table notevent" lay-skin="line">
+    <table class="layui-table notevent">
         <thead>
         <tr>
             <!--<th class='list-table-check-td'>-->
             <!--<input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
             <!--</th>-->
-            <th class="text-center nowrap">优惠券主题</th>
-            <th class="text-center nowrap">优惠券发放量</th>
-            <th class="text-center nowrap">优惠券领取量</th>
+            <th class="text-center nowrap">活动主题</th>
+            <th class="text-center nowrap">主题图</th>
             <th class="text-center nowrap">活动时间</th>
-            <th class="text-center nowrap">活动状态</th>
-<!--            <th class="text-center nowrap">预览</th>-->
+            <th class="text-center nowrap">状态</th>
+            <th class="text-center nowrap">参与人数</th>
+            <th class="text-center nowrap">创建时间</th>
             <th class="text-center nowrap">操作</th>
         </tr>
         </thead>
@@ -55,8 +55,7 @@
             <td class="text-center nowrap">
                 {$vo.title}
             </td>
-            <td class="text-center nowrap">{$vo.activity_num|default=0}</td>
-            <td class="text-center nowrap">{$vo.partake_num|default=0}</td>
+            <td class="text-center nowrap"><img style="width: 150px; height: 80px" src="{$vo.theme_img|default=''}"/></td>
             <td class="text-center nowrap">{$vo.beg_time|format_date} ~ {$vo.end_time|format_date}</td>
             <td class="text-center nowrap">
                 {if $time < $vo.beg_time}
@@ -64,19 +63,19 @@
                 {elseif $time > $vo.end_time /}
                 <span class="color-red">已结束</span>
                 {else /}
+                {if $vo.status == 99}
                 <span class="color-green">进行中</span>
+                {else /}
+                <span class="color-red">已结束</span>
+                {/if}
                 {/if}
             </td>
-<!--            <td class="text-center nowrap">-->
-<!--                <a class="layui-btn layui-btn-primary layui-btn-xs" data-area="['50%','50%']" data-title="查看二维码"-->
-<!--                   data-modal='{:url("$classuri/qrcode")}?id={$vo.id}'>-->
-<!--                    <i class="fa fa-qrcode"></i>-->
-<!--                </a>-->
-<!--            </td>-->
+            <td class="text-center nowrap">{$vo.click_num|default=0}</td>
+            <td class="text-center nowrap">{$vo.created_at|format_date}</td>
             <td class="text-center nowrap">
-                <a data-title="活动详情" data-open='{:url("$classuri/detail")}?id={$vo.id}'>活动详情</a>
-                <span class="text-explode">|</span>
-                <a data-title="编辑活动" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['50%','60%']">编辑</a>
+<!--                <a data-title="活动详情" data-open='{:url("$classuri/detail")}?id={$vo.id}'>活动详情</a>-->
+<!--                <span class="text-explode">|</span>-->
+                <a data-title="编辑活动" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['40%','60%']">编辑</a>
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
             </td>

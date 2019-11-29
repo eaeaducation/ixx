@@ -8,9 +8,16 @@ use app\common\model\Customer;
 use controller\BasicXcx;
 use service\HttpService;
 use think\Db;
+use think\Exception;
 use think\facade\Cache;
 use think\facade\Log;
 use think\facade\Session;
+
+/**
+ * Class User
+ * @package app\api_xcx\controller
+ * @method \WeChat\Card card() static 卡券管理
+ */
 
 class User extends BasicXcx
 {
@@ -51,7 +58,7 @@ class User extends BasicXcx
             //解密获取 手机号信息
             $decrypt = $this->decryptData($post['encrypt_data'], $post['iv'], $sessioninfo['session_key']);
             if ($decrypt->phoneNumber) {
-                $customer = $query_user = Db::name('saas_customer')
+                $customer = Db::name('saas_customer')
                     ->where('status', '<>', 3)
                     ->where('parent_tel', '=', $decrypt->phoneNumber)
                     ->find();
@@ -61,6 +68,12 @@ class User extends BasicXcx
                     $data['created_at'] = time();
                     $data['source'] = 22;
                     $customer = Db::name('saas_customer')->insert($data);
+                }
+                $wallet = Db::name('saas_wallet')
+                    ->where('customer_id', '=', $customer['id'])
+                    ->find();
+                if (!$wallet) {
+                    $wallet = Db::name('saas_wallet')->insert(['customer_id' => $customer['id'], 'integration' => 0, 'amount' => 0, 'created_at' => time()]);
                 }
                 return $this->success('用户信息保存成功', $customer);
             }
@@ -113,27 +126,102 @@ class User extends BasicXcx
     {
         $user = $this->getUser();
         $status = $this->request->post('status');
-        $time = time();
-        $coupons = Db::name('saas_xcx_activity_detail sxad')
-            ->join('saas_xcx_activity sxa', 'sxa.id = sxad.aid');
-        if (isset($status) && $status == 0) {
-            $coupons->where('sxad.status', '=', 0);//未使用
-        } elseif (isset($status) && $status == 1) {
-            $coupons->where('sxad.status', '=', 1);//已使用
-        } else {
-            $coupons->where("sxa.end_time < $time");//已过期
-        }
+        $time = time() - 86400;
+        $coupons = Db::name('saas_xcx_coupon_detail sxad')
+            ->join('saas_xcx_coupon sxa', 'sxa.id = sxad.aid');
+//        if (isset($status) && $status == 0) {
+//            $coupons->where('sxad.status', '=', 0);//未使用
+//        } elseif (isset($status) && $status == 1) {
+//            $coupons->where('sxad.status', '=', 1);//已使用
+//        } else {
+//            $coupons->where("sxa.end_time < $time");//已过期
+//        }
         $coupons = $coupons->where('sxad.cid', '=', $user->id)
             ->where('sxa.deleted', '=', 0)
             ->where('sxad.del', '=', 0)
             ->where('sxad.is_can_use', '=', 1)
-            ->field('sxad.id, sxa.title, sxa.beg_time, sxa.end_time, sxa.rule_detail, sxa.activity_theme_img, sxad.amount, sxad.status')
+            ->field('sxad.id, sxa.title, sxa.beg_time, sxa.end_time, sxa.rule_detail, sxa.activity_theme_img, sxad.amount, sxad.status, sxa.activity_rule')
             ->select();
+        $data1 = [];
+        $data2 = [];
+        $data3 = [];
         foreach ($coupons as $key => $value) {
-            $coupons[$key]['beg_time'] = date('Y-m-d', $coupons[$key]['beg_time']);
-            $coupons[$key]['end_time'] = date('Y-m-d', $coupons[$key]['end_time']);
+            $value['beg_time'] = date('Y-m-d', $value['beg_time']);
+            $value['end_time'] = date('Y-m-d', $value['end_time']);
+            if ($status == 0 && $value['status'] == 0) {
+                array_push($data1, $value);
+            } elseif ($status == 1 && $value['status'] == 1) {
+                array_push($data2, $value);
+            } else {
+                $rule = json_decode($value['activity_rule'], 1);
+                if ($rule['term_of_validity'] == 2 && strtotime($value['end_time']) < $time) {
+                    array_push($data3, $value);
+                }
+            }
         }
-        return $this->success('用户在活动中获取的所有优惠', $coupons);
+        if ($status == 0) {
+            return $this->success('未使用优惠券', $data1);
+        } elseif ($status == 1) {
+            return $this->success('已使用优惠券', $data2);
+        } else {
+            return $this->success('过期优惠券', $data3);
+        }
+
     }
+
+    /**
+     * 用户分享结果反
+     */
+    public function userShareeRecode()
+    {
+        $user = $this->getUser();
+        $share_recode = Db::name('saas_xcx_award_detail')
+            ->where('cid', '=', $user->id)
+            ->where('del', '=', 0)
+            ->where('type', '=', 2)
+            ->select();
+        return $this->success('分享记录', $share_recode);
+    }
+
+    /**
+     * 用户领取红包
+     */
+    public function getReward()
+    {
+        $user = $this->getUser();
+        $aid = $this->request->post('activity_id');
+        $user_share_detail = Db::name('saas_xcx_award_detail')
+            ->where('cid', '=', $user->id)
+            ->where('aid', '=', $aid)
+            ->find();
+        if ($user_share_detail['is_can_use'] == 0) {
+            return $this->error('该奖励暂不能领取');
+        }
+        if ($user_share_detail['status'] == 1) {
+            return $this->error('该奖励已领取，勿重复操作');
+        }
+        //领取操作
+        Db::startTrans();
+        try {
+            $data = [
+                'customer_id' => $user->id,
+                'integration' => 0,
+                'amount' => $user_share_detail['amount'],
+                'remark' => '参加活动-'.$user_share_detail['a_titile'],
+                'created_at' => time(),
+                'period_date' => 1
+            ];
+            Db::name('saas_wallet_log')->insert($data);
+            $wallet = Db::name('saas_wallet')->where('customer_id', '=', $user->id)->find();
+            Db::name('saas_wallet')->where('customer_id', '=', $user->id)->update(['amount' => $wallet['amount']]);
+            Db::commit();
+            return $this->success('领取成功');
+        } catch (Exception $e) {
+            Db::rollback();
+            return $this->error('领取失败');
+        }
+    }
+
+
 
 }

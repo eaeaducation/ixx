@@ -1,0 +1,36 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value='{$vo.title|default=""}' required="required" title="请输入消息标题"
+                   placeholder="请输入姓名" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息内容</label>
+        <div class='layui-input-block'>
+            <textarea name="content">{$vo.content|default=''|raw}</textarea>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}
+        <input type='hidden' value='{$vo.id}' name='id'>
+        {else}
+        <input type="hidden" name="created_at" value="{:time()}">
+        {/if}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+    <script>
+        /*! 实例富文本编辑器  */
+        require(['ckeditor'], function () {
+            window.createEditor('[name="content"]', {height: 200});
+        });
+        window.form.render();
+
+    </script>
+
+</form>

@@ -1,11 +1,7 @@
-{extend name='admin@public/content'}
 
-{block name="style"}
-{/block}
-{block name="content"}
 <div class="layui-tab layui-tab-card">
     <!--表单start-->
-    <div style="padding: 15px;" class="col-md-6">
+    <div style="padding: 15px;">
 
         <form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
 
@@ -62,7 +58,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">用户最多可领</label>
                 <div class="layui-input-inline" style="width: 33%">
-                    <input type="number" name="user_coupon_limit_num" value='{if isset($vo.activity_rule)}{:json_decode($vo.activity_rule, 1)["user_coupon_limit_num"]}{else}0{/if}' title="用户单次优惠券活动最多领取张数"
+                    <input type="number" name="user_coupon_limit_num" value='{if isset($vo.activity_rule)}{:json_decode($vo.activity_rule, 1)["user_coupon_limit_num"]}{else}1{/if}' title="用户单次优惠券活动最多领取张数"
                            placeholder="用户单次优惠券活动最多领取张数" class="layui-input">
                 </div>
                 <label class="layui-form-label" style="width: 100px">消费满减限额</label>
@@ -75,10 +71,10 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">优惠券有效期</label>
                 <div class="layui-input-block">
-                    {if (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["full_reducation"] == 1)}
+                    {if (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["term_of_validity"] == 1)}
                     <input type="radio" name="term_of_validity" value="1" title="永久可用" checked="" style="display: none !important;">
                     <input type="radio" name="term_of_validity" value="2" title="活动期可用" style="display: none !important;">
-                    {elseif (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["full_reducation"] == 2)}
+                    {elseif (isset($vo.activity_rule) && json_decode($vo.activity_rule, 1)["term_of_validity"] == 2)}
                     <input type="radio" name="term_of_validity" value="1" title="永久可用" style="display: none !important;">
                     <input type="radio" name="term_of_validity" value="2" title="活动期可用" checked style="display: none !important;">
                     {else /}
@@ -112,10 +108,10 @@
 
     </div>
 
-    <div style="padding: 15px; text-align: center" class="col-md-6" ng-app="ClassForm">
-        同步显示页面效果待开发
-        <p>{{name}}</p>
-    </div>
+<!--    <div style="padding: 15px; text-align: center" class="col-md-6" ng-app="ClassForm">-->
+<!--        同步显示页面效果待开发-->
+<!--        <p>{{name}}</p>-->
+<!--    </div>-->
 </div>
 <script>
     $(function () {
@@ -138,4 +134,3 @@
         });
     })
 </script>
-{/block}

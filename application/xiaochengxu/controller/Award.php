@@ -7,9 +7,9 @@ namespace app\xiaochengxu\controller;
 use controller\BasicAdmin;
 use think\Db;
 
-class Coupon extends BasicAdmin
+class Award extends BasicAdmin
 {
-    public $table = 'saas_xcx_coupon';
+    public $table = 'saas_xcx_award';
 
     /**
      * @return array|string
@@ -20,10 +20,10 @@ class Coupon extends BasicAdmin
      */
     public function index()
     {
-        $this->title = '优惠券活动';
+        $this->title = '参加活动，赢取现金大礼';
         $db = Db::name($this->table)
             ->where('deleted', '=', 0)
-            ->where('type', '=', 1)
+            ->where('type', '=', 2)
             ->order('id desc');
         if ($this->request->has('title')) {
             $db->whereLike('title', $this->request->get('title'));
@@ -31,33 +31,42 @@ class Coupon extends BasicAdmin
         return parent::_list($db, true);
     }
 
-    public function addCoupon()
+    public function addShare()
     {
-        $title = '创建优惠券';
+        $title = '创建活动';
         if ($this->request->isPost()) {
             $post = $this->request->post();
             list($s_time, $e_time) = explode(' ~ ', $post['activity_time']);
             $s_time = strtotime($s_time);
             $e_time = strtotime($e_time) + 86400;
             $rule = [
-              'user_coupon_limit_num' => $post['user_coupon_limit_num'],//用户最多领取多少张
-              'full_reducation' => $post['max_money_limit'],//用户消费满多少可用
-              'term_of_validity' => $post['term_of_validity']//优惠券有效期
+                'user_activity_limit_num' => $post['user_activity_limit_num'],//用户最多领取多少张
+                'max_share_num_limit' => $post['max_share_num_limit'],//用户消费满多少可用
+                'term_of_validity' => $post['term_of_validity']//优惠券有效期
             ];
             $data = [
                 'title' => $post['activity_title'],
-                'type' => 1,
-                'activity_num' => $post['coupon_num'],
-                'single_amount' => $post['coupon_price'],
+                'type' => 2,
+                'activity_num' => $post['activity_num'],
+                'single_amount' => $post['activity_price'],
                 'beg_time' => $s_time,
                 'end_time' => $e_time,
                 'created_at' => time(),
                 'activity_rule' => json_encode($rule),
                 'rule_detail' => $post['rule_detail'],
-                'activity_theme_img' => $post['activity_theme']
+                'activity_theme_img' => $post['activity_theme'],
+                'operate_type' => $post['operate_type'],
             ];
-            Db::name('saas_xcx_coupon')->insert($data);
-            list($base, $spm, $url) = [url('@admin'), $this->request->get('spm'), url('xiaochengxu/coupon/index')];
+            if ($post['operate_type'] == 5) {
+                $data['h5_url'] = $post['h5_url'];
+            } elseif ($post['operate_type'] == 4) {
+                $productinfo = [
+                    'product_id' => $post['product_id'],
+                    'product_price' => $post['product_price']
+                ];
+                $data['product_info'] = json_encode($productinfo);
+            }
+            Db::name('saas_xcx_award')->insert($data);
             $this->success("创建成功!", "");
         }
         return $this->fetch('form', [
@@ -67,12 +76,11 @@ class Coupon extends BasicAdmin
 
     public function edit()
     {
-        $title = '编辑优惠券';
+        $title = '编辑活动';
         $id = $this->request->get('id');
         $coupon = Db::name($this->table)
             ->where('deleted', '=', 0)
             ->where('id', '=', $id)
-            ->where('type', '=', 1)
             ->find();
         if ($this->request->isPost()) {
             $post = $this->request->post();
@@ -80,23 +88,22 @@ class Coupon extends BasicAdmin
             $s_time = strtotime($s_time);
             $e_time = strtotime($e_time) + 86400;
             $rule = [
-                'user_coupon_limit_num' => $post['user_coupon_limit_num'],//用户最多领取多少张
-                'full_reducation' => $post['max_money_limit'],//用户消费满多少可用
+                'user_activity_limit_num' => $post['user_activity_limit_num'],//用户最多领取多少张
+                'max_share_num_limit' => $post['max_share_num_limit'],//用户消费满多少可用
                 'term_of_validity' => $post['term_of_validity']//优惠券有效期
             ];
             $data = [
                 'title' => $post['activity_title'],
-                'type' => 1,
-                'activity_num' => $post['coupon_num'],
-                'single_amount' => $post['coupon_price'],
+                'type' => 2,
+                'activity_num' => $post['activity_num'],
+                'single_amount' => $post['activity_price'],
                 'beg_time' => $s_time,
                 'end_time' => $e_time,
                 'activity_rule' => json_encode($rule),
                 'rule_detail' => $post['rule_detail'],
                 'activity_theme_img' => $post['activity_theme']
             ];
-            Db::name('saas_xcx_coupon')->where('id', $id)->update($data);
-            list($base, $spm, $url) = [url('@admin'), $this->request->get('spm'), url('xiaochengxu/coupon/index')];
+            Db::name('saas_xcx_award')->where('id', $id)->update($data);
             $this->success("编辑成功!", "");
         }
         return $this->fetch('form', [
@@ -110,7 +117,6 @@ class Coupon extends BasicAdmin
         $id = $this->request->get('id');
         $coupon = Db::name($this->table)
             ->where('deleted', '=', 0)
-            ->where('type', '=', 1)
             ->where('id', '=', $id)
             ->find();
         if (!$coupon) {
@@ -118,7 +124,6 @@ class Coupon extends BasicAdmin
         }
         $res = Db::name($this->table)
             ->where('id', '=', $id)
-            ->where('type', '=', 1)
             ->update(['deleted'=> 1]);
         if ($res) {
             $this->success('删除成功');
@@ -130,7 +135,7 @@ class Coupon extends BasicAdmin
     {
         $id = $this->request->get('id');
         $this->title = '优惠券活动详情';
-        $db = Db::name('saas_xcx_coupon_detail')
+        $db = Db::name('saas_xcx_award_detail')
             ->where('del', '=', 0)
             ->where('aid', '=', $id)
             ->order('id desc');

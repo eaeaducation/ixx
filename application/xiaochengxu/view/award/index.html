@@ -1,8 +1,8 @@
 {extend name='admin@public/content'}
 
 {block name="button"}
-<button data-modal='{:url("$classuri/addcoupon")}' data-title="创建优惠券"
-        class='layui-btn layui-btn-sm layui-btn-primary' data-area="['50%','60%']">创建优惠券
+<button data-modal='{:url("$classuri/addshare")}' data-title="创建活动"
+        class='layui-btn layui-btn-sm layui-btn-primary' data-area="['45%','75%']">创建活动
 </button>
 {/block}
 
@@ -36,9 +36,9 @@
             <!--<th class='list-table-check-td'>-->
             <!--<input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
             <!--</th>-->
-            <th class="text-center nowrap">优惠券主题</th>
-            <th class="text-center nowrap">优惠券发放量</th>
-            <th class="text-center nowrap">优惠券领取量</th>
+            <th class="text-center nowrap">活动主题</th>
+            <th class="text-center nowrap">奖励发放量</th>
+            <th class="text-center nowrap">奖励领取量</th>
             <th class="text-center nowrap">活动时间</th>
             <th class="text-center nowrap">活动状态</th>
 <!--            <th class="text-center nowrap">预览</th>-->
@@ -67,16 +67,10 @@
                 <span class="color-green">进行中</span>
                 {/if}
             </td>
-<!--            <td class="text-center nowrap">-->
-<!--                <a class="layui-btn layui-btn-primary layui-btn-xs" data-area="['50%','50%']" data-title="查看二维码"-->
-<!--                   data-modal='{:url("$classuri/qrcode")}?id={$vo.id}'>-->
-<!--                    <i class="fa fa-qrcode"></i>-->
-<!--                </a>-->
-<!--            </td>-->
             <td class="text-center nowrap">
                 <a data-title="活动详情" data-open='{:url("$classuri/detail")}?id={$vo.id}'>活动详情</a>
                 <span class="text-explode">|</span>
-                <a data-title="编辑活动" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['50%','60%']">编辑</a>
+                <a data-title="编辑活动" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['45%','75%']">编辑</a>
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
             </td>

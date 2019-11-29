@@ -19,6 +19,7 @@ use app\common\model\Customer;
 use service\HttpService;
 use service\ToolsService;
 use think\exception\HttpResponseException;
+use think\facade\Cache;
 use think\facade\Response;
 use think\facade\Session;
 use think\facade\Config;
@@ -122,13 +123,17 @@ class BasicXcx
      */
     protected function getAccessToken()
     {
+        if (Cache::has('xcx_token')) {
+            return ['access_token' => Cache::get('xcx_token')];
+        }
         $url = $this->wxapi_url . 'cgi-bin/token?grant_type=client_credential&appid='.$this->app_id.'&secret='.$this->app_secret;
         $res = HttpService::get($url,[]);
         $row = json_decode($res, 1);
-        if ($row['errcode'] != 0) {
+        if (!isset($row['access_token'])) {
             return $this->error($row['errmsg']);
         }
-        return $this->success('token获取成功', ['access_token' => $row['access_token']]);
+        Cache::set('xcx_token', $row['access_token'], 7000);
+        return ['access_token' => $row['access_token']];
     }
 
     /**
@@ -149,6 +154,7 @@ class BasicXcx
         $aesCipher = base64_decode($encryptedData);
         $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
         $dataObj = json_decode($result);
+        \think\facade\Log::error($dataObj);
         if($dataObj == NULL) {
             \think\facade\Log::error('aes 解密失败');
             return $this->error('数据异常');

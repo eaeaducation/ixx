@@ -1,8 +1,8 @@
 {extend name='admin@public/content'}
 
 {block name="button"}
-<button data-open='{:url("$classuri/addMessage")}' data-title="发布消息"
-        class='layui-btn layui-btn-sm layui-btn-primary'>发布消息
+<button data-modal='{:url("$classuri/addMessage")}' data-title="发布消息"
+        class='layui-btn layui-btn-sm layui-btn-primary' data-area="['50%','60%']">发布消息
 </button>
 {/block}
 
@@ -33,12 +33,12 @@
     <table class="layui-table notevent" >
         <thead>
         <tr>
-            <th class='list-table-check-td'>
-            <input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>
-            </th>
+<!--            <th class='list-table-check-td'>-->
+<!--            <input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
+<!--            </th>-->
             <th class="text-center nowrap">ID</th>
             <th class="text-center nowrap">标题</th>
-            <th class="text-center nowrap">内容</th>
+            <th class="text-center ">内容</th>
             <th class="text-center nowrap">操作</th>
         </tr>
         </thead>
@@ -46,18 +46,18 @@
         <tbody>
         {foreach $list as $key=>$vo}
         <tr>
-            <td class='list-table-check-td text-top'>
-            <input class="list-check-box" value='{$vo.id}' type='checkbox'>
-            </td>
+<!--            <td class='list-table-check-td text-top'>-->
+<!--            <input class="list-check-box" value='{$vo.id}' type='checkbox'>-->
+<!--            </td>-->
             <td class="text-center nowrap">
                 {$vo.id|default=""}
             </td>
             <td class="text-center nowrap">
                 {$vo.title|default=""}
             </td>
-            <td class="text-center nowrap">{$vo.content|default=""}</td>
+            <td class="text-center " style="width: 50%">{:strip_tags($vo.content)}</td>
             <td class="text-center nowrap">
-                <a data-title="编辑消息" data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                <a data-title="编辑消息" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['50%','60%']">编辑</a>
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}?id={$vo.id}'>删除</a>
             </td>
