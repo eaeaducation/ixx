@@ -91,11 +91,12 @@ class User extends BasicXcx
         if (!$post['phone']) {
             return $this->error('参数错误');
         }
-        $query_user = Db::name('saas_customer')
-            ->where('status', '<>', 3)
-            ->where('parent_tel', '=', $post['phone'])
+        $query_user = Db::name('saas_customer c')
+            ->join('saas_wallet w', 'w.customer_id = c.id', 'left')
+            ->where('c.status', '<>', 3)
+            ->where('c.parent_tel', '=', $post['phone'])
             ->find();
-        return $this->success('用户信息保存成功', $query_user);
+        return $this->success('用户信息', $query_user);
     }
 
     /**
@@ -117,6 +118,26 @@ class User extends BasicXcx
         $user->parent_tel = trim($post['mobile']);
         $user->save();
         return $this->success('手机号绑定成功', []);
+    }
+
+    /**
+     * user center
+     */
+    public function userWallet()
+    {
+        $user = $this->getUser();
+        $current_time = time();
+        $userinfo = Db::name('saas_customer c')
+            ->join('saas_wallet w', 'w.customer_id = c.id', 'left')
+            ->where('c.status', '<>', 3)
+            ->where('c.id', '=', $user->id)
+            ->find();
+        $activity = Db::name('saas_xcx_award')
+            ->where('beg_time', '<', $current_time)
+            ->where('end_time', '>', $current_time-86400)
+            ->where('deleted', '=', 0)
+            ->select();
+        return $this->success('用户信息', ['userinfo' => $userinfo, 'awards' => $activity]);
     }
 
     /**
