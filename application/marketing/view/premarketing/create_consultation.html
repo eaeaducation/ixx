@@ -343,9 +343,9 @@
             var cc = '<select name="collect_id"><option value="">-请选择-</option>';
             $.each(data, function(key, val){
                 if($.inArray(val.authorize, [11,3,5]) != -1){
-                    cc += '<option value="' + val.id + '">' + val.name + '</option>option>';
+                    cc += '<option value="' + val.id + '">' + val.name +'&nbsp'+ val.english_name + '</option>option>';
                 }
-                sale += '<option value="' + val.id + '">' + val.name + '</option>option>';
+                sale += '<option value="' + val.id + '">' + val.name +'&nbsp'+ val.english_name + '</option>option>';
             })
             sale += '</select>';
             cc += '</select>';

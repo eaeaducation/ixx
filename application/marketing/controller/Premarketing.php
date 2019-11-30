@@ -404,7 +404,7 @@ class Premarketing extends BasicAdmin
             $branch = $this->request->request('school');
             $res = Db::name('saas_employee')->alias('e')
                 ->join('system_user u', 'e.userid = u.id', 'left')
-                ->field('e.name,u.id,e.userid,u.authorize')
+                ->field('e.name,u.id,e.userid,u.authorize,e.english_name')
                 ->where('e.department', '=', $branch)
                 ->select();
             $this->success('', '', $res);
