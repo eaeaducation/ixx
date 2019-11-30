@@ -206,10 +206,10 @@
                 <span class="text-explode">|</span>
                 <a data-open='{:url("educational/student/add")}?id={$vo.id}&spm=m-58-71-92' data-title="报名">报名</a>
                 {/if}
-                {if auth("educational/trial_class/fast_add")}
+                {if auth("educational/trialclass/fast_add")}
                 {if !isset($vo.trial_class_id)}
                 <span class="text-explode">|</span>
-                <a data-modal='{:url("educational/trial_class/fast_add")}?id={$vo.id}&spm=m-58-71-92' data-title="体验课报名">体验课报名</a>
+                <a data-modal='{:url("educational/trialclass/fast_add")}?id={$vo.id}&spm=m-58-71-92' data-title="体验课报名">体验课报名</a>
                 {/if}
                 {/if}
             </td>
