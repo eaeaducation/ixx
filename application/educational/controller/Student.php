@@ -89,7 +89,6 @@ class Student extends BasicAdmin
     protected function _form_filter(&$vo)
     {
         if ($this->request->isPost()) {
-            Log::error($vo);die;
             if (empty($vo['student']['name'] && $vo['student']['parent_name'] && $vo['student']['parent_tel'])) $this->error('带星号为必填项');
             if (empty($vo['class_id']) && empty($vo['courses'])) $this->error('请选择班级或课程报名');
             !isset($vo['student']['birthday']) || $vo['student']['birthday'] = strtotime($vo['student']['birthday']);

@@ -150,13 +150,6 @@ class User extends BasicXcx
         $time = time() - 86400;
         $coupons = Db::name('saas_xcx_coupon_detail sxad')
             ->join('saas_xcx_coupon sxa', 'sxa.id = sxad.aid');
-//        if (isset($status) && $status == 0) {
-//            $coupons->where('sxad.status', '=', 0);//未使用
-//        } elseif (isset($status) && $status == 1) {
-//            $coupons->where('sxad.status', '=', 1);//已使用
-//        } else {
-//            $coupons->where("sxa.end_time < $time");//已过期
-//        }
         $coupons = $coupons->where('sxad.cid', '=', $user->id)
             ->where('sxa.deleted', '=', 0)
             ->where('sxad.del', '=', 0)
