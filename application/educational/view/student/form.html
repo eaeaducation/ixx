@@ -226,7 +226,7 @@
             </label>
             <div class='col-sm-2'>
                 {if in_array(session('user.authorize'),[1,3,4,22])}
-                {:get_branches_select('student[branch]', isset($vo.branch)?$vo.branch:'', '', [], false)}
+                {:get_branches_select('student[branch]', isset($vo.branch)?$vo.branch:'', '', ["lay-filter"=>"campus"], false)}
                 {else/}
                 <input type="text" class="layui-input" value={:convert_branch(session('user.employee.department'))}
                        readonly>
@@ -241,9 +241,15 @@
                 {:get_channels_select('student[source]', isset($vo.source)?$vo.source:'', '', [], false)}
             </div>
             <label class="col-sm-1 control-label">
-                cc
+                采单员
             </label>
-            <div class='col-sm-2'>
+            <div class='col-sm-2' id="sale">
+                {:get_employee_select('', 'sales_id', session('user.employee.department'), session('user.id'), '', [], false)}
+            </div>
+            <label class="col-sm-1 control-label">
+                销售员(CC)
+            </label>
+            <div class='col-sm-2' id="cc">
                 {:get_sellers_select('cc','student[collect_id]', '', '', [],false)}
             </div>
         </div>
@@ -518,5 +524,30 @@
         f = Math.round(x * 100) / 100;
         return f;
     }
+
+    /**
+     * 校区二级联动
+     */
+    form.on('select(campus)', function (data) {
+        $('#sale').children().remove();
+        $('#cc').children().remove();
+        $.post('{:url("marketing/premarketing/get_sales")}', {"school": data.value}, function (info) {
+            console.log(info)
+            var data = info.data;
+            var sale = '<select name="sales_id"><option value="">-请选择-</option>';
+            var cc = '<select name="collect_id"><option value="">-请选择-</option>';
+            $.each(data, function(key, val){
+                if($.inArray(val.authorize, [11,3,5]) != -1){
+                    cc += '<option value="' + val.id + '">' + val.name +'&nbsp'+ val.english_name + '</option>option>';
+                }
+                sale += '<option value="' + val.id + '">' + val.name +'&nbsp'+ val.english_name + '</option>option>';
+            })
+            sale += '</select>';
+            cc += '</select>';
+            $('#sale').append(sale);
+            $('#cc').append(cc);
+            window.form.render();
+        })
+    })
 </script>
 {/block}

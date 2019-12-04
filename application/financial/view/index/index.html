@@ -64,7 +64,9 @@
             <th class="text-center">学员姓名</th>
             <th class="text-center">订单收入</th>
             <th class="text-center">校区</th>
-            <th class="text-center">销售员</th>
+            <th class="text-center">采单员</th>
+            <th class="text-center">CC</th>
+            <th class="text-center">老师</th>
             <th class="text-center">类型</th>
             <th class="text-center">经办人</th>
             <th class="text-center">创建时间</th>
@@ -77,6 +79,8 @@
             <td class="text-center">￥{$vo.price}元</td>
             <td class="text-center">{$vo.branch|convert_branch}</td>
             <td class="text-center">{$vo.sales_id|get_employee_name2}</td>
+            <td class="text-center">{$vo.collect_id|get_employee_name2}</td>
+            <td class="text-center">{$vo.teacher_id|get_employee_name}</td>
             {if $vo.type == 1}
             <td class="text-center">报名</td>
             {elseif $vo.type == 2 /}
