@@ -33,7 +33,7 @@
                 <label class="col-sm-1 control-label">
                     姓名
                 </label>
-                <div class='col-sm-2'>
+                <div class='col-sm-3'>
                     <input type="text" name="name" required="required"
                            pattern="^.{2,}$"
                            value='{$vo.name|default=""}'
@@ -43,7 +43,7 @@
                 <label class="col-sm-1 control-label">
                     是否是教师
                 </label>
-                <div class='col-sm-2'>
+                <div class='col-sm-3'>
                     {if empty($vo.is_teacher)}
                     <input type='radio' name='is_teacher' value='1' title='是' style="display: none !important;" lay-filter="is_teacher" />
                     <input type='radio' name='is_teacher' value='0' checked title='否' lay-filter="is_teacher"
@@ -57,7 +57,7 @@
                 <label class="col-sm-1 control-label cross_campus" style="display: none;">
                     跨校区上课
                 </label>
-                <div class='col-sm-2 cross_campus' style="display: none">
+                <div class='col-sm-3 cross_campus' style="display: none">
                     {if empty($vo.is_cross_campus)}
                     <input type='radio' name='is_cross_campus' value='1' title='是' style="display: none !important;"/>
                     <input type='radio' name='is_cross_campus' value='0' checked title='否'
@@ -69,12 +69,7 @@
                     {/if}
                 </div>
 
-                <label class="col-sm-1 control-label">
-                    性别
-                </label>
-                <div class='col-sm-2'>
-                    {:get_category_radio(3, 'gender', isset($vo.gender)?$vo.gender:'', '')}
-                </div>
+
             </div>
             <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
@@ -115,19 +110,16 @@
         <div data-consultation-type="other" class="form-item" style="display:none;">
             <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
-                    生日
+                    性别
                 </label>
                 <div class='col-sm-3'>
-                    <input type="text" name="birthday"
-                           value='{$vo.birthday|default=""|date="Y-m-d"}' class="layui-input" placeholder="请选择生日">
+                    {:get_category_radio(3, 'gender', isset($vo.gender)?$vo.gender:'', '')}
                 </div>
                 <label class="col-sm-1 control-label">
-                    人事状态
+                    员工状态
                 </label>
                 <div class='col-sm-3'>
-                    {:get_category_select(17, 'personnel_status',
-                    isset($vo.personnel_status)?$vo.personnel_status:'',
-                    '', [], false)}
+                    {:get_category_radio(23, 'status', isset($vo.status)?$vo.status:'1', '')}
                 </div>
                 <label class="col-sm-1 control-label">
                     婚姻状态
@@ -137,67 +129,195 @@
                     '')}
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="col-sm-1 control-label">
-                    邮箱
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="email"
-                           value='{$vo.email|default=""}' class="layui-input" placeholder="请输入邮箱">
-                </div>
-                <label class="col-sm-1 control-label">
-                    居住地址
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="live_address"
-                           value='{$vo.live_address|default=""}' class="layui-input" placeholder="请输入居住地址">
-                </div>
-                <label class="col-sm-1 control-label">
-                    员工状态
-                </label>
-                <div class='col-sm-3'>
-                    {:get_category_radio(23, 'status', isset($vo.status)?$vo.status:'1', '')}
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
+                    身份证号
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="id_no"
+                           value='{$vo.id_no|default=""}' class="layui-input" placeholder="请输入身份证信息">
+                </div>
+                <label class="col-sm-1 control-label">
                     籍贯
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="origin"
                            value='{$vo.origin|default=""}' class="layui-input" placeholder="请输入籍贯信息">
                 </div>
                 <label class="col-sm-1 control-label">
                     民族
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="nationality"
                            value='{$vo.nationality|default=""}' class="layui-input" placeholder="请输入民族信息">
-                </div>
-
-                <label class="col-sm-1 control-label">
-                    身份证号
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="id_no"
-                           value='{$vo.id_no|default=""}' class="layui-input" placeholder="请输入身份证信息">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="col-sm-1 control-label">
-                    微信
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="wechat"
-                           value='{$vo.wechat|default=""}' class="layui-input" placeholder="请输入微信号码">
                 </div>
                 <label class="col-sm-1 control-label">
                     政治面貌
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="political_status"
                            value='{$vo.political_status|default=""}' class="layui-input" placeholder="请输入政治面貌">
+                </div>
+
+
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    生日
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="birthday"
+                           value='{$vo.birthday|default=""|date="Y-m-d"}' class="layui-input" placeholder="请选择生日">
+                </div>
+                <label class="col-sm-1 control-label">
+                    微信
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="wechat"
+                           value='{$vo.wechat|default=""}' class="layui-input" placeholder="请输入微信号码">
+                </div>
+                <label class="col-sm-1 control-label">
+                    QQ号码
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="qq"
+                           value='{$vo.qq|default=""}' class="layui-input" placeholder="请输入qq号码">
+                </div>
+                <label class="col-sm-1 control-label">
+                    邮箱
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="email"
+                           value='{$vo.email|default=""}' class="layui-input" placeholder="请输入邮箱">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    人事状态
+                </label>
+                <div class='col-sm-2'>
+                    {:get_category_select(17, 'personnel_status',
+                    isset($vo.personnel_status)?$vo.personnel_status:'',
+                    '', [], false)}
+                </div>
+                <label class="col-sm-1 control-label">
+                    劳务关系
+                </label>
+                <div class='col-sm-2'>
+                    {:get_category_select(22, 'lw_status', isset($vo.lw_status)?$vo.lw_status:'', '', [], false)}
+                </div>
+                <label class="col-sm-1 control-label">
+                    社保状态
+                </label>
+                <div class='col-sm-2'>
+                    {:get_category_select(20, 'social_security_status',
+                    isset($vo.social_security_status)?$vo.social_security_status:'', '', [], false)}
+                </div>
+                <label class="col-sm-1 control-label">
+                    户口类型
+                </label>
+                <div class="col-sm-2">
+                    <select name="househole_type">
+                        <option value="">请选择</option>
+                        <option value="农业">农业</option>
+                        <option value="城镇">城镇</option>
+                    </select>
+                    <script>
+                        $(function () {
+                            var birthday = '{$Think.get.birthday}';
+                            $("select#birthday option[value='" + birthday + '\']').attr('selected', true)
+                        })
+                    </script>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    教龄
+                </label>
+                <div class='col-sm-2'>
+                    <input type="number" name="school_age"
+                           value='{$vo.school_age|default="0"}' class="layui-input" placeholder="请输入教龄">
+                </div>
+                <label class="col-sm-1 control-label">
+                    工龄
+                </label>
+                <div class='col-sm-2'>
+                    <input type="number" name="work_age"
+                           value='{$vo.work_age|default="0"}' class="layui-input" placeholder="请输入教龄">
+                </div>
+                <label class="col-sm-1 control-label">
+                    身份证地址
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="idcard_address"
+                           value='{$vo.idcard_address|default=""}' class="layui-input" placeholder="请输入身份证地址">
+                </div>
+
+                <label class="col-sm-1 control-label">
+                    居住地址
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="live_address"
+                           value='{$vo.live_address|default=""}' class="layui-input" placeholder="请输入居住地址">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+
+
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    入职渠道
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="entry_channels"
+                           value='{$vo.entry_channels|default=""}' class="layui-input" placeholder="请选择转正时间">
+                </div>
+                <label class="col-sm-1 control-label">
+                    转正时间
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="zz_date"
+                           value='{$vo.zz_date|default=""|date="Y-m-d"}' class="layui-input" placeholder="请选择转正时间">
+                </div>
+                <label class="col-sm-1 control-label">
+                    员工卡号
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="icard"
+                           value='{$vo.icard|default=""}' class="layui-input" placeholder="请输入员工卡号">
+                </div>
+                <label class="col-sm-1 control-label">
+                    标签
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="tags"
+                           value='{$vo.tags|default=""}' class="layui-input" placeholder="请输入标签信息">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    教师简介
+                </label>
+                <div class='col-sm-11'>
+                    <textarea name="description" class="layui-textarea">{$vo.description|default=""}</textarea>
+                </div>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>学历信息</legend>
+            </fieldset>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    毕业时间
+                </label>
+                <div class='col-sm-3'>
+                    <input type="text" name="graduation_time"
+                           value='{$vo.graduation_time|default=""}' class="layui-input" placeholder="请选择毕业时间">
                 </div>
                 <label class="col-sm-1 control-label">
                     毕业学校
@@ -206,124 +326,188 @@
                     <input type="text" name="school"
                            value='{$vo.school|default=""}' class="layui-input" placeholder="请输入毕业学校">
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
-                    学历
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="education"
-                           value='{$vo.education|default=""}' class="layui-input" placeholder="请选择学历">
-                </div>
-                <label class="col-sm-1 control-label">
-                    专业
+                    所学专业
                 </label>
                 <div class='col-sm-3'>
                     <input type="text" name="profession"
                            value='{$vo.profession|default=""}' class="layui-input" placeholder="请输入专业信息">
                 </div>
-                <label class="col-sm-1 control-label">
-                    教龄
-                </label>
-                <div class='col-sm-3'>
-                    <input type="number" name="school_age"
-                           value='{$vo.school_age|default=""}' class="layui-input" placeholder="请输入教龄">
-                </div>
             </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>合同信息</legend>
+            </fieldset>
             <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
-                    劳务关系
+                    合同开始时间
                 </label>
-                <div class='col-sm-3'>
-                    {:get_category_select(22, 'lw_status', isset($vo.lw_status)?$vo.lw_status:'', '', [], false)}
-                </div>
-                <label class="col-sm-1 control-label">
-                    社保状态
-                </label>
-                <div class='col-sm-3'>
-                    {:get_category_select(20, 'social_security_status',
-                    isset($vo.social_security_status)?$vo.social_security_status:'', '', [], false)}
-                </div>
-                <label class="col-sm-1 control-label">
-                    转正时间
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="zz_date"
-                           value='{$vo.zz_date|default=""|date="Y-m-d"}' class="layui-input" placeholder="请选择转正时间">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="col-sm-1 control-label">
-                    合同开始日期
-                </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="contract_date_begin"
                            value='{$vo.contract_date_begin|default=""|date="Y-m-d"}' class="layui-input"
                            placeholder="请选择合同开始日期">
                 </div>
                 <label class="col-sm-1 control-label">
-                    合同结束日期
+                    合同结束时间
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="contract_date_end"
                            value='{$vo.contract_date_end|default=""|date="Y-m-d"}' class="layui-input"
                            placeholder="请选择合同结束日期">
                 </div>
                 <label class="col-sm-1 control-label">
+                    试用期结束时间
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="contract_date_end"
+                           value='{$vo.contract_date_end|default=""|date="Y-m-d"}' class="layui-input"
+                           placeholder="请选择试用期结束日期">
+                </div>
+
+                <label class="col-sm-1 control-label">
                     合同状态
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     {:get_category_select(21, 'contract_status', isset($vo.contract_status)?$vo.contract_status:'',
                     '',
                     [], false)}
                 </div>
             </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>薪资信息</legend>
+            </fieldset>
             <div class="layui-form-item">
-
-                <label class="col-sm-1 control-label">
-                    工资卡开户行
-                </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="pay_card_type"
-                           value='{$vo.pay_card_type|default=""}' class="layui-input" placeholder="请输入开户行">
-                </div>
                 <label class="col-sm-1 control-label">
                     工资卡号
                 </label>
-                <div class='col-sm-3'>
+                <div class='col-sm-2'>
                     <input type="text" name="pay_card"
                            value='{$vo.pay_card|default=""}' class="layui-input" placeholder="请输入工资卡号">
                 </div>
                 <label class="col-sm-1 control-label">
-                    标签
+                    开户行
                 </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="tags"
-                           value='{$vo.tags|default=""}' class="layui-input" placeholder="请输入标签信息">
+                <div class='col-sm-2'>
+                    <input type="text" name="pay_card_type"
+                           value='{$vo.pay_card_type|default=""}' class="layui-input" placeholder="请输入开户行">
+                </div>
+                <label class="col-sm-1 control-label">
+                    试用基础薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="probation_basic_salary"
+                           value='{$vo.probation_basic_salary|default="0"}' class="layui-input" placeholder="试用基础薪资">
+                </div>
+                <label class="col-sm-1 control-label">
+                    转正基础薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="formal_basic_salary"
+                           value='{$vo.formal_basic_salary|default="0"}' class="layui-input" placeholder="转正基础薪资">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    试用绩效薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="probation_merits_salary"
+                           value='{$vo.probation_merits_salary|default="0"}' class="layui-input" placeholder="试用绩效薪资">
+                </div>
+                <label class="col-sm-1 control-label">
+                    转正绩效薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="formal_merits_salary"
+                           value='{$vo.formal_merits_salary|default="0"}' class="layui-input" placeholder="转正绩效薪资">
+                </div>
+                <label class="col-sm-1 control-label">
+                    试用补助薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="probation_subsidy_salary"
+                           value='{$vo.probation_subsidy_salary|default="0"}' class="layui-input" placeholder="试用补助薪资">
+                </div>
+                <label class="col-sm-1 control-label">
+                    转正补助薪资
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="formal_subsidy_salary"
+                           value='{$vo.formal_subsidy_salary|default="0"}' class="layui-input" placeholder="转正补助薪资">
+                </div>
+
+            </div>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>履历信息&nbsp&nbsp<span style="color: green; font-size: 14px">(前两份工作信息)</span></legend>
+            </fieldset>
+            <div class="layui-form-item">
+                <label class="col-sm-1 control-label">
+                    工作时间1
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="work_time1"
+                           value='{$vo.work_time1|default=""}' class="layui-input"
+                           placeholder="请选择工作时间">
+                </div>
+                <label class="col-sm-1 control-label">
+                    工作单位
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="work_company1"
+                           value='{$vo.work_company1|default=""}' class="layui-input"
+                           placeholder="请输入工作单位">
+                </div>
+                <label class="col-sm-1 control-label">
+                    工作岗位
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="work_station1"
+                           value='{$vo.work_station1|default=""}' class="layui-input"
+                           placeholder="请输入工作岗位">
+                </div>
+
+                <label class="col-sm-1 control-label">
+                    离职原因
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="reasons_for_leaving1"
+                           value='{$vo.reasons_for_leaving1|default=""}' class="layui-input"
+                           placeholder="用简短语言说明离职原因">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
-                    QQ号码
+                    工作时间2
                 </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="qq"
-                           value='{$vo.qq|default=""}' class="layui-input" placeholder="请输入qq号码">
+                <div class='col-sm-2'>
+                    <input type="text" name="work_time2"
+                           value='{$vo.work_time2|default=""}' class="layui-input"
+                           placeholder="请选择工作时间">
                 </div>
                 <label class="col-sm-1 control-label">
-                    员工卡号
+                    工作单位
                 </label>
-                <div class='col-sm-3'>
-                    <input type="text" name="icard"
-                           value='{$vo.icard|default=""}' class="layui-input" placeholder="请输入员工卡号">
+                <div class='col-sm-2'>
+                    <input type="text" name="work_company2"
+                           value='{$vo.work_company2|default=""}' class="layui-input"
+                           placeholder="请输入工作单位">
                 </div>
-            </div>
-            <div class="layui-form-item">
                 <label class="col-sm-1 control-label">
-                    教师简介
+                    工作岗位
                 </label>
-                <div class='col-sm-10'>
-                    <textarea name="description" class="layui-textarea">{$vo.description|default=""}</textarea>
+                <div class='col-sm-2'>
+                    <input type="text" name="work_station2"
+                           value='{$vo.work_station2|default=""}' class="layui-input"
+                           placeholder="请输入工作岗位">
+                </div>
+
+                <label class="col-sm-1 control-label">
+                    离职原因
+                </label>
+                <div class='col-sm-2'>
+                    <input type="text" name="reasons_for_leaving2"
+                           value='{$vo.reasons_for_leaving2|default=""}' class="layui-input"
+                           placeholder="用简短语言说明离职原因">
                 </div>
             </div>
         </div>
@@ -398,6 +582,9 @@
     window.laydate.render({range: false, elem: 'input[name="zz_date"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: false, elem: 'input[name="contract_date_begin"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: false, elem: 'input[name="contract_date_end"]'});
+    window.laydate.render({range: false, elem: 'input[name="graduation_time"]', max: '{:date("Y-m-d")}'});
+    window.laydate.render({range: '~', elem: 'input[name="work_time1"]', max: '{:date("Y-m")}',type: 'month'});
+    window.laydate.render({range: '~', elem: 'input[name="work_time2"]', max: '{:date("Y-m")}',type: 'month'});
 
     function showMore() {
         $("[data-consultation-type='other']").toggle();
