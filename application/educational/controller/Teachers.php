@@ -55,14 +55,14 @@ class Teachers extends BasicAdmin
 //        empty($source) || $db->where('e.source', '=', $source);
 //        empty($branch) || $db->where('e.department', '=', $branch);
         if (isset($branch) && !empty($branch)) {
-            $db->where('e.department', '=', $branch);
+            $db->where('s.department', '=', $branch);
         }
         if (isset($keyword) && !empty($keyword)) {
             $db->where(['e.name|e.english_name' => $keyword]);
         }
         if (!in_array($this->user['authorize'], [1, 3, 4, 22])) {
-            $db->where('e.department', '=', $this->user['employee']['department']);
-//            $db->where('s.branch', '=', $this->user['employee']['department']);
+//            $db->where('e.department', '=', $this->user['employee']['department']);
+            $db->where('s.branch', '=', $this->user['employee']['department']);
         }
         return parent::_list($db, true);
     }
