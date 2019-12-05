@@ -55,7 +55,7 @@ class Teachers extends BasicAdmin
 //        empty($source) || $db->where('e.source', '=', $source);
 //        empty($branch) || $db->where('e.department', '=', $branch);
         if (isset($branch) && !empty($branch)) {
-            $db->where('s.department', '=', $branch);
+            $db->where('s.branch', '=', $branch);
         }
         if (isset($keyword) && !empty($keyword)) {
             $db->where(['e.name|e.english_name' => $keyword]);
