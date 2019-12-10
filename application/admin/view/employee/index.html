@@ -111,6 +111,7 @@
                 {/empty}
             </td>
             <td class="text-nowrap text-center nowrap">
+                <a data-title="查看员工信息" data-modal='{:url("$classuri/infoview")}?id={$vo.id}' data-area="['60%', '50%']">查看</a>
                 {if auth("$classuri/edit")}
                 <span class="text-explode">|</span>
                 <a data-title="编辑员工信息" data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>

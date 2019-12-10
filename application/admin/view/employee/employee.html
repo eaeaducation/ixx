@@ -220,9 +220,19 @@
                 </label>
                 <div class="col-sm-2">
                     <select name="househole_type">
+                        {if isset($vo['househole_type']) && $vo['househole_type'] == '农业'}
+                        <option value="">请选择</option>
+                        <option value="农业" selected>农业</option>
+                        <option value="城镇">城镇</option>
+                        {elseif (isset($vo['househole_type']) && $vo['househole_type'] == '城镇')}
+                        <option value="">请选择</option>
+                        <option value="农业">农业</option>
+                        <option value="城镇" selected>城镇</option>
+                        {else /}
                         <option value="">请选择</option>
                         <option value="农业">农业</option>
                         <option value="城镇">城镇</option>
+                        {/if}
                     </select>
                     <script>
                         $(function () {
@@ -276,7 +286,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="entry_channels"
-                           value='{$vo.entry_channels|default=""}' class="layui-input" placeholder="请选择转正时间">
+                           value='{$vo.entry_channels|default=""}' class="layui-input" placeholder="入职渠道">
                 </div>
                 <label class="col-sm-1 control-label">
                     转正时间
@@ -317,7 +327,7 @@
                 </label>
                 <div class='col-sm-3'>
                     <input type="text" name="graduation_time"
-                           value='{$vo.graduation_time|default=""}' class="layui-input" placeholder="请选择毕业时间">
+                           value='{if isset($vo.education_info) && !empty(json_decode($vo.education_info, 1)["graduation_time"])}{:json_decode($vo.education_info, 1)["graduation_time"]}{else/}{/if}' class="layui-input" placeholder="请选择毕业时间">
                 </div>
                 <label class="col-sm-1 control-label">
                     毕业学校
@@ -358,8 +368,8 @@
                     试用期结束时间
                 </label>
                 <div class='col-sm-2'>
-                    <input type="text" name="contract_date_end"
-                           value='{$vo.contract_date_end|default=""|date="Y-m-d"}' class="layui-input"
+                    <input type="text" name="probation_date_end"
+                           value='{if isset($vo.contract_info) && !empty(json_decode($vo.contract_info, 1)["probation_date_end"])}{:json_decode($vo.contract_info, 1)["probation_date_end"]}{else/}{/if}' class="layui-input"
                            placeholder="请选择试用期结束日期">
                 </div>
 
@@ -395,14 +405,14 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="probation_basic_salary"
-                           value='{$vo.probation_basic_salary|default="0"}' class="layui-input" placeholder="试用基础薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["probation_basic_salary"])}{:json_decode($vo.salary_info, 1)["probation_basic_salary"]}{else/}0{/if}' class="layui-input" placeholder="试用基础薪资">
                 </div>
                 <label class="col-sm-1 control-label">
                     转正基础薪资
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="formal_basic_salary"
-                           value='{$vo.formal_basic_salary|default="0"}' class="layui-input" placeholder="转正基础薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["formal_basic_salary"])}{:json_decode($vo.salary_info, 1)["formal_basic_salary"]}{else/}0{/if}' class="layui-input" placeholder="转正基础薪资">
                 </div>
 
             </div>
@@ -412,28 +422,28 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="probation_merits_salary"
-                           value='{$vo.probation_merits_salary|default="0"}' class="layui-input" placeholder="试用绩效薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["probation_merits_salary"])}{:json_decode($vo.salary_info, 1)["probation_merits_salary"]}{else/}0{/if}' class="layui-input" placeholder="试用绩效薪资">
                 </div>
                 <label class="col-sm-1 control-label">
                     转正绩效薪资
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="formal_merits_salary"
-                           value='{$vo.formal_merits_salary|default="0"}' class="layui-input" placeholder="转正绩效薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["formal_merits_salary"])}{:json_decode($vo.salary_info, 1)["formal_merits_salary"]}{else/}0{/if}' class="layui-input" placeholder="转正绩效薪资">
                 </div>
                 <label class="col-sm-1 control-label">
                     试用补助薪资
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="probation_subsidy_salary"
-                           value='{$vo.probation_subsidy_salary|default="0"}' class="layui-input" placeholder="试用补助薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["probation_subsidy_salary"])}{:json_decode($vo.salary_info, 1)["probation_subsidy_salary"]}{else/}0{/if}' class="layui-input" placeholder="试用补助薪资">
                 </div>
                 <label class="col-sm-1 control-label">
                     转正补助薪资
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="formal_subsidy_salary"
-                           value='{$vo.formal_subsidy_salary|default="0"}' class="layui-input" placeholder="转正补助薪资">
+                           value='{if isset($vo.salary_info) && !empty(json_decode($vo.salary_info, 1)["formal_subsidy_salary"])}{:json_decode($vo.salary_info, 1)["formal_subsidy_salary"]}{else/}0{/if}' class="layui-input" placeholder="转正补助薪资">
                 </div>
 
             </div>
@@ -446,7 +456,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_time1"
-                           value='{$vo.work_time1|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[0]["work_time1"])}{:json_decode($vo.work_info, 1)[0]["work_time1"]}{else/}{/if}' class="layui-input"
                            placeholder="请选择工作时间">
                 </div>
                 <label class="col-sm-1 control-label">
@@ -454,7 +464,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_company1"
-                           value='{$vo.work_company1|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[0]["work_company1"])}{:json_decode($vo.work_info, 1)[0]["work_company1"]}{else/}{/if}' class="layui-input"
                            placeholder="请输入工作单位">
                 </div>
                 <label class="col-sm-1 control-label">
@@ -462,7 +472,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_station1"
-                           value='{$vo.work_station1|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[0]["work_station1"])}{:json_decode($vo.work_info, 1)[0]["work_station1"]}{else/}{/if}' class="layui-input"
                            placeholder="请输入工作岗位">
                 </div>
 
@@ -471,7 +481,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="reasons_for_leaving1"
-                           value='{$vo.reasons_for_leaving1|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[0]["reasons_for_leaving1"])}{:json_decode($vo.work_info, 1)[0]["reasons_for_leaving1"]}{else/}{/if}' class="layui-input"
                            placeholder="用简短语言说明离职原因">
                 </div>
             </div>
@@ -481,7 +491,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_time2"
-                           value='{$vo.work_time2|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[1]["work_time2"])}{:json_decode($vo.work_info, 1)[1]["work_time2"]}{else/}{/if}' class="layui-input"
                            placeholder="请选择工作时间">
                 </div>
                 <label class="col-sm-1 control-label">
@@ -489,7 +499,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_company2"
-                           value='{$vo.work_company2|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[1]["work_company2"])}{:json_decode($vo.work_info, 1)[1]["work_company2"]}{else/}{/if}' class="layui-input"
                            placeholder="请输入工作单位">
                 </div>
                 <label class="col-sm-1 control-label">
@@ -497,7 +507,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="work_station2"
-                           value='{$vo.work_station2|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[1]["work_station2"])}{:json_decode($vo.work_info, 1)[1]["work_station2"]}{else/}{/if}' class="layui-input"
                            placeholder="请输入工作岗位">
                 </div>
 
@@ -506,7 +516,7 @@
                 </label>
                 <div class='col-sm-2'>
                     <input type="text" name="reasons_for_leaving2"
-                           value='{$vo.reasons_for_leaving2|default=""}' class="layui-input"
+                           value='{if isset($vo.work_info) && !empty(json_decode($vo.work_info, 1)[1]["reasons_for_leaving2"])}{:json_decode($vo.work_info, 1)[1]["reasons_for_leaving2"]}{else/}{/if}' class="layui-input"
                            placeholder="用简短语言说明离职原因">
                 </div>
             </div>
@@ -582,6 +592,7 @@
     window.laydate.render({range: false, elem: 'input[name="zz_date"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: false, elem: 'input[name="contract_date_begin"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: false, elem: 'input[name="contract_date_end"]'});
+    window.laydate.render({range: false, elem: 'input[name="probation_date_end"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: false, elem: 'input[name="graduation_time"]', max: '{:date("Y-m-d")}'});
     window.laydate.render({range: '~', elem: 'input[name="work_time1"]', max: '{:date("Y-m")}',type: 'month'});
     window.laydate.render({range: '~', elem: 'input[name="work_time2"]', max: '{:date("Y-m")}',type: 'month'});

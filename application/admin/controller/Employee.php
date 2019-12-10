@@ -110,6 +110,45 @@ class Employee extends BasicAdmin
             !isset($vo['contract_date_begin']) || $vo['contract_date_begin'] = strtotime($vo['contract_date_begin']);
             !isset($vo['contract_date_end']) || $vo['contract_date_end'] = strtotime($vo['contract_date_end']);
             !isset($vo['zz_date']) || $vo['zz_date'] = strtotime($vo['zz_date']);
+            $education_info = [
+                'graduation_time' => $vo['graduation_time'],
+                'school' => trim($vo['school']),
+                'profession' => trim($vo['profession'])
+            ];
+            $vo['education_info'] = json_encode($education_info);
+            $contract_info = [
+                'contract_date_begin' => $vo['contract_date_begin'],
+                'contract_date_end' => $vo['contract_date_end'],
+                'probation_date_end' => $vo['probation_date_end'],
+                'contract_status' => $vo['contract_status'],
+            ];
+            $vo['contract_info'] = json_encode($contract_info);
+            $salary_info = [
+                'pay_card' => trim($vo['pay_card']),
+                'pay_card_type' => trim($vo['pay_card_type']),
+                'probation_basic_salary' => trim($vo['probation_basic_salary']),
+                'formal_basic_salary' => trim($vo['formal_basic_salary']),
+                'probation_merits_salary' => trim($vo['probation_merits_salary']),
+                'formal_merits_salary' => trim($vo['formal_merits_salary']),
+                'probation_subsidy_salary' => trim($vo['probation_subsidy_salary']),
+                'formal_subsidy_salary'    => trim($vo['formal_subsidy_salary'])
+            ];
+            $vo['salary_info'] = json_encode($salary_info);
+            $work_info = [
+                [
+                    'work_time1' => $vo['work_time1'],
+                    'work_company1' => $vo['work_company1'],
+                    'work_station1' => $vo['work_station1'],
+                    'reasons_for_leaving1' => $vo['reasons_for_leaving1']
+                ],
+                [
+                    'work_time2' => $vo['work_time2'],
+                    'work_company2' => $vo['work_company2'],
+                    'work_station2' => $vo['work_station2'],
+                    'reasons_for_leaving2' => $vo['reasons_for_leaving2']
+                ]
+            ];
+            $vo['work_info'] = json_encode($work_info);
         }
         if ($this->request->isPost() && isset($vo['id'])) {
             $this->_form_after();
@@ -273,5 +312,14 @@ class Employee extends BasicAdmin
         ];
         $title = "员工表";
         down_excel($data, $key, $title);
+    }
+
+    public function infoview()
+    {
+        $get = $this->request->get();
+        $emplory_info = Db::name('saas_employee')
+        ->where('id', '=', $get['id'])
+        ->find();
+        return $this->fetch('', ['info' => $emplory_info]);
     }
 }
