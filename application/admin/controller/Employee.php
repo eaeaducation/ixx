@@ -314,12 +314,70 @@ class Employee extends BasicAdmin
         down_excel($data, $key, $title);
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 查看员工信息
+     */
     public function infoview()
     {
         $get = $this->request->get();
         $emplory_info = Db::name('saas_employee')
         ->where('id', '=', $get['id'])
         ->find();
+        if ($emplory_info) {
+            //更新单位员工工龄
+            $contract_start_date = date_create(date('Y-m-d', $emplory_info['contract_date_begin']));
+            $current_date = date_create(date('Y-m-d'));
+            $diff = date_diff($contract_start_date, $current_date);
+            if ($emplory_info['work_age'] != $diff->y) {
+                Db::name('saas_employee')->where('id', '=', $get['id'])->update(['work_age'=>$diff->y]);
+                $emplory_info = Db::name('saas_employee')
+                    ->where('id', '=', $get['id'])
+                    ->find();
+            }
+        }
         return $this->fetch('', ['info' => $emplory_info]);
+    }
+
+    /**
+     * @return array|string
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 上月绩效显示
+     */
+    public function achievementsList()
+    {
+        //绩效管理，默认显示上个月绩效
+        $get = $this->request->get();
+        $achievements = Db::name('saas_employee_achievements');
+        (isset($get['branch']) && $get['branch'] !== '') && $achievements->where('branch', '=', $get['branch']);
+        if (isset($get['keyword']) && $get['keyword'] != '') {
+            $get['keyword'] = trim($get['keyword']);
+            if (preg_match('/^\d{4}$/', $get['keyword'])) {
+                $achievements->where('mobile', 'like', "%{$get['keyword']}%");
+            } elseif (preg_match('/^\d{11}$/', $get['keyword'])) {
+                $achievements->where('mobile', '=', "{$get['keyword']}");
+            } elseif (preg_match('/[a-zA-Z\x{4e00}-\x{9fa5}]/u', $get['keyword'])) {
+                $achievements->where('name|english_name', 'like', "%{$get['keyword']}%");
+            } else {
+                $achievements->where('1=0');
+            }
+        }
+        if (isset($get['month']) && $get['month'] != '') {
+            $achievements->where('month', '=', $get['month']);
+        } else {
+            $achievements->where('month', '=', date('Ym', strtotime('-1 month')));
+        }
+        if (!in_array($this->user['authorize'], [1, 3, 4, 19, 23])) {
+            $achievements->where('employee_id', '=', $this->user['employee']['id']);
+        }
+        return parent::_list($achievements, true);
     }
 }

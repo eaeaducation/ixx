@@ -9,25 +9,235 @@
             <li>履历信息</li>
         </ul>
         <div class="layui-tab-content" style="height: 100px;">
+<!--            基本信息-->
             <div class="layui-tab-item layui-show">
                 <table class="layui-table">
                     <tbody>
                         <tr>
-                            <td class='text-center'>姓名</td>
-                            <td class='text-center'>张三</td>
-                            <td class='text-center'>英文名</td>
-                            <td class='text-center'>nick</td>
-                            <td class='text-center'>姓名</td>
-                            <td class='text-center'>张三</td>
+                            <td class='text-center' style="background-color: #D0DCE0">姓名</td>
+                            <td class='text-center'>{$info.name|default='未设置'}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">英文名</td>
+                            <td class='text-center'>{$info.english_name|default='未设置'}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">联系电话</td>
+                            <td class='text-center'>{$info.mobile}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center' style="background-color: #D0DCE0">性别</td>
+                            <td class='text-center'>{if $info.gender==1}男{else /}女{/if}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">在职状态</td>
+                            <td class='text-center'>{$info.personnel_status|convert_category=17|raw}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">婚姻状态</td>
+                            <td class='text-center'>{if $info.marriage_status==0}未婚{else/}已婚{/if}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">所属校区</td>
+                            <td class='text-center'>{:convert_branch($info.department)}</td>
+                            <td class='text-center' style="background-color: #D0DCE0">任课教师</td>
+                            <td class='text-center'>{if $info.is_teacher==1}是{else /}否{/if}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">跨校区任课</td>
+                            <td class='text-center'>{if $info.is_cross_campus==1}是{else /}否{/if}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">身份证号</td>
+                            <td class='text-center'>{$info.id_no|default='未设置'}</td>
+                            <td class='text-center' style="background-color: #D0DCE0">籍贯</td>
+                            <td class='text-center'>{$info.origin|default='未设置'}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">民族</td>
+                            <td class='text-center'>{$info.nationality|default='未设置'}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">政治面貌</td>
+                            <td class='text-center'>{$info.political_status|default='未设置'}</td>
+                            <td class='text-center' style="background-color: #D0DCE0">生日</td>
+                            <td class='text-center'>{$vo.birthday|default="未设置"|date="Y-m-d"}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">邮箱</td>
+                            <td class='text-center'>{$info.email|default='未设置'}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">人事状态</td>
+                            <td class='text-center'>
+                                {if $info.personnel_status == 1}
+                                面试期
+                                {elseif $info.personnel_status == 2}
+                                培训期
+                                {elseif $info.personnel_status == 3}
+                                试用期
+                                {elseif $info.personnel_status == 4}
+                                兼职员工
+                                {elseif $info.personnel_status == 5}
+                                正式员工
+                                {elseif $info.personnel_status == 6}
+                                转正失败
+                                {elseif $info.personnel_status == 7}
+                                停职留薪
+                                {elseif $info.personnel_status == 8}
+                                主动离职
+                                {/if}
+                            </td>
+                            <td class='text-center' style="background-color: #D0DCE0">劳务关系</td>
+                            <td class='text-center'>
+                                {if $info.lw_status == 1}
+                                全职
+                                {elseif $info.lw_status == 2}
+                                兼职
+                                {elseif $info.lw_status == 3}
+                                合作
+                                {/if}
+                            </td>
+                            <td class='text-center'  style="background-color: #D0DCE0">社保状态</td>
+                            <td class='text-center'>
+                                {if $info.social_security_status == 1}
+                                已缴纳
+                                {else if $info.social_security_status == 2}
+                                未缴纳
+                                {/if}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">户口类型</td>
+                            <td class='text-center'>{$info.househole_type|default='未设置'}</td>
+                            <td class='text-center' style="background-color: #D0DCE0">身份证地址</td>
+                            <td class='text-center'>{$vo.idcard_address|default="未设置"|date="Y-m-d"}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">现居地址</td>
+                            <td class='text-center'>{$info.live_address|default='未设置'}</td>
+                        </tr>
+                        <tr>
+                            <td class='text-center'  style="background-color: #D0DCE0">入职渠道</td>
+                            <td class='text-center'>{$info.entry_channels|default='未设置'}</td>
+                            <td class='text-center' style="background-color: #D0DCE0">教育工龄</td>
+                            <td class='text-center'>{$info.school_age|default="未设置"}</td>
+                            <td class='text-center'  style="background-color: #D0DCE0">入职工龄</td>
+                            <td class='text-center'>{$info.work_age|default='未设置'}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="layui-tab-item">2</div>
-            <div class="layui-tab-item">3</div>
-            <div class="layui-tab-item">4</div>
-            <div class="layui-tab-item">5</div>
-            <div class="layui-tab-item">6</div>
+<!--            学历信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <tbody>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">毕业时间</td>
+                        <td class='text-center'>{if isset($info.education_info) && !empty(json_decode($info.education_info, 1)["graduation_time"])}{:json_decode($info.education_info, 1)["graduation_time"]}{else/}未设置{/if}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">毕业学校</td>
+                        <td class='text-center'>{if isset($info.education_info) && !empty(json_decode($info.education_info, 1)["school"])}{:json_decode($info.education_info, 1)["school"]}{else/}未设置{/if}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">所学专业</td>
+                        <td class='text-center'>{if isset($info.education_info) && !empty(json_decode($info.education_info, 1)["profession"])}{:json_decode($info.education_info, 1)["profession"]}{else/}未设置{/if}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+<!--            合同信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <tbody>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">合同状态</td>
+                        <td class='text-center'>
+                            {if $info.contract_status == 1}
+                            存续
+                            {elseif $info.contract_status == 2}
+                            待签订
+                            {elseif $info.contract_status == 3}
+                            已解除
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">合同开始时间</td>
+                        <td class='text-center'>{$info.contract_date_begin|default=""|date="Y-m-d"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">合同结束时间</td>
+                        <td class='text-center'>{$info.contract_date_end|default=""|date="Y-m-d"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">试用期结束时间</td>
+                        <td class='text-center'>{if isset($info.contract_info) && !empty(json_decode($info.contract_info, 1)["probation_date_end"])}{:json_decode($info.contract_info, 1)["probation_date_end"]}{else/}未设置{/if}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+<!--            薪资信息-->
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <tbody>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">工资卡号</td>
+                        <td class='text-center' style="width: 25%">{$info.pay_card|default="未设置"}</td>
+                        <td class='text-center' style="background-color: #D0DCE0">开户行</td>
+                        <td class='text-center' style="width: 25%">{$info.pay_card_type|default="未设置"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">试用基础工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["probation_basic_salary"])}{:json_decode($info.salary_info, 1)["probation_basic_salary"]}{else/}0{/if}</td>
+                        <td class='text-center' style="background-color: #D0DCE0">转正基础工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["formal_basic_salary"])}{:json_decode($info.salary_info, 1)["formal_basic_salary"]}{else/}0{/if}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">试用绩效工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["probation_merits_salary"])}{:json_decode($info.salary_info, 1)["probation_merits_salary"]}{else/}0{/if}</td>
+                        <td class='text-center' style="background-color: #D0DCE0">转正绩效工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["formal_merits_salary"])}{:json_decode($info.salary_info, 1)["formal_merits_salary"]}{else/}0{/if}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">试用补助工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["probation_subsidy_salary"])}{:json_decode($info.salary_info, 1)["probation_subsidy_salary"]}{else/}0{/if}</td>
+                        <td class='text-center' style="background-color: #D0DCE0">转正补助工资</td>
+                        <td class='text-center'>{if isset($info.salary_info) && !empty(json_decode($info.salary_info, 1)["formal_subsidy_salary"])}{:json_decode($info.salary_info, 1)["formal_subsidy_salary"]}{else/}0{/if}</td> </tr>
+                    </tbody>
+                </table>
+            </div>
+<!--            履历信息-->
+            <div class="layui-tab-item">
+                {php}
+                $work_history = json_decode($info['work_info'], 1);
+                {/php}
+                <table class="layui-table">
+                    <tbody>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0; width: 20%">单位名称1</td>
+                        <td class='text-center'>{$work_history[0]['work_company1']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">工作时间段1</td>
+                        <td class='text-center'>{$work_history[0]['work_time1']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">工作岗位1</td>
+                        <td class='text-center'>{$work_history[0]['work_station1']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">离职原因1</td>
+                        <td class='text-center'>{$work_history[0]['reasons_for_leaving1']|default="未填写"}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="layui-table">
+                    <tbody>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0; width: 20%">单位名称2</td>
+                        <td class='text-center'>{$work_history[1]['work_company2']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">工作时间段2</td>
+                        <td class='text-center'>{$work_history[1]['work_time2']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">工作岗位2</td>
+                        <td class='text-center'>{$work_history[1]['work_station2']|default="未填写"}</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style="background-color: #D0DCE0">离职原因2</td>
+                        <td class='text-center'>{$work_history[1]['reasons_for_leaving2']|default="未填写"}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </form>
