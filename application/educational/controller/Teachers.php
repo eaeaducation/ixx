@@ -82,9 +82,21 @@ class Teachers extends BasicAdmin
                 ->where('c.is_ok', '=', '1')
                 ->where('c.teacher_id', '=', $teacher_id)
                 ->where('c.is_deleted', '=', '0')
-                ->whereBetween('c.created_at', [$get['start'], $get['end']])
-                ->field('c.*,n.begin_time_each,n.end_time_each,n.title,n.ctitle')
+                ->whereBetween('c.created_at', [$get['start'], $get['end']]);
+            $course_num = Db::name('saas_course_teacher_log')->alias('c')
+                ->join('(select d.class_course_no,d.begin_time_each,d.end_time_each,c.title,u.title as ctitle from saas_courses_detail as d LEFT JOIN saas_class c on d.class_id = c.id LEFT JOIN saas_courses u on d.courses_id = u.id) n', 'c.class_course_no = n.class_course_no', 'left')
+                ->where('c.is_ok', '=', '1')
+                ->where('c.teacher_id', '=', $teacher_id)
+                ->where('c.is_deleted', '=', '0')
+                ->whereBetween('c.created_at', [$get['start'], $get['end']]);
+            if (isset($get['type']) && !empty($get['type'])) {
+                $db->where('c.status', '=', $get['type']);
+                $course_num->where('c.status', '=', $get['type']);
+            }
+            $db->field('c.*,n.begin_time_each,n.end_time_each,n.title,n.ctitle')
                 ->order('c.created_at desc');
+            $course_num = $course_num->sum("c.course_hour");
+            $this->assign('course_num', $course_num);
             return parent::_list($db, true);
         }
     }
