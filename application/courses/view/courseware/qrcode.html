@@ -1,0 +1,38 @@
+
+    <div class="layui-box">
+<!--            <tr>-->
+<!--                <th class="text-center">链接:</th>-->
+<!--                <td>-->
+<!--                    <code id="code"></code>-->
+<!--                    <a id="preview" scrolling="yes" class="layui-btn layui-btn-xs layui-btn-normal">预览</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+                    <div class="img-responsive" style="height: 60%; width: 60%; margin: 10% auto">
+                        <img id="ewm" src="" style="height: 100%; width: 100%" title="点击下载到本地" onclick="downloadImg()">
+                    </div>
+    </div>
+
+<script type="text/javascript">
+    function create() {
+        var id = '{$Think.get.id}';
+        var url = "{:url('Courseware/createQrCode')}";
+        $.get(url, {'id': id}, function (data) {
+            if (data.msg == 1) {
+                $('#code').text(data.url);
+                $('#ewm').attr("src", 'data:image/png;base64,' + data.data)
+            } else {
+                return layer.msg('生成二维码失败');
+            }
+        })
+    }
+    create();
+    function downloadImg(){
+        var img = document.getElementById('ewm'); // 获取要下载的图片
+        var url = img.src;                            // 获取图片地址
+        var a = document.createElement('a');          // 创建一个a节点插入的document
+        var event = new MouseEvent('click')           // 模拟鼠标click点击事件
+        a.download = '课件二维码'                  // 设置a节点的download属性值
+        a.href = url;                                 // 将图片的src赋值给a节点的href
+        a.dispatchEvent(event)                        // 触发鼠标点击事件
+    }
+</script>
