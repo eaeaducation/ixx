@@ -6,6 +6,7 @@ namespace app\api_xcx\controller;
 
 use controller\BasicXcx;
 use think\Db;
+use think\facade\Log;
 
 class Product extends BasicXcx
 {
@@ -41,6 +42,11 @@ class Product extends BasicXcx
         $product = $res->select();
         if (!$product) {
             return $this->error('数据获取失败');
+        }
+        foreach ($product as &$item) {
+            foreach (json_decode($item['spec_param'], 1) as $value) {
+                $item['spec_type'][] = $value['name'];
+            }
         }
         $data = [
             'product_list' => $product,
