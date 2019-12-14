@@ -29,13 +29,14 @@ class Product extends BasicXcx
         $get = $this->request->get();
         $cate = Db::name('store_goods_cate')->field('id,cate_title')->where('is_deleted', '=', 0)->select();
         $get['cate_id'] = isset($get['cate_id']) ? $get['cate_id'] : 1;
-        $res = Db::name('store_goods')
-            ->where('is_deleted', '=', 0)
-            ->where('status', '=', 1)
-            ->where('cate_id', '=', $get['cate_id'])
-            ->field('id,goods_title,goods_subtitle,goods_logo');
+        $res = Db::name('store_goods g')
+            ->join('store_goods_spec gs', 'g.spec_id = gs.id')
+            ->where('g.is_deleted', '=', 0)
+            ->where('g.status', '=', 1)
+            ->where('g.cate_id', '=', $get['cate_id'])
+            ->field('g.id,g.goods_title,g.goods_desc,g.goods_subtitle,g.goods_logo,gs.spec_param');
         if (isset($get['keyword']) && !empty($get['keyword'])) {
-            $res->where('goods_title', 'like', '%' . $get['keyword'] . '%');
+            $res->where('g.goods_title', 'like', '%' . $get['keyword'] . '%');
         }
         $product = $res->select();
         if (!$product) {
