@@ -20,8 +20,13 @@ class Discover extends BasicXcx
         $ban = Db::name('saas_content')->where('catid', '=', '89')->field('thumb')->select();
         $content = Db::name('saas_content')
             ->where('catid', '=', '88')
-            ->field('thumb, title, link, id')
+            ->field('thumb, title, link, id, views')
             ->select();
+        foreach ($content as &$item) {
+            if (is_null($item['views'])) {
+                $item['views'] = 0;
+            }
+        }
         $data = [
             'banner' => $ban,
             'content' => $content
@@ -34,6 +39,8 @@ class Discover extends BasicXcx
     {
         $get = $this->request->get();
         $row = Db::name('saas_content')->where('id', '=', $get['id'])->find();
+        if (is_null($row['views'])) $row['views'] = 0;
+        Db::name('saas_content')->where('id', '=', $get['id'])->update(['views' => $row['views']+1]);
         $data = ['content' => base64_encode($row['content'])];
         return $this->success('', $data);
     }
