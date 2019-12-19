@@ -296,7 +296,7 @@ class Order extends BasicXcx
             $order_log = [];
             foreach ($post['data'] as $key => $v) {
                 $order_log[$key]['order_id'] = $order_id;
-                $order_log[$key]['goods_id'] = $v['gid'];
+                $order_log[$key]['product_id'] = $v['gid'];
                 $order_log[$key]['goods_type'] = 1;
                 $order_log[$key]['old_price'] = $v['price'];
                 $order_log[$key]['price'] = $v['price'];
