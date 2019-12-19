@@ -1587,6 +1587,7 @@ function get_teachers()
         $branch = session('user.employee.department');
         $db->where('department', '=', $branch);
     }
+    $db->whereOr('is_cross_campus', '=', 1);
     $teachers = $db->column('name', 'id');
     //查询教学总监
     $director = Db::name('system_user')
