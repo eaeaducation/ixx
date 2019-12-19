@@ -38,7 +38,7 @@ class Index extends BasicAdmin
             ->join('saas_order o', 'f.orderno = o.orderno', 'left')
             ->join('saas_customer c', 'c.id = f.cid', 'left')
             ->whereBetween('f.created_at', [$month_start, $month_end])
-            ->field('f.price, f.cid, o.userid, c.name, c.sales_id, c.branch, f.created_at, f.type')
+            ->field('f.price, f.cid, o.userid, c.name, c.sales_id, c.branch, f.created_at, f.type, c.collect_id, f.teacher_id')
             ->order('f.created_at desc');
 
         $total = Db::name('saas_cash_flow')->alias('f')

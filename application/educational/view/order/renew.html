@@ -15,6 +15,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">老师</label>
+        <div class='layui-input-block'>
+            {:get_teacher_select('teacher_id', '', '', ['lay-filter' => ''], false)}
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">课程单价</label>
         <div class='layui-input-block'>
             <input type="text" name="course_price" disabled value="{$order_goods.course_price}" required="required" title="请输入单价"

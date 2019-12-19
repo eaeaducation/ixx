@@ -145,8 +145,9 @@
         <!--{/foreach}-->
         </tbody>
     </table>
-    {if isset($page)}<p>{$page|raw}</p>{/if}
-    {if isset($pages)}<p>{$pages|raw}</p>{/if}
+    {if isset($page)}<p style="display: inline-block">{$page|raw}</p>{/if}
+    {if isset($pages)}<p style="display: inline-block">{$pages|raw}</p>{/if}
+    <p style="display: inline-block; color: red">总课时：{$lession.goods_num}；已消耗课时：{$lession.consume_num}；剩余课时：{$lession.goods_num - $lession.consume_num}</p>
     <!--{/empty}-->
 </form>
 <script>

@@ -200,7 +200,9 @@ class Order extends BasicAdmin
             $id = $request->get('id', false);
             $order_goods = Db::name('saas_order_log')->where('id', $id)->find();
             $course_price = Db::name('saas_courses')->where('id', '=', $order_goods['goods_id'])->value('price');
+            $teacher_id = Db::name('saas_class')->where('id', '=', $order_goods['class_id'])->value('teacher_id');
             $order_goods['course_price'] = $course_price;
+            $order_goods['teacher_id'] = isset($teacher_id) && !empty($teacher_id) ? $teacher_id : 0;
             return $this->fetch('', ['order_goods' => $order_goods]);
         }
 
@@ -216,13 +218,13 @@ class Order extends BasicAdmin
                 $data['price'] = $post['renew_price'] + $post['price'];
                 $price = $order['price'] + $post['renew_price'];
                 //记录资金流动记录
-                $row = cash_flow($order['orderno'], $order['student_id'], $post['renew_price'], 2, $post['goods_id'], $post['remark']);
+                $row = cash_flow($order['orderno'], $order['student_id'], $post['renew_price'], 2, $post['goods_id'], $post['remark'], $post['teacher_id']);
             } else {
                 $data['price'] = $post['renew_price'] + $post['price'] - $post['preferential'];
                 $price = $order['price'] + $post['renew_price'] - $post['preferential'];
                 //记录资金流动记录
                 $true_price = $post['renew_price'] - $post['preferential'];
-                $row = cash_flow($order['orderno'], $order['student_id'], $true_price, 2, $post['goods_id'], $post['remark']);
+                $row = cash_flow($order['orderno'], $order['student_id'], $true_price, 2, $post['goods_id'], $post['remark'], $post['teacher_id']);
             }
 
             $data['old_price'] = $post['old_price'] + $post['renew_price'];

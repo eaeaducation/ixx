@@ -5,7 +5,24 @@
 </button>
 {/block}
 {block name="content"}
-<div class="padding-15">
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">上课类型</label>
+        <div class="layui-input-inline">
+            <select name='type' class='layui-select full-width'>
+                <option value=''>全部类型</option>
+                <option value='1'>正常</option>
+                <option value='2'>补课</option>
+                <option value='3'>体验课</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<div>
     <form onsubmit="return false;" data-auto="true" method="post" action="{:request()->url()}">
         <!--{empty name='list'}-->
         <p class="help-block text-center well">没 有 记 录 哦！</p>
@@ -69,7 +86,8 @@
             </tbody>
         </table>
         {if isset($page)}<p>{$page|raw}</p>{/if}
-        <div class="hr-line-dashed"></div>
+        <p style="display: inline-block; color: red; font-size: 16px">总累计课时：{$course_num}；</p>
+<!--        <div class="hr-line-dashed"></div>-->
         <!--{/empty}-->
     </form>
 

@@ -1,12 +1,12 @@
 {extend name='admin@public/content'}
 
 {block name="button"}
-<!--{if auth("$classuri/add")}-->
-<!--<button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'-->
-<!--data-title="添加课件"-->
-<!--class='layui-btn layui-btn-sm layui-btn-primary'>添加课件-->
-<!--</button>-->
-<!--{/if}-->
+{if auth("$classuri/add")}
+<button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'
+data-title="添加课件"
+class='layui-btn layui-btn-sm layui-btn-primary'>添加课件
+</button>
+{/if}
 {if auth("$classuri/del")}
 <button data-update data-field='delete' data-action='{:url("$classuri/del")}?top_id={$Think.get.top_id}'
         class='layui-btn layui-btn-sm layui-btn-primary'>删除课件
@@ -53,9 +53,12 @@
                     <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
                 </th>
                 <th class='text-center nowrap'>ID</th>
-                <th class='text-center nowrap'>课程名称</th>
+<!--                <th class='text-center nowrap'>课程名称</th>-->
                 <th class="text-center nowrap">课件标题</th>
-                <th class="text-center nowrap">简介</th>
+                <th class="text-center nowrap">课件简介</th>
+                <th class="text-center nowrap">课件类型</th>
+                <th class="text-center nowrap">课件分类</th>
+                <th class="text-center nowrap">所属科目</th>
                 <th class="text-center nowrap">资源地址</th>
                 <th class="text-center nowrap">备注</th>
                 <th class="text-center nowrap">创建时间</th>
@@ -69,13 +72,26 @@
                     <input class="list-check-box" value='{$vo.id}' type='checkbox'>
                 </td>
                 <td class="text-center nowrap">{$vo.id}</td>
-                <td class="text-center nowrap">{$vo.course_id|get_courses_title=$vo.course_id}</td>
+<!--                <td class="text-center nowrap">{$vo.course_id|get_courses_title=$vo.course_id}</td>-->
                 <td class="text-center nowrap">{$vo.title}</td>
                 <td class="text-center nowrap" title="{$vo.content}">{:cn_substr($vo.content)}</td>
-                <td class="text-center" ><a href="http://{$vo.url}" target="_blank" title='点击查看'>访问资源</a></td>
+                <td class="text-center nowrap">
+                    {if $vo.file_type == 1}
+                    视频
+                    {elseif $vo.file_type ==2}
+                    音频
+                    {/if}
+                </td>
+                <td class="text-center nowrap">{$vo.file_category|convert_category=6|raw}</td>
+                <td class="text-center nowrap">{$vo.file_subject|convert_subject|raw}</td>
+                <td class="text-center" ><a href="{$vo.url}" target="_blank" title='点击查看'>访问资源</a></td>
                 <td class="text-center" title="{$vo.remark}">{:cn_substr($vo.remark)}</td>
                 <td class="text-center nowrap">{$vo.created_at|date='Y-m-d H:m:s'}</td>
                 <td class="text-nowrap text-center">
+                    <a data-area="['25%','50%']" data-title="查看二维码"
+                       data-modal='{:url("$classuri/qrcode")}?id={$vo.id}'>
+                        二维码
+                    </a>
                     {if auth("$classuri/edit")}
                     <span class="text-explode">|</span>
                     <a data-title="编辑"

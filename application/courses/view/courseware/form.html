@@ -6,19 +6,65 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">简介</label>
+        <label class="layui-form-label">
+            课件类别
+        </label>
+        <div class='layui-input-inline' id="category">
+            {:get_category_select(6, 'file_category', isset($vo.file_category)?$vo.file_category:'', '', ['lay-filter'=>'file_category','required' => 'required'])}
+        </div>
+        <label class="layui-form-label">
+            所属科目
+        </label>
+        <div class='layui-input-inline' id="subject_add">
+            <select name="file_subject" lay-filter="file_subject" id="subject" required>
+                {if isset($vo.file_subject) && !empty($vo.file_subject)}
+                <option value="{$vo.file_subject}">{$vo.file_subject|convert_subject|raw}</option>
+                {else}
+                <option value="">-请选择-</option>
+                {/if}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件类型</label>
+        <div class="layui-input-block" >
+            {if isset($vo.file_type) && $vo.file_type == 1}
+            <input type="radio" name="file_type" value="1" title="视频" checked="" style="display: none !important;" required lay-filter="file_type">
+            <input type="radio" name="file_type" value="2" title="音频" style="display: none !important;" required lay-filter="file_type">
+            {elseif isset($vo.file_type) && $vo.file_type == 2}
+            <input type="radio" name="file_type" value="1" title="视频" style="display: none !important;" required lay-filter="file_type">
+            <input type="radio" name="file_type" value="2" title="音频" checked=""  style="display: none !important;" required lay-filter="file_type">
+            {else/}
+            <input type="radio" name="file_type" value="1" title="视频" checked="" style="display: none !important;" required lay-filter="file_type">
+            <input type="radio" name="file_type" value="2" title="音频" style="display: none !important;" required lay-filter="file_type">
+            {/if}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="layui-form-label">资源信息</label>
+        <div class='layui-input-block'>
+            <div class="layui-input-inline" style="width: 80%">
+                <input style="border-right:none" name="url" required="required" value="{$vo.url|default=''}" class="layui-input" title="请输入链接或上传视频/音频展示文件" placeholder="请输入链接或上传视频/音频展示文件">
+            </div>
+            <div class="layui-input-inline" style="width: 19%">
+                <button data-file="one" data-type="mp4,mp3" data-field="url" type="button" class="layui-btn layui-btn-sm" style="height:38px;line-height:38px;width:100%">上传视频/音频文件</button>
+            </div>
+        </div>
+    </div>
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">资源地址</label>-->
+<!--        <div class='layui-input-block'>-->
+<!--            <input type="text" name="url" value='{$vo.url|default=""}' required="required" title="请输入资源地址" placeholder="请输入资源地址" class="layui-input">-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">课件简介</label>
         <div class='layui-input-block'>
             <input type="text" name="content" value='{$vo.content|default=""}' required="required"  title="请输入简介" placeholder="请输入简介" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">资源地址</label>
-        <div class='layui-input-block'>
-            <input type="text" name="url" value='{$vo.url|default=""}' required="required" title="请输入资源地址" placeholder="请输入资源地址" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">备注</label>
+        <label class="layui-form-label">添加备注</label>
         <div class='layui-input-block'>
             <input type="text" name="remark" value='{$vo.remark|default=""}'  title="请输入备注" placeholder="请输入备注" class="layui-input">
         </div>
@@ -39,4 +85,31 @@
 </form>
 <script>
     window.form.render();
+    form.on('select(file_category)', function (data) {
+        category = $('select[name="file_category"] option:selected').val();
+        tool();
+    });
+    form.on('select(file_subject)', function (data) {
+        category = $('select[name="file_category"] option:selected').val();
+        if (category == '') {
+            layer.msg('请先选择课程类别!', {icon: 5});
+            return false;
+        }
+        subject = data.value;
+    });
+
+    function tool() {
+        $.post('{:url("educational/subject/get_subject")}', {category: category}, function (res) {
+            var subject_html = '<option value="">-请选择科目-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    subject_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                }
+                $("#subject").html(subject_html);
+            } else {
+                $("#subject").html(subject_html);
+            }
+            window.form.render();
+        })
+    }
 </script>

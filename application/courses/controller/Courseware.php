@@ -9,6 +9,7 @@
 namespace app\courses\controller;
 
 use controller\BasicAdmin;
+use QRCode;
 use think\Db;
 use service\DataService;
 use service\LogService;
@@ -73,6 +74,35 @@ class Courseware extends BasicAdmin
     {
         if ($this->request->isPost()) {
             LogService::write('课程管理', '修改了【' . $vo['title'] . '】课件');
+        }
+    }
+
+    /**
+     * @二维码
+     */
+    public function qrcode()
+    {
+        return $this->fetch('');
+    }
+
+    public function createQrCode()
+    {
+        $request = $this->request;
+        $id = $request->get('id');
+        if ($id) {
+            $url = Db::name('saas_courseware')->where('id', $id)->value('url');
+            $data = [
+                'msg' => 1,
+                'url' => $url,
+                'data' => QrCode::createQRCodeString($url, 150)
+            ];
+            return json($data);
+        } else {
+            return json([
+                'msg' => 0,
+                'url' => '',
+                'data' => ''
+            ]);
         }
     }
 }

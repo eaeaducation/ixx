@@ -111,7 +111,7 @@ class Premarketing extends BasicAdmin
             ->field('c.*, f.type, f.interest,f.follow_status,f.remind_time,f.keyword,f.content,f.user_id,
             f.created_at as follow_time, f.interest_course_1,f.interest_course_2,f.interest_course_3');
         $db->join('(select * from saas_customer_follow where id in ((select max(id) from saas_customer_follow  group by customer_id))) f', 'c.id=f.customer_id', 'left');
-        $db->order('c.created_at desc');
+        $db->order('f.created_at desc');
 //        $db->where('is_student', '<>', 1);   2018.11.7 开
         $db->where('c.status', '<>', 3);
         if (!empty($source)) $db->where('c.source', '=', $source);
@@ -404,7 +404,7 @@ class Premarketing extends BasicAdmin
             $branch = $this->request->request('school');
             $res = Db::name('saas_employee')->alias('e')
                 ->join('system_user u', 'e.userid = u.id', 'left')
-                ->field('e.name,u.id,e.userid,u.authorize')
+                ->field('e.name,u.id,e.userid,u.authorize,e.english_name')
                 ->where('e.department', '=', $branch)
                 ->select();
             $this->success('', '', $res);

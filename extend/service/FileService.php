@@ -56,13 +56,15 @@ class FileService
     {
         $mines = cache('all_ext_mine');
         if (empty($mines)) {
-            $content = file_get_contents('http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types');
-            preg_match_all('#^([^\s]{2,}?)\s+(.+?)$#ism', $content, $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) {
-                foreach (explode(" ", $match[2]) as $ext) {
-                    $mines[$ext] = $match[1];
-                }
-            }
+//            $content = file_get_contents('http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types');
+//            preg_match_all('#^([^\s]{2,}?)\s+(.+?)$#ism', $content, $matches, PREG_SET_ORDER);
+//            foreach ($matches as $match) {
+//                foreach (explode(" ", $match[2]) as $ext) {
+//                    $mines[$ext] = $match[1];
+//                }
+//            }
+            $mime_file = getcwd() . '/config/mime.php';
+            $mines = include($mime_file);
             cache('all_ext_mine', $mines);
         }
         return $mines;

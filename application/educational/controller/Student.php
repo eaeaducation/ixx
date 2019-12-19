@@ -34,6 +34,11 @@ class Student extends BasicAdmin
             ->where('status', '<>', 3)
             ->where('is_student', '=', 1)
             ->order('created_at desc');
+        $lession = Db::name('saas_order_log l')
+            ->field("sum(l.goods_num) as goods_num, sum(l.consume_num) as consume_num")
+            ->join('saas_order o', 'o.id = l.order_id', 'left')
+            ->join('saas_courses c', 'c.id = l.goods_id', 'left')
+            ->where('o.status', '<>', 3);
         if (isset($get['keyword']) && $get['keyword'] != '') {
             $get['keyword'] = trim($get['keyword']);
             if (preg_match('/^\d{4}$/', $get['keyword'])) {
@@ -66,7 +71,11 @@ class Student extends BasicAdmin
         }
         foreach (['source', 'branch'] as $key) {
             if (isset($get[$key]) && $get[$key] != '') $db->where($key, '=', $get[$key]);
+            if (isset($get[$key]) && $get[$key] != '') $lession->where($key, '=', $get[$key]);
         }
+        $lession_data = $lession->select();
+        $this->assign('lession', $lession_data[0]);
+//        Log::error($lession_data[0]);
         if (!in_array($this->user['authorize'], [1, 3, 4, 22])) {
             $db->where('branch', '=', $this->user['employee']['department']);
         }

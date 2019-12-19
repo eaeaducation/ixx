@@ -113,7 +113,13 @@
             <td class="text-center">{$vo.education}</td>
             <td class="text-center">{$vo.school}</td>
             <td class="text-center">{$vo.major}</td>
-            <td class="text-center"><a target="_blank" href="{$vo.resume}">查看简历</a></td>
+            <td class="text-center">
+                {if !empty($vo.resume)}
+                <a target="_blank" href="{$vo.resume}">查看简历</a>
+                {else/}
+                简历未上传
+                {/if}
+            </td>
             <td class="text-center">{if $vo.is_read==1}<span class="text-green">已读</span>{else/}<span class="text-red">未读</span>{/if}</td>
             <td class="text-center">
                 {if $vo.status == 1}

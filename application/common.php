@@ -2185,7 +2185,7 @@ function get_user_name($id)
  * @param       string $desc 描述备注
  * @return bool
  */
-function cash_flow($orderno, $cid, $price, $type, $goods_id, $desc = '')
+function cash_flow($orderno, $cid, $price, $type, $goods_id, $desc = '', $teacher_id = '')
 {
     $data = [
         'orderno' => $orderno,
@@ -2194,7 +2194,8 @@ function cash_flow($orderno, $cid, $price, $type, $goods_id, $desc = '')
         'type' => $type,
         'goods_id' => $goods_id,
         'desc' => $desc,
-        'created_at' => time()
+        'created_at' => time(),
+        'teacher_id' => $teacher_id
     ];
     $res = Db::name('saas_cash_flow')->insert($data);
     if ($res) {
