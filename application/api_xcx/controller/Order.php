@@ -188,7 +188,7 @@ class Order extends BasicXcx
 
         //查询用户可用的优惠券
         $can_use_coupon = Db::name('saas_xcx_coupon_detail xad')
-            ->join('saas_xcx_activity xa', 'xad.aid = xa.id')
+            ->join('saas_xcx_coupon xa', 'xad.aid = xa.id')
             ->where('xad.cid', '=', $user->id)
             ->where('xad.is_can_use', '=', 1)
             ->where('xad.status', '=', 0)
