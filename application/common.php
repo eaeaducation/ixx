@@ -2335,3 +2335,15 @@ function get_student_course($student_id)
 
     return $html_table;
 }
+
+function get_customer_lession_num($cid, $class_id)
+{
+    $data = Db::name('saas_order_log l')
+        ->join('saas_order o', 'o.id = l.order_id', 'left')
+        ->where('o.student_id', '=', $cid)
+        ->where('l.class_id', '=', $class_id)
+        ->where('o.status', '<>', 3)
+        ->field('l.goods_num, l.consume_num')
+        ->find();
+    return $data['goods_num'] - $data['consume_num'];
+}
