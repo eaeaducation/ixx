@@ -14,14 +14,27 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label layui-form-label">
-                    活动主题图
+                    优惠券主题图
                 </label>
-                <div class='col-sm-8'>
+                <div class='col-sm-10'>
                     <img data-tips-image style="height:auto;max-height:32px;min-width:32px" src="{$vo.activity_theme_img|default=''}"/>
-                    <input type="hidden" name="activity_theme" onchange="$(this).prev('img').attr('src', this.value)"
+                    <input type="hidden" name="activity_theme_img" onchange="$(this).prev('img').attr('src', this.value)"
                            value="{$vo.activity_theme_img|default=''}" class="layui-input" required>
                     <a class="btn btn-link" data-file="one" data-uptype="local" data-type="jpg,png,jpeg"
-                       data-field="activity_theme">上传图片</a>
+                       data-field="activity_theme_img">上传图片</a>
+                    <p class="help-block">建议上传尺寸为206x60px（格式暂定）</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label layui-form-label">
+                    优惠券领取图
+                </label>
+                <div class='col-sm-10'>
+                    <img data-tips-image style="height:auto;max-height:32px;min-width:32px" src="{$vo.activity_img|default=''}"/>
+                    <input type="hidden" name="activity_img" onchange="$(this).prev('img').attr('src', this.value)"
+                           value="{$vo.activity_img|default=''}" class="layui-input" required>
+                    <a class="btn btn-link" data-file="one" data-uptype="local" data-type="jpg,png,jpeg"
+                       data-field="activity_img">上传图片</a>
                     <p class="help-block">建议上传尺寸为206x60px（格式暂定）</p>
                 </div>
             </div>

@@ -54,7 +54,8 @@ class Coupon extends BasicAdmin
                 'created_at' => time(),
                 'activity_rule' => json_encode($rule),
                 'rule_detail' => $post['rule_detail'],
-                'activity_theme_img' => $post['activity_theme']
+                'activity_theme_img' => $post['activity_theme_img'],
+                'activity_img' => $post['activity_img']
             ];
             Db::name('saas_xcx_coupon')->insert($data);
             list($base, $spm, $url) = [url('@admin'), $this->request->get('spm'), url('xiaochengxu/coupon/index')];
@@ -93,7 +94,8 @@ class Coupon extends BasicAdmin
                 'end_time' => $e_time,
                 'activity_rule' => json_encode($rule),
                 'rule_detail' => $post['rule_detail'],
-                'activity_theme_img' => $post['activity_theme']
+                'activity_theme_img' => $post['activity_theme_img'],
+                'activity_img' => $post['activity_img']
             ];
             Db::name('saas_xcx_coupon')->where('id', $id)->update($data);
             list($base, $spm, $url) = [url('@admin'), $this->request->get('spm'), url('xiaochengxu/coupon/index')];
