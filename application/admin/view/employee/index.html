@@ -115,7 +115,7 @@
             <td class="text-nowrap text-center nowrap">
                 {if auth("$classuri/edit")}
                 <span class="text-explode">|</span>
-                <a data-title="编辑员工信息" data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                <a data-title="编辑员工信息" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['70%', '80%']">编辑</a>
                 {/if}
                 {if $vo.sys_status eq 1}
                 <span class="text-explode">|</span>

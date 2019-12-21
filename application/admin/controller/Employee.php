@@ -148,7 +148,7 @@ class Employee extends BasicAdmin
             Cache::rm('users11');
         }
         if ($vo === true) {
-            $this->success('员工信息修改成功！', "{$base}#{$url}?spm={$spm}");
+            $this->success('员工信息修改成功！', "");
         } else {
             $this->success('添加员工成功！', "{$base}#{$url}?spm={$spm}");
         }
@@ -184,7 +184,7 @@ class Employee extends BasicAdmin
      */
     public function edit()
     {
-        $this->title = '编辑员工';
+//        $this->title = '编辑员工';
         return $this->_form($this->table, 'employee');
 
     }
