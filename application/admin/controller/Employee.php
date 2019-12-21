@@ -33,7 +33,7 @@ class Employee extends BasicAdmin
         $this->title = '员工管理';
         $db = Db::name($this->table)
             ->alias('e')
-            ->field('e.*, a.title as username')
+            ->field('e.*, a.title as username, u.status as sys_status')
             ->join('system_user u', 'e.userid=u.id')
             ->join('system_auth a', 'u.authorize=a.id')
             ->order('e.id desc')
