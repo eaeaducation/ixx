@@ -120,11 +120,11 @@
                 {if $vo.sys_status eq 1}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.userid}" data-field='status' data-value='0' data-action='{:url("admin/user/forbid")}'
-                   href="javascript:void(0)">禁用{$vo.sys_status}</a>
+                   href="javascript:void(0)">禁用</a>
                 {else if $vo.sys_status eq 0}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.userid}" data-field='status' data-value='1' data-action='{:url("admin/user/resume")}'
-                   href="javascript:void(0)">启用{$vo.sys_status}</a>
+                   href="javascript:void(0)">启用</a>
                 {/if}
                 {if auth("$classuri/del")}
                 <span class="text-explode">|</span>
