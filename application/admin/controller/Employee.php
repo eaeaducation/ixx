@@ -68,7 +68,7 @@ class Employee extends BasicAdmin
         if (isset($get['authorize']) && $get['authorize'] != '') {
             $db->where('u.authorize', '=', $get['authorize']);
         }
-        if (!in_array($this->user['authorize'], [1, 3, 4])) {
+        if (!in_array($this->user['authorize'], [1, 3, 4, 23])) {
             $db->where('department', '=', $this->user['employee']['department']);
         }
         if (isset($get['action']) && $get['action'] == 'down') {
