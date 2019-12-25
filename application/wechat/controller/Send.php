@@ -26,7 +26,7 @@ class Send extends Controller
             ->field('c.title as class_name,h.*, w.*')
             ->join('saas_class c', 'h.class_id=c.id', 'left')
             ->join('saas_courseware w', 'w.id=h.courseware_id', 'left')
-            ->where('h.id', '=', 18)
+            ->where('h.id', '=', $id)
             ->find();
         $homework['courseware_words'] = json_decode($homework['courseware_words'], 1);
         $homework['courseware_sentence'] = json_decode($homework['courseware_sentence'], 1);

@@ -38,7 +38,7 @@
                 hui.closeLoading();
                 if (e.code == 1) {
                     hui.iconToast(e.msg);
-                    setTimeout(window.location.href = "{$call_back}", 3000);
+                    setTimeout(window.close(), 3000);
                 } else {
                     hui.toast(e.msg);
                 }
