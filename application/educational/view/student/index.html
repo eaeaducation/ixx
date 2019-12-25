@@ -162,11 +162,11 @@
             done: function (value, date, endDate) {
                 var date = new Date(date.year + '-' + date.month + '-' + date.date)
                 var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
-                if ((endDate - date) / 1000 / 86400 > 31) {
-                    $.msg.alert('最大时间范围为31天', function () {
-                        $('#time_range').val('')
-                    })
-                }
+                // if ((endDate - date) / 1000 / 86400 > 31) {
+                //     $.msg.alert('最大时间范围为31天', function () {
+                //         $('#time_range').val('')
+                //     })
+                // }
             }
         })
     })
