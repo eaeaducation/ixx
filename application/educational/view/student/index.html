@@ -1,5 +1,9 @@
 {extend name='admin@public/content'}
-
+{block name="button"}
+<a   href= "{:url('educational/student/export')}?source={$Think.get.source}&branch={$Think.get.branch}&keyword={$Think.get.keyword}&time_range={$Think.get.time_range}"
+     class='layui-btn layui-btn-sm '>导出数据
+</a>
+{/block}
 {block name="content"}
 <style>
     .new-table td {
