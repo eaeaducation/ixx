@@ -105,7 +105,7 @@ class CustomerRegister extends Controller
         $userInfo = WechatService::webOauth($url);
         $openId = $userInfo['openid'];
         //查询用户信息
-        $call_back = url('wechatBindMobile');
+        $call_back = url('success_page');
         if ($this->request->isPost()) {
             $openid = $this->request->post('openid');
             $parent_tel = $this->request->post('parent_tel');
@@ -134,7 +134,11 @@ class CustomerRegister extends Controller
                 }
             }
         }
-        return $this->fetch('register', ['openid' => $openId, 'call_back' => $call_back]);
+        return $this->fetch('bindmobile', ['openid' => $openId, 'call_back' => $call_back]);
     }
 
+    public function success_page()
+    {
+        return $this->fetch('');
+    }
 }

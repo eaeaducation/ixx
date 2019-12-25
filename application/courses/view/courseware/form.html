@@ -82,9 +82,9 @@
                         <td class="param-input-td two nowrap">
                             <input required placeholder="点击上传单词配图" title="请上传单词配图" ng-model="x.pic_url" class="layui-input" data-file="one" data-type="png,jpeg,jpg" data-field="words[{{i}}][pic_url]" name="words[{{i}}][pic_url]">
                         </td>
-                        <td class="param-input-td three nowrap">
-                            <input required placeholder="点击上传单词配音" title="请上传单词语音" ng-model="x.voice_url" data-file="one" data-type="mp3" data-field="words[{{i}}][voice_url]" name="words[{{i}}][voice_url]" class="layui-input">
-                        </td>
+<!--                        <td class="param-input-td three nowrap">-->
+<!--                            <input required placeholder="点击上传单词配音" title="请上传单词语音" ng-model="x.voice_url" data-file="one" data-type="mp3" data-field="words[{{i}}][voice_url]" name="words[{{i}}][voice_url]" class="layui-input">-->
+<!--                        </td>-->
                         <td class="param-input-td thr nowrap">
                             <a ng-if="$index<1" class="color-desc">删除</a>
                             <a ng-if="$index>0" ng-click="delParam($index)">删除</a>
@@ -244,7 +244,7 @@
 
             // 添加参数
             $rootScope.addParam = function () {
-                $rootScope.words.push({word: '', pic_url: '', voice_url: ''});
+                $rootScope.words.push({word: '', pic_url: ''});
                 setTimeout(function () {
                     $('.param-table-list').scrollTop('10000')
                 }, 10);
@@ -315,7 +315,6 @@
                         word_list.push({
                             word: $rootScope.words[i].word,
                             word_picture: $rootScope.words[i].pic_url,
-                            word_voice: $rootScope.words[i].voice_url
                         });
                     }
                     var data = {
@@ -333,7 +332,7 @@
 
         // 过滤单词参数列表
         function filterParamList(list) {
-            return list.length < 1 ? [{word: '', pic_url: '', voice_url: ''}] : list;
+            return list.length < 1 ? [{word: '', pic_url: ''}] : list;
         }
 
         // 过滤语音参数列表

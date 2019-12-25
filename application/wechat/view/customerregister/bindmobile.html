@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>绑定手机号</title>
+    <title>关联账号</title>
     <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css"/>
 </head>
 <body style="background:#F4F5F6;">
@@ -33,7 +33,7 @@
             hui.loading('请稍后');
             var parent_tel = $("input[name='parent_tel']").val();
             var openid = $("input[name='openId']").val();
-            var url = "{:url('register')}";
+            var url = "{:url('wechatBindMobile')}";
             $.post(url, {parent_tel: parent_tel, openid: openid}, function (e) {
                 hui.closeLoading();
                 if (e.code == 1) {
