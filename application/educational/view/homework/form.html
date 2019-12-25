@@ -53,43 +53,58 @@
             </div>
         </div>
 
-
         <div class="layui-form-item">
-            <label class="layui-form-label">作业内容</label>
+            <label class="layui-form-label">选择作业</label>
             <div class='layui-input-block'>
-                <textarea id="content" name="content" lay-filter="content">{$va.content|default=''|raw}</textarea>
+                <select name="courseware_id" required lay-search>
+                    {if isset($courseware) && !empty($courseware)}
+                    {foreach $courseware as $key => $value}
+                    <option value="{$key}">{$value}</option>
+                    {/foreach}
+                    {else}
+                    <option value="">-请选择-</option>
+                    {/if}
+                </select>
             </div>
         </div>
 
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">添加图片</label>
-            <div class="layui-input-block">
-                <table class="layui-table background-item margin-none" lay-size="sm" lay-skin="nob">
-                    <thead>
-                    <tr>
-                        <td>添加作业图片</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="text-top" style="width:100px">
-                            <input type="hidden" name="homework_pic" value="{$va.homework_pic|default=''}" >
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">作业内容</label>-->
+<!--            <div class='layui-input-block'>-->
+<!--                <textarea id="content" name="content" lay-filter="content">{$va.content|default=''|raw}</textarea>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="hr-line-dashed"></div>
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">添加图片</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <table class="layui-table background-item margin-none" lay-size="sm" lay-skin="nob">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <td>添加作业图片</td>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr>-->
+<!--                        <td class="text-top" style="width:100px">-->
+<!--                            <input type="hidden" name="homework_pic" value="{$va.homework_pic|default=''}" >-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="hr-line-dashed"></div>-->
 
         <script>
-            window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
-            require(['ckeditor'], function () {
-                window.createEditor('[name="content"]', {height: 300});
-            });
-            window.form.render();
+            // window.laydate.render({range: true, elem: '#notice_time', min: '{:date("Y-m-d")}'});
+            // require(['ckeditor'], function () {
+            //     window.createEditor('[name="content"]', {height: 300});
+            // });
+            // window.form.render();
         </script>
     </div>
     <div class="layui-col-xs10">

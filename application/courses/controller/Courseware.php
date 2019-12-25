@@ -13,6 +13,7 @@ use QRCode;
 use think\Db;
 use service\DataService;
 use service\LogService;
+use think\facade\Log;
 
 /**
  * 课件管理
@@ -46,7 +47,28 @@ class Courseware extends BasicAdmin
      */
     public function add()
     {
-        return $this->_form($this->table, 'form');
+        if (!$this->request->isPost()) {
+            return $this->fetch('form');
+        }
+        $post = $this->request->post();
+        $words = !empty($post['words']) ? $post['words'] : [];
+        $sentence = !empty($post['sentences']) ? $post['sentences'] : [];
+        $insert_data = [
+            'title' => $post['title'],
+            'content' => !empty($post['content']) ? $post['content'] : '',
+            'url' => $post['url'],
+            'remark' => $post['remark'],
+            'created_at' => time(),
+            'file_category' => $post['file_category'],
+            'file_subject' => $post['file_subject'],
+            'courseware_tid' => $post['teacher_id'],
+            'course_lecture' => $post['course_lecture'],
+            'courseware_words' => json_encode($words),
+            'courseware_sentence' => json_encode($sentence)
+        ];
+        Db::name('saas_courseware')->insert($insert_data);
+        $this->success('恭喜, 数据保存成功!', '');
+//        return $this->_form($this->table, 'form');
     }
 
     /**
@@ -55,7 +77,29 @@ class Courseware extends BasicAdmin
      */
     public function edit()
     {
-        return $this->_form($this->table, 'form');
+        $get = $this->request->get();
+        if (!$this->request->isPost()) {
+            $vo = Db::name('saas_courseware')->where('id', '=', $get['id'])->find();
+            $this->assign('vo', $vo);
+            return $this->fetch('form');
+        }
+        $post = $this->request->post();
+        $words = !empty($post['words']) ? $post['words'] : [];
+        $sentence = !empty($post['sentences']) ? $post['sentences'] : [];
+        $update_data = [
+            'title' => $post['title'],
+            'content' => !empty($post['content']) ? $post['content'] : '',
+            'url' => $post['url'],
+            'remark' => $post['remark'],
+            'file_category' => $post['file_category'],
+            'file_subject' => $post['file_subject'],
+            'courseware_tid' => $post['teacher_id'],
+            'course_lecture' => $post['course_lecture'],
+            'courseware_words' => json_encode($words),
+            'courseware_sentence' => json_encode($sentence)
+        ];
+        Db::name('saas_courseware')->where('id', '=', $get['id'])->update($update_data);
+        $this->success('恭喜, 数据更新成功!', '');
     }
 
     /**

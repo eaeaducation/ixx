@@ -99,4 +99,42 @@ class CustomerRegister extends Controller
         return $this->fetch('', ['openid' => $openId, 'call_back' => $call_back]);
     }
 
+    public function wechatBindMobile()
+    {
+        $url = "http://" . $_SERVER['HTTP_HOST'] . "/wechat/CustomerRegister/wechatBindMobile";
+        $userInfo = WechatService::webOauth($url);
+        $openId = $userInfo['openid'];
+        //查询用户信息
+        $call_back = url('wechatBindMobile');
+        if ($this->request->isPost()) {
+            $openid = $this->request->post('openid');
+            $parent_tel = $this->request->post('parent_tel');
+            if (empty($openid)) {
+                return json(['code' => -1, 'msg' => '非法操作']);
+            }
+            if (empty($parent_tel)) {
+                return json(['code' => -1, 'msg' => '请输入电话号']);
+            }
+            $customer = Db::name('saas_customer')->where('parent_tel', trim($parent_tel))->find();
+            if (empty($customer)) {
+                $data['wxopenid'] = $openid;
+                $data['parent_tel'] = $parent_tel;
+                $data['source'] = 1;
+                $data['created_at'] = time();
+                Db::name('saas_customer')->insert($data);
+                return json(['code' => 1, 'msg' => '您已成为了EA新成员']);
+            } elseif (!empty($customer['wxopenid'])) {
+                return json(['code' => -1, 'msg' => '该账号已经关联了微信']);
+            } else {
+                $res = Db::name('saas_customer')->where('parent_tel', $parent_tel)->update(['wxopenid' => $openid]);
+                if ($res) {
+                    return json(['code' => 1, 'msg' => '账号与微信关联成功']);
+                } else {
+                    return json(['code' => -1, 'msg' => '关联失败,请稍后重试']);
+                }
+            }
+        }
+        return $this->fetch('register', ['openid' => $openId, 'call_back' => $call_back]);
+    }
+
 }

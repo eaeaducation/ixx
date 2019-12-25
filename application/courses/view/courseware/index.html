@@ -3,7 +3,7 @@
 {block name="button"}
 {if auth("$classuri/add")}
 <button data-modal='{:url("$classuri/add")}?top_id={$Think.get.top_id}&hidden_filter={$Think.get.hidden_filter}'
-data-title="添加课件"
+data-title="添加课件" data-area="['60%', '70%']"
 class='layui-btn layui-btn-sm layui-btn-primary'>添加课件
 </button>
 {/if}
@@ -56,7 +56,6 @@ class='layui-btn layui-btn-sm layui-btn-primary'>添加课件
 <!--                <th class='text-center nowrap'>课程名称</th>-->
                 <th class="text-center nowrap">课件标题</th>
                 <th class="text-center nowrap">课件简介</th>
-                <th class="text-center nowrap">课件类型</th>
                 <th class="text-center nowrap">课件分类</th>
                 <th class="text-center nowrap">所属科目</th>
                 <th class="text-center nowrap">资源地址</th>
@@ -75,13 +74,6 @@ class='layui-btn layui-btn-sm layui-btn-primary'>添加课件
 <!--                <td class="text-center nowrap">{$vo.course_id|get_courses_title=$vo.course_id}</td>-->
                 <td class="text-center nowrap">{$vo.title}</td>
                 <td class="text-center nowrap" title="{$vo.content}">{:cn_substr($vo.content)}</td>
-                <td class="text-center nowrap">
-                    {if $vo.file_type == 1}
-                    视频
-                    {elseif $vo.file_type ==2}
-                    音频
-                    {/if}
-                </td>
                 <td class="text-center nowrap">{$vo.file_category|convert_category=6|raw}</td>
                 <td class="text-center nowrap">{$vo.file_subject|convert_subject|raw}</td>
                 <td class="text-center" ><a href="{$vo.url}" target="_blank" title='点击查看'>访问资源</a></td>

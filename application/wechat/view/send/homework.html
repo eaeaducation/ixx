@@ -1,58 +1,200 @@
-<!doctype html>
+<!--<!doctype html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport"-->
+<!--          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+<!--    <title>家庭作业</title>-->
+<!--    <style>-->
+<!--        .homework {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            min-height: 32rem;-->
+<!--            margin: 0.2rem 0.5rem 0 0.5rem;-->
+<!--        }-->
+
+<!--        .text {-->
+<!--            width: 85%;-->
+<!--            margin-left: 6%;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            font-size: 1rem;-->
+<!--            text-align: center;-->
+<!--            line-height: 4.5;-->
+<!--        }-->
+
+<!--        img {-->
+<!--            margin-left: 10%;-->
+<!--            width: 80%;-->
+<!--            display: block;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<form class="layui-form" onsubmit="return false" method="post">-->
+<!--    <div class="homework">-->
+<!--        <h1>{$homework.class_name|default=""}&nbsp;</h1>-->
+<!--        &lt;!&ndash;{empty name='homework'}&ndash;&gt;-->
+<!--        <p style="text-align: center">暂无作业！</p>-->
+<!--        &lt;!&ndash;{else}&ndash;&gt;-->
+<!--        <div class="text">-->
+<!--            作业题目：-->
+<!--            {$homework.title}-->
+<!--        </div>-->
+<!--        <div class="text">-->
+<!--            作业内容：-->
+<!--            {:htmlspecialchars_decode($homework.content)}-->
+<!--        </div>-->
+<!--        <div class="text">-->
+<!--            作业图片：<br>-->
+<!--            <img src="{$homework.homework_pic}" alt="">-->
+<!--        </div>-->
+<!--        &lt;!&ndash;{/empty}&ndash;&gt;-->
+<!--    </div>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>家庭作业</title>
-    <style>
-        .homework {
-            width: 100%;
-            height: 100%;
-            min-height: 32rem;
-            margin: 0.2rem 0.5rem 0 0.5rem;
-        }
+    <title>课程内容</title>
+    <link rel="stylesheet" href="/static/homework/css/index.css">
 
-        .text {
-            width: 85%;
-            margin-left: 6%;
-        }
-
-        h1 {
-            font-size: 1rem;
-            text-align: center;
-            line-height: 4.5;
-        }
-
-        img {
-            margin-left: 10%;
-            width: 80%;
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/homework/css/audio.css">
 </head>
+
 <body>
-<form class="layui-form" onsubmit="return false" method="post">
-    <div class="homework">
-        <h1>{$homework.class_name|default=""}&nbsp;</h1>
-        <!--{empty name='homework'}-->
-        <p style="text-align: center">暂无作业！</p>
-        <!--{else}-->
-        <div class="text">
-            作业题目：
-            {$homework.title}
+<div class="lessonCourse" id="app">
+<!--    <div class="head-title">课程内容</div>-->
+    <!-- 本堂内容 -->
+    <div class="mainContent">
+        <div class="title">本堂内容</div>
+        {if $homework.file_type == 2}
+        <audio id="myAudio" src="{$homework.url}" controls="controls" preload="auto">
+            你的浏览器不支持video元素
+        </audio>
+        {else/}
+        <video id="myPlayer" width="100%" height="200" src="{$homework.url}" controls="controls" loop="loop">
+            你的浏览器不支持audio元素
+        </video>
+        {/if}
+        <div class="teacher_info">
+            授课老师：{:get_employee_name2($homework.courseware_tid)}
         </div>
-        <div class="text">
-            作业内容：
-            {:htmlspecialchars_decode($homework.content)}
+        <div class="lesson">
+            <div class="lesson_l">lesson: <span>{$homework.course_lecture}</span></div>
+            <div class="lesson_r"><img src="/static/homework/images/time.png" alt=""><span>{:date('Y-m-d', $homework.created_at)}</span></div>
         </div>
-        <div class="text">
-            作业图片：<br>
-            <img src="{$homework.homework_pic}" alt="">
-        </div>
-        <!--{/empty}-->
     </div>
-</form>
+    <!-- 课程重点 -->
+    <div class="courseFocus">
+        <div class="title">课程重点</div>
+        <div class="course_list">
+            <div class="course_top">
+                <span><i></i> New Word</span>
+                <img src="/static/homework/images/open.png" alt="" class="closeBtn rotate">
+            </div>
+            <ul class="list">
+                {if !empty($homework.courseware_words)}
+                {foreach $homework.courseware_words as $item}
+                <li style='background: url("{$item.pic_url}") no-repeat;background-size: 100% 100%;'>
+                    <p class="word">{$item.word} </p><img class="button" src="/static/homework/images/yinliang.png" alt="voice">
+                    <div class="mask"></div>
+                </li>
+                {/foreach}
+                {/if}
+<!--                <li style="background: url(images/list_bg.png) no-repeat;background-size: 100% 100%;">-->
+<!--                    <p class="word">cat </p><img class="button" src="images/yinliang.png" alt="voice">-->
+<!--                    <div class="mask"></div>-->
+<!--                </li>-->
+<!--                <li style="background: url(images/list_bg.png) no-repeat;background-size: 100% 100%;">-->
+<!--                    <p class="word">test </p><img class="button" src="images/yinliang.png" alt="voice">-->
+<!--                    <div class="mask"></div>-->
+<!--                </li>-->
+<!--                <li style="background: url(images/list_bg.png) no-repeat;background-size: 100% 100%;">-->
+<!--                    <p class="word">cat </p><img class="button" src="images/yinliang.png" alt="voice">-->
+<!--                    <div class="mask"></div>-->
+<!--                </li>-->
+            </ul>
+            <audio id="audio"></audio>
+        </div>
+    </div>
+    <!-- sentence -->
+    <div class="sentence">
+        <div class="course_top">
+            <span><i></i> Sentence</span>
+            <img src="/static/homework/images/open.png" alt="" class="closeBtn2 rotate">
+        </div>
+        {if !empty($homework.courseware_sentence)}
+        {foreach $homework.courseware_sentence as $key => $item}
+        <div class="audio-wrapper">
+            <audio size="#4.50MB" duration="#01:57" filename="">
+                <source src="{$item.sentence_url}" type="audio/mp3">
+            </audio>
+            <div class="sentence_text">
+                {$key+1}. {$item.sentence}
+            </div>
+            <div class="audio_wrap">
+                <div class="audio-left">
+                    <!-- <p style="max-width: 536px;">Launch_Kan R. Gao.mp3</p> -->
+                    <div class="progress-bar-bg" id="progressBarBg">
+                        <span id="progressDot"></span>
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <!-- <div class="audio-time">
+                        <span class="audio-length-current" id="audioCurTime">00:00</span>
+                        <span class="audio-length-total">01:57</span>
+                    </div> -->
+                </div>
+                <div class="audio-right">
+                    <img id="audioPlayer" src="/static/homework/images/play.png">
+                </div>
+            </div>
+        </div>
+        {/foreach}
+        {/if}
+    </div>
+</div>
+<script src="/static/homework/js/jquery-1.11.0.min.js"></script>
+<script src="/static/homework/js/audio.js"></script>
+<script>
+    var audio = document.getElementById("audio");
+    var mask = document.getElementsByClassName("mask");
+    var audioUrl = 'https://dict.youdao.com/speech?audio='; //有道在线发音的api地址
+    var pronounce = document.getElementsByClassName("button");
+    for (var index in pronounce) {
+        pronounce[index].onclick = function() {
+            $('.mask').hide()
+            $(this).next().show();
+            $(this).prev().css('color', '#A1C4FF');
+            audio.src = audioUrl + this.previousSibling.textContent; //获取p标签对象，因为p标签内才有英文单词;
+            audio.play();
+        }
+    }
+
+    $('.closeBtn').click(function() {
+        if ($(this).hasClass("rotate")) {
+            $(this).removeClass("rotate").addClass("rotate1");
+        } else {
+            $(this).removeClass("rotate1").addClass("rotate");
+        }
+        $('.list').slideToggle();
+    })
+    $('.closeBtn2').click(function() {
+        if ($(this).hasClass("rotate")) {
+            $(this).removeClass("rotate").addClass("rotate1");
+        } else {
+            $(this).removeClass("rotate1").addClass("rotate");
+        }
+        $('.audio-wrapper').slideToggle();
+    })
+</script>
 </body>
+
 </html>

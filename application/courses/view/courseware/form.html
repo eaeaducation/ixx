@@ -1,4 +1,4 @@
-<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post"  id="form">
     <div class="layui-form-item">
         <label class="layui-form-label">课件标题</label>
         <div class='layui-input-block'>
@@ -26,6 +26,24 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">
+            授课讲师
+        </label>
+        <div class='layui-input-inline'>
+            {:get_teacher_select('teacher_id',isset($vo.courseware_tid)?$vo.courseware_tid:'', '', ["lay-filter"=>"","required"=>"required",'lay-search' => ''],false)}
+        </div>
+        <label class="layui-form-label">
+            课件课时
+        </label>
+        <div class='layui-input-inline'>
+            <select name="course_lecture" required>
+                {for start="1" end="50"}
+                <option value="第{$i}节">第{$i}节</option>
+                {/for}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">文件类型</label>
         <div class="layui-input-block" >
             {if isset($vo.file_type) && $vo.file_type == 1}
@@ -41,14 +59,88 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="layui-form-label">资源信息</label>
+        <label class="layui-form-label">课堂课件</label>
         <div class='layui-input-block'>
             <div class="layui-input-inline" style="width: 80%">
-                <input style="border-right:none" name="url" required="required" value="{$vo.url|default=''}" class="layui-input" title="请输入链接或上传视频/音频展示文件" placeholder="请输入链接或上传视频/音频展示文件">
+                <input style="border-right:none" name="url" required="required" value="{$vo.url|default=''}" class="layui-input" title="请输入链接或上传视频展示文件" placeholder="请输入链接或上传视频展示文件">
             </div>
             <div class="layui-input-inline" style="width: 19%">
-                <button data-file="one" data-type="mp4,mp3" data-field="url" type="button" class="layui-btn layui-btn-sm" style="height:38px;line-height:38px;width:100%">上传视频/音频文件</button>
+                <button data-file="one" data-type="mp4" data-field="url" type="button" class="layui-btn layui-btn-sm" style="height:38px;line-height:38px;width:100%">上传课堂视频/音频</button>
             </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单词课件</label>
+        <div class="layui-input-block">
+            <div class="param-table-list">
+                <table class="layui-table margin-none">
+                    <tbody class="param-table-list">
+                    <tr ng-repeat="(i, x) in words" class="transition">
+                        <td class="param-input-td one nowrap">
+                            <input required placeholder="单词" title="请输入单词写法" ng-model="x.word" class="layui-input" name="words[{{i}}][word]">
+                        </td>
+                        <td class="param-input-td two nowrap">
+                            <input required placeholder="点击上传单词配图" title="请上传单词配图" ng-model="x.pic_url" class="layui-input" data-file="one" data-type="png,jpeg,jpg" data-field="words[{{i}}][pic_url]" name="words[{{i}}][pic_url]">
+                        </td>
+                        <td class="param-input-td three nowrap">
+                            <input required placeholder="点击上传单词配音" title="请上传单词语音" ng-model="x.voice_url" data-file="one" data-type="mp3" data-field="words[{{i}}][voice_url]" name="words[{{i}}][voice_url]" class="layui-input">
+                        </td>
+                        <td class="param-input-td thr nowrap">
+                            <a ng-if="$index<1" class="color-desc">删除</a>
+                            <a ng-if="$index>0" ng-click="delParam($index)">删除</a>
+                            <a ng-if="$index<1" class="color-desc">上移</a>
+                            <a ng-if="$index>0" ng-click="moveToUp($index)">上移</a>
+                            <a ng-if="$index+1<words.length" ng-click="moveToDn($index)">下移</a>
+                            <a ng-if="$index+1>=words.length" class="color-desc">下移</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="help-block">*单词配图大小：302*261。</p>
+            </div>
+            <table class="layui-table">
+                <tr>
+                    <td class="text-center notselect padding-none border-none">
+                        <button type="button" class="layui-btn full-width layui-btn-primary" ng-click="addParam()">添加单词课件</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">语言课件</label>
+        <div class="layui-input-block">
+            <div class="param-table-list">
+                <table class="layui-table margin-none">
+                    <tbody class="param-table-list">
+                    <tr ng-repeat="(i, x) in sentences" class="transition">
+                        <td class="param-input-td one-sentence nowrap">
+                            <input placeholder="语句" title="请输入单词写法" ng-model="x.sentence" class="layui-input" name="sentences[{{i}}][sentence]">
+                        </td>
+                        <td class="param-input-td two-sentence nowrap">
+                            <input  placeholder="点击上传英语语句发音" title="请上传英语语句发音" ng-model="x.sentence_url" class="layui-input" data-file="one" data-type="mp3,wav" data-field="sentences[{{i}}][sentence_url]" name="sentences[{{i}}][sentence_url]">
+                        </td>
+                        <td class="param-input-td thr nowrap">
+                            <a ng-if="$index<1" class="color-desc">删除</a>
+                            <a ng-if="$index>0" ng-click="delSentence($index)">删除</a>
+                            <a ng-if="$index<1" class="color-desc">上移</a>
+                            <a ng-if="$index>0" ng-click="moveToUp2($index)">上移</a>
+                            <a ng-if="$index+1<sentences.length" ng-click="moveToDn2($index)">下移</a>
+                            <a ng-if="$index+1>=sentences.length" class="color-desc">下移</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table class="layui-table">
+                <tr>
+                    <td class="text-center notselect padding-none border-none">
+                        <button type="button" class="layui-btn full-width layui-btn-primary" ng-click="addSentence()">添加语句课件</button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 <!--    <div class="layui-form-item">-->
@@ -113,3 +205,197 @@
         })
     }
 </script>
+<script>
+    require(['angular'], function () {
+        // 应用创建与初始化
+        var app = angular.module("Form", []).run(callback);
+        angular.bootstrap(document.getElementById('form'), [app.name]);
+
+        // 应用事件处理
+        function callback($rootScope) {
+            // 属性参数
+            $rootScope.words = filterParamList(JSON.parse('{$vo.courseware_words|default="[]"|raw}') || []);
+            $rootScope.sentences = filterSentenceList(JSON.parse('{$vo.courseware_sentence|default="[]"|raw}') || []);
+            // 删除菜单
+            $rootScope.delParam = function (x) {
+                var dialogIndex = $.msg.confirm('确定移除参数吗？', function () {
+                    $rootScope.$apply(function () {
+                        var tmp = [];
+                        for (var i in $rootScope.words) {
+                            (parseInt(i) !== parseInt(x)) && tmp.push($rootScope.words[i]);
+                        }
+                        $rootScope.words = filterParamList(tmp);
+                        $.msg.close(dialogIndex);
+                    });
+                });
+            };
+            $rootScope.delSentence = function (x) {
+                var dialogIndex = $.msg.confirm('确定移除参数吗？', function () {
+                    $rootScope.$apply(function () {
+                        var tmp = [];
+                        for (var i in $rootScope.sentences) {
+                            (parseInt(i) !== parseInt(x)) && tmp.push($rootScope.sentences[i]);
+                        }
+                        $rootScope.sentences = filterSentenceList(tmp);
+                        $.msg.close(dialogIndex);
+                    });
+                });
+            };
+
+            // 添加参数
+            $rootScope.addParam = function () {
+                $rootScope.words.push({word: '', pic_url: '', voice_url: ''});
+                setTimeout(function () {
+                    $('.param-table-list').scrollTop('10000')
+                }, 10);
+            };
+            $rootScope.addSentence = function () {
+                $rootScope.sentences.push({sentence: '', sentence_url: ''});
+                setTimeout(function () {
+                    $('.param-table-list').scrollTop('10000')
+                }, 10);
+            };
+
+            // 属性参数下移
+            $rootScope.moveToDn = function (index) {
+                var tmp = [], cur = $rootScope.words[index];
+                if (index > $rootScope.words.length - 2) {
+                    return false;
+                }
+                for (var i in $rootScope.words) {
+                    (parseInt(i) !== parseInt(index)) && tmp.push($rootScope.words[i]);
+                    (parseInt(i) === parseInt(index) + 1) && tmp.push(cur);
+                }
+                $rootScope.words = tmp;
+            };
+            // 属性参数下移
+            $rootScope.moveToDn2 = function (index) {
+                var tmp = [], cur = $rootScope.sentences[index];
+                if (index > $rootScope.sentences.length - 2) {
+                    return false;
+                }
+                for (var i in $rootScope.sentences) {
+                    (parseInt(i) !== parseInt(index)) && tmp.push($rootScope.sentences[i]);
+                    (parseInt(i) === parseInt(index) + 1) && tmp.push(cur);
+                }
+                $rootScope.sentences = tmp;
+            };
+
+            // 属性参数上移
+            $rootScope.moveToUp = function (index) {
+                var tmp = [], cur = $rootScope.words[index];
+                if (index < 1) {
+                    return false;
+                }
+                for (var i in $rootScope.words) {
+                    (parseInt(i) === parseInt(index) - 1) && tmp.push(cur);
+                    (parseInt(i) !== parseInt(index)) && tmp.push($rootScope.words[i]);
+                }
+                $rootScope.words = tmp;
+            };
+
+            // 属性参数上移
+            $rootScope.moveToUp2 = function (index) {
+                var tmp = [], cur = $rootScope.sentences[index];
+                if (index < 1) {
+                    return false;
+                }
+                for (var i in $rootScope.sentences) {
+                    (parseInt(i) === parseInt(index) - 1) && tmp.push(cur);
+                    (parseInt(i) !== parseInt(index)) && tmp.push($rootScope.sentences[i]);
+                }
+                $rootScope.sentences = tmp;
+            };
+
+            // 表单验证
+            $('#spec-form').vali(function (ret) {
+                try {
+                    var word_list = [];
+                    for (var i in $rootScope.words) {
+                        word_list.push({
+                            word: $rootScope.words[i].word,
+                            word_picture: $rootScope.words[i].pic_url,
+                            word_voice: $rootScope.words[i].voice_url
+                        });
+                    }
+                    var data = {
+                        word_list: JSON.stringify(word_list)
+                    };
+                    var id = '{$vo.id|default=0}';
+                    id > 0 && (data.id = id);
+                    $.form.load('{:request()->url()}', data, 'post');
+                } catch ($e) {
+                    console.log($e);
+                }
+                return false;
+            });
+        }
+
+        // 过滤单词参数列表
+        function filterParamList(list) {
+            return list.length < 1 ? [{word: '', pic_url: '', voice_url: ''}] : list;
+        }
+
+        // 过滤语音参数列表
+        function filterSentenceList(list) {
+            return list.length < 1 ? [{sentence: '', sentence_url: ''}] : list;
+        }
+    });
+</script>
+
+<style>
+    .param-table-list {
+        overflow: auto;
+        max-height: 200px;
+        position: relative;
+        overflow-y: scroll;
+    }
+
+    .param-input-td {
+        position: relative;
+        padding: 0 !important;
+    }
+
+    .param-input-td.one {
+        width: 30%;
+    }
+
+    .param-input-td.thr {
+        width: 20%;
+        text-align: center;
+    }
+
+    .param-input-td.one:before {
+        content: '单词'
+    }
+
+    .param-input-td.two:before {
+        content: '配图'
+    }
+
+    .param-input-td.three:before {
+        content: '语音'
+    }
+    .param-input-td.one-sentence:before {
+        content: '语句'
+    }
+
+    .param-input-td.two-sentence:before {
+        content: '配音'
+    }
+
+    .param-input-td:before {
+        margin: 4px;
+        width: 40px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        position: absolute;
+        background: #e2e2e2;
+    }
+
+    .param-input-td input {
+        padding-left: 50px;
+        border: none !important;
+    }
+</style>
