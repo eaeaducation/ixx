@@ -65,7 +65,7 @@
                 <input style="border-right:none" name="url" required="required" value="{$vo.url|default=''}" class="layui-input" title="请输入链接或上传视频展示文件" placeholder="请输入链接或上传视频展示文件">
             </div>
             <div class="layui-input-inline" style="width: 19%">
-                <button data-file="one" data-type="mp4,mp3,wav" data-field="url" type="button" class="layui-btn layui-btn-sm" style="height:38px;line-height:38px;width:100%">上传课堂视频/音频</button>
+                <button data-file="one" data-type="mp4,mp3,wav,rm,rmvb" data-field="url" type="button" class="layui-btn layui-btn-sm" style="height:38px;line-height:38px;width:100%">上传课堂视频/音频</button>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
                             <input required placeholder="点击上传单词配图" title="请上传单词配图" ng-model="x.pic_url" class="layui-input" data-file="one" data-type="png,jpeg,jpg" data-field="words[{{i}}][pic_url]" name="words[{{i}}][pic_url]">
                         </td>
                         <td class="param-input-td three nowrap">
-                            <input required placeholder="点击上传单词配音" title="请上传单词语音" ng-model="x.voice_url" data-file="one" data-type="mp3" data-field="words[{{i}}][voice_url]" name="words[{{i}}][voice_url]" class="layui-input">
+                            <input required placeholder="点击上传单词配音" title="请上传单词语音" ng-model="x.voice_url" data-file="one" data-type="mp3,wma,wav" data-field="words[{{i}}][voice_url]" name="words[{{i}}][voice_url]" class="layui-input">
                         </td>
                         <td class="param-input-td thr nowrap">
                             <a ng-if="$index<1" class="color-desc">删除</a>
@@ -120,7 +120,7 @@
                             <input placeholder="语句" title="请输入单词写法" ng-model="x.sentence" class="layui-input" name="sentences[{{i}}][sentence]">
                         </td>
                         <td class="param-input-td two-sentence nowrap">
-                            <input  placeholder="点击上传英语语句发音" title="请上传英语语句发音" ng-model="x.sentence_url" class="layui-input" data-file="one" data-type="mp3,wav" data-field="sentences[{{i}}][sentence_url]" name="sentences[{{i}}][sentence_url]">
+                            <input  placeholder="点击上传英语语句发音" title="请上传英语语句发音" ng-model="x.sentence_url" class="layui-input" data-file="one" data-type="mp3,wav,wma" data-field="sentences[{{i}}][sentence_url]" name="sentences[{{i}}][sentence_url]">
                         </td>
                         <td class="param-input-td thr nowrap">
                             <a ng-if="$index<1" class="color-desc">删除</a>
