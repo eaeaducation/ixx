@@ -64,9 +64,9 @@ class Student extends BasicAdmin
             list($start, $end) = explode(' ~ ', $get['time_range']);
             $_start = strtotime($start);
             $_end = strtotime($end) + 86400;
-            if (($_end - $_start) / 86400 > 60) {
-                $_start = strtotime('-60 days', $_end);
-            }
+//            if (($_end - $_start) / 86400 > 60) {
+//                $_start = strtotime('-60 days', $_end);
+//            }
             $db->whereBetween('created_at', [$_start, $_end]);
         }
         foreach (['source', 'branch'] as $key) {
