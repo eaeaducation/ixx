@@ -121,12 +121,12 @@
             <div class="layui-form-item" id="product" style="display: none">
                 <label class="layui-form-label">产品ID</label>
                 <div class="layui-input-inline" style="width: 20%">
-                    <input type="text" name="product_id" value='{$vo.product_id|default=""}' title="本次参与活动的产品id"
+                    <input type="text" name="product_id" value='{if isset($vo.product_info)}{:json_decode($vo.product_info, 1)["product_id"]}{else}{/if}' title="本次参与活动的产品id"
                            placeholder="本次参与活动的产品id" class="layui-input">
                 </div>
                 <label class="layui-form-label">秒杀价</label>
                 <div class="layui-input-inline" style="width: 20%">
-                    <input type="text" name="product_price" value='{$vo.product_price|default=""}' title="产品秒杀价格"
+                    <input type="text" name="product_price" value='{if isset($vo.product_info)}{:json_decode($vo.product_info, 1)["product_price"]}{else}{/if}' title="产品秒杀价格"
                            placeholder="产品秒杀价格" class="layui-input">
                 </div>
             </div>
@@ -180,12 +180,18 @@
     $(function () {
         require(['angular'], function () {
             var app = angular.module('ClassForm', []);
-            console.log(app)
             app.controller('form', function ($scope) {
                 console.log(111)
                 $scope.name = 'dafads';
             })
         })
+
+        var radio_type = $('input[name="operate_type"]:checked').val();
+        if (radio_type == 4) {
+            $('#product').show();
+        } else if(radio_type == 5) {
+            $('#h5_url').show();
+        }
     })
     window.form.render();
     layui.use('laydate', function() {
