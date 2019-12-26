@@ -24,6 +24,14 @@
                 {/if}
             </select>
         </div>
+        <label class="layui-form-label">
+            所属课程
+        </label>
+        <div class='layui-input-inline' id="course_add">
+            <select name="course" lay-filter="course" id="course" required>
+                <option value="">-请选择-</option>
+            </select>
+        </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">
@@ -177,6 +185,9 @@
 </form>
 <script>
     window.form.render();
+    var category = '';
+    var subject = '';
+    var course = '';
     form.on('select(file_category)', function (data) {
         category = $('select[name="file_category"] option:selected').val();
         tool();
@@ -188,6 +199,15 @@
             return false;
         }
         subject = data.value;
+        //查询类别，科目下的课程
+        get_course();
+    });
+    form.on('select(course)', function (data) {
+        subject = $('select[name="file_subject"] option:selected').val();
+        if (subject == '') {
+            layer.msg('请先选择课程所属科目!', {icon: 5});
+            return false;
+        }
     });
 
     function tool() {
@@ -200,6 +220,21 @@
                 $("#subject").html(subject_html);
             } else {
                 $("#subject").html(subject_html);
+            }
+            window.form.render();
+        })
+    }
+
+    function get_course() {
+        $.post('{:url("educational/courses/get_course")}', {category: category, subject: subject}, function (res) {
+            var course_html = '<option value="">-请选择课程-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    course_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                }
+                $("#course").html(course_html);
+            } else {
+                $("#course").html(course_html);
             }
             window.form.render();
         })

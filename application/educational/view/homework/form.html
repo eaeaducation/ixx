@@ -53,18 +53,35 @@
             </div>
         </div>
 
+        <div class="layui-form-item" >
+            <label class="layui-form-label">所属课程类别</label>
+            <div class='layui-input-block' id="category">
+                {:get_category_select(6, 'file_category', isset($vo.file_category)?$vo.file_category:'', '', ['lay-filter'=>'file_category'])}
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">所属课程科目</label>
+            <div class='layui-input-block' id="subject_add">
+                <select name="file_subject" lay-filter="file_subject" id="subject">
+                    <option value="">-请选择-</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <label class="layui-form-label">所属课程</label>
+            <div class='layui-input-block' id="course_add">
+                <select name="course" lay-filter="course" id="course" required>
+                    <option value="">-请选择-</option>
+                </select>
+            </div>
+        </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">选择作业</label>
             <div class='layui-input-block'>
-                <select name="courseware_id" required lay-search>
-                    {if isset($courseware) && !empty($courseware)}
+                <select name="courseware_id" required lay-search id="courseware">
                     <option value="">-请选择-</option>
-                    {foreach $courseware as $key => $value}
-                    <option value="{$key}">{$value}</option>
-                    {/foreach}
-                    {else}
-                    <option value="">-请选择-</option>
-                    {/if}
                 </select>
             </div>
         </div>
@@ -122,6 +139,79 @@
 </form>
 <script>
     window.form.render();
+
+    var category = '';
+    var subject = '';
+    var course = '';
+    form.on('select(file_category)', function (data) {
+        category = $('select[name="file_category"] option:selected').val();
+        tool();
+    });
+    form.on('select(file_subject)', function (data) {
+        category = $('select[name="file_category"] option:selected').val();
+        if (category == '') {
+            layer.msg('请先选择课程类别!', {icon: 5});
+            return false;
+        }
+        subject = data.value;
+        //查询类别，科目下的课程
+        get_course();
+    });
+    form.on('select(course)', function (data) {
+        subject = $('select[name="file_subject"] option:selected').val();
+        if (subject == '') {
+            layer.msg('请先选择课程所属科目!', {icon: 5});
+            return false;
+        }
+        course = data.value;
+        get_courseware();
+    });
+
+    function tool() {
+        $.post('{:url("educational/subject/get_subject")}', {category: category}, function (res) {
+            var subject_html = '<option value="">-请选择科目-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    subject_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                }
+                $("#subject").html(subject_html);
+            } else {
+                $("#subject").html(subject_html);
+            }
+            window.form.render();
+        })
+    }
+
+    function get_course() {
+        $.post('{:url("educational/courses/get_course")}', {category: category, subject: subject}, function (res) {
+            var course_html = '<option value="">-请选择课程-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    course_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                }
+                $("#course").html(course_html);
+            } else {
+                $("#course").html(course_html);
+            }
+            window.form.render();
+        })
+    }
+    function get_courseware() {
+        $.post('{:url("educational/homework/get_courseware")}', {category: category, subject: subject, course: course}, function (res) {
+            var courseware_html = '<option value="">-请选择课件-</option>';
+            if (res.code == 1) {
+                for (var i = 0; i < res.data.length; i++) {
+                    courseware_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                }
+                $("#courseware").html(courseware_html);
+            } else {
+                $("#courseware").html(courseware_html);
+            }
+            window.form.render();
+        })
+    }
+
+
     $('input[name="homework_pic"]').uploadOneImage();
 
     var ids = [];
@@ -133,8 +223,13 @@
         }
     });
     $('#sub').click(function () {
+        courseware = $('select[name="courseware_id"] option:selected').val();
         if (ids.length < 1) {
             layer.msg('没有要布置作业的学员！', {icon: 5});
+            return false;
+        }
+        if (courseware == '') {
+            layer.msg('请选择课件', {icon: 5});
             return false;
         }
         $('[name=operation]').val('send');

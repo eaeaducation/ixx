@@ -263,4 +263,25 @@ class Homework extends BasicAdmin
         }
     }
 
+    /**
+     * 获取科目
+     */
+    public function get_courseware()
+    {
+        $category_id = $this->request->post('category');
+        $subject_id = $this->request->post('subject');
+        $course_id = $this->request->post('course');
+        $data = Db::name('saas_courseware')
+            ->field('id,title')
+            ->where('course_id', '=', $course_id)
+            ->where('file_category','=',$category_id)
+            ->where('file_subject', '=', $subject_id)
+            ->select();
+        if ($data){
+            $this->success('', '', $data);
+        } else {
+            $this->error();
+        }
+    }
+
 }
