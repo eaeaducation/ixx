@@ -433,8 +433,11 @@ class Student extends BasicAdmin
             $_end = strtotime($end) + 86400;
             $data->whereBetween('u.created_at', [$_start, $_end]);
         }
-        foreach (['u.source', 'u.branch'] as $key) {
-            if (isset($get[$key]) && $get[$key] != '') $data->where($key, '=', $get[$key]);
+        if (isset($get['source']) && $get['source'] != '') {
+            $data->where('u.source', '=', $get['source']);
+        }
+        if (isset($get['branch']) && $get['branch'] != '') {
+            $data->where('u.branch', '=', $get['branch']);
         }
         $data->order('u.created_at desc');
         $export_data = $data->select();
