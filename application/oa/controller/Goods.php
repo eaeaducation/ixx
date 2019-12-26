@@ -107,13 +107,12 @@ class Goods extends BasicAdmin
     {
         $id = $this->request->get('id');
 
-        $num = $this->request->get('num');
-
+        $office_goods = Db::name('saas_textbook')->where('id', $id)->find();
         if ($this->request->isPost()) {
 
             $post = $this->request->post();
 
-            if ($post['number'] > $num) {
+            if ($post['number'] > $office_goods['num']) {
                 $this->error('物品库存不够！');
             }
 
@@ -123,9 +122,9 @@ class Goods extends BasicAdmin
 
             Db::name('saas_goods_record')->insert($post);
 
-            $lastNum = $num - $post['number'];//剩余库存
+            $lastNum = $office_goods['num'] - $post['number'];//剩余库存
 
-            $res = Db::name('saas_textbook')->where('id', '=', $id)->update(['num' => $lastNum]);
+            $res = Db::name('saas_textbook')->where('id', '=', $id)->update(['residue' => $lastNum]);
 
             if ($res) {
                 $this->success('出库成功！','');
