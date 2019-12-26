@@ -101,8 +101,18 @@ class Award extends BasicAdmin
                 'end_time' => $e_time,
                 'activity_rule' => json_encode($rule),
                 'rule_detail' => $post['rule_detail'],
-                'activity_theme_img' => $post['activity_theme']
+                'activity_theme_img' => $post['activity_theme'],
+                'operate_type' => $post['operate_type'],
             ];
+            if ($post['operate_type'] == 5) {
+                $data['h5_url'] = $post['h5_url'];
+            } elseif ($post['operate_type'] == 4) {
+                $productinfo = [
+                    'product_id' => $post['product_id'],
+                    'product_price' => $post['product_price']
+                ];
+                $data['product_info'] = json_encode($productinfo);
+            }
             Db::name('saas_xcx_award')->where('id', $id)->update($data);
             $this->success("编辑成功!", "");
         }
