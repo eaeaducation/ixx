@@ -187,7 +187,7 @@
             })
         })
     })
-
+    window.form.render();
     layui.use('laydate', function() {
         var laydate = layui.laydate;
         laydate.render({
@@ -197,6 +197,7 @@
         });
     })
     layui.use(['laydate','form'], function () {
+        window.form.render();
         var form = layui.form;
         form.on('radio(operate_type)', function (data) {
             if (data.value == 4) {
