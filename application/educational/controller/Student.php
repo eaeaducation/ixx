@@ -401,7 +401,7 @@ class Student extends BasicAdmin
         $this->title = '学生列表';
         $get = $this->request->get();
         $data = Db::name('saas_order_log l')
-            ->field("u.name,u.parent_tel,c.title,l.goods_num,l.consume_num,u.id,l.goods_num-l.consume_num as residue_num")
+            ->field("u.name,u.parent_tel,c.title,l.goods_num,l.consume_num,u.id,l.goods_num-l.consume_num as residue_num, l.order_id, o.orderno, l.id")
             ->join('saas_order o', 'o.id = l.order_id', 'left')
             ->join('saas_customer u', 'u.id = o.student_id', 'left')
             ->join('saas_courses c', 'c.id = l.goods_id', 'left')
@@ -442,6 +442,9 @@ class Student extends BasicAdmin
         $data->order('u.created_at desc');
         $export_data = $data->select();
         $key = [
+            'id' => '课程订单id',
+            'order_id' => '订单id',
+            'orderno' => '订单号',
             'name' => '姓名',
             'parent_tel' => '联系电话',
             'title' => '课程',
