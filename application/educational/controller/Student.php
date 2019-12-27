@@ -64,14 +64,14 @@ class Student extends BasicAdmin
             list($start, $end) = explode(' ~ ', $get['time_range']);
             $_start = strtotime($start);
             $_end = strtotime($end) + 86400;
-            if (($_end - $_start) / 86400 > 60) {
-                $_start = strtotime('-60 days', $_end);
-            }
+//            if (($_end - $_start) / 86400 > 60) {
+//                $_start = strtotime('-60 days', $_end);
+//            }
             $db->whereBetween('created_at', [$_start, $_end]);
         }
         foreach (['source', 'branch'] as $key) {
             if (isset($get[$key]) && $get[$key] != '') $db->where($key, '=', $get[$key]);
-            if (isset($get[$key]) && $get[$key] != '') $lession->where($key, '=', $get[$key]);
+//            if (isset($get[$key]) && $get[$key] != '') $lession->where($key, '=', $get[$key]);
         }
         $lession_data = $lession->select();
         $this->assign('lession', $lession_data[0]);
@@ -463,5 +463,65 @@ class Student extends BasicAdmin
 
         }
         return $orderinfo;
+    }
+
+    public function export()
+    {
+        $this->title = '学生列表';
+        $get = $this->request->get();
+        $data = Db::name('saas_order_log l')
+            ->field("u.name,u.parent_tel,c.title,l.goods_num,l.consume_num,u.id,l.goods_num-l.consume_num as residue_num, l.order_id, o.orderno, l.id")
+            ->join('saas_order o', 'o.id = l.order_id', 'left')
+            ->join('saas_customer u', 'u.id = o.student_id', 'left')
+            ->join('saas_courses c', 'c.id = l.goods_id', 'left')
+            ->where('o.status', '<>', 3);
+        if (isset($get['keyword']) && $get['keyword'] != '') {
+            $get['keyword'] = trim($get['keyword']);
+            if (preg_match('/^\d{4}$/', $get['keyword'])) {
+                $data->where('u.parent_tel', 'like', "%{$get['keyword']}%");
+            } elseif (preg_match('/^\d{11}$/', $get['keyword'])) {
+                $data->where('u.parent_tel', '=', "{$get['keyword']}");
+            } elseif (preg_match('/[a-zA-Z\x{4e00}-\x{9fa5}]/u', $get['keyword'])) {
+                $data->where('u.name|u.nickname|u.parent_name', 'like', "%{$get['keyword']}%");
+            } else {
+                $data->where('1=0');
+            }
+        }
+
+        if (isset($get['status']) && $get['status'] == 0) {
+            $data->where('u.status', '=', 0);
+        } elseif (isset($get['status']) && $get['status'] == 1) {
+            $data->where('u.status', '=', 1);
+        } elseif (isset($get['status']) && $get['status'] == -99) {
+            $data->where('u.status', '=', -99);
+        }
+        if (isset($get['time_range']) && $get['time_range'] != '') {
+            $get['time_range'] = str_replace('+~+', ' ~ ', $get['time_range']);
+            list($start, $end) = explode(' ~ ', $get['time_range']);
+            $_start = strtotime($start);
+            $_end = strtotime($end) + 86400;
+            $data->whereBetween('u.created_at', [$_start, $_end]);
+        }
+        if (isset($get['source']) && $get['source'] != '') {
+            $data->where('u.source', '=', $get['source']);
+        }
+        if (isset($get['branch']) && $get['branch'] != '') {
+            $data->where('u.branch', '=', $get['branch']);
+        }
+        $data->order('u.created_at desc');
+        $export_data = $data->select();
+        $key = [
+            'id' => '课程订单id',
+            'order_id' => '订单id',
+            'orderno' => '订单号',
+            'name' => '姓名',
+            'parent_tel' => '联系电话',
+            'title' => '课程',
+            'goods_num' => '购买课时',
+            'consume_num' => '已消课时',
+            'residue_num' => '剩余课时'
+        ];
+        $title = "学生课时";
+        down_excel($export_data, $key, $title);
     }
 }

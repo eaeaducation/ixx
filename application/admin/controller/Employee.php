@@ -33,7 +33,7 @@ class Employee extends BasicAdmin
         $this->title = '员工管理';
         $db = Db::name($this->table)
             ->alias('e')
-            ->field('e.*, a.title as username')
+            ->field('e.*, a.title as username, u.status as sys_status')
             ->join('system_user u', 'e.userid=u.id')
             ->join('system_auth a', 'u.authorize=a.id')
             ->order('e.id desc')
@@ -68,7 +68,7 @@ class Employee extends BasicAdmin
         if (isset($get['authorize']) && $get['authorize'] != '') {
             $db->where('u.authorize', '=', $get['authorize']);
         }
-        if (!in_array($this->user['authorize'], [1, 3, 4])) {
+        if (!in_array($this->user['authorize'], [1, 3, 4, 23])) {
             $db->where('department', '=', $this->user['employee']['department']);
         }
         if (isset($get['action']) && $get['action'] == 'down') {
@@ -148,7 +148,7 @@ class Employee extends BasicAdmin
             Cache::rm('users11');
         }
         if ($vo === true) {
-            $this->success('员工信息修改成功！', "{$base}#{$url}?spm={$spm}");
+            $this->success('员工信息修改成功！', "");
         } else {
             $this->success('添加员工成功！', "{$base}#{$url}?spm={$spm}");
         }
@@ -184,7 +184,7 @@ class Employee extends BasicAdmin
      */
     public function edit()
     {
-        $this->title = '编辑员工';
+//        $this->title = '编辑员工';
         return $this->_form($this->table, 'employee');
 
     }

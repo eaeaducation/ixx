@@ -428,4 +428,24 @@ class Courses extends BasicAdmin
             return json($branchData);
         }
     }
+
+    /**
+     * 获取科目
+     */
+    public function get_course()
+    {
+        $category_id = $this->request->post('category');
+        $subject_id = $this->request->post('subject');
+        $data = Db::name('saas_courses')
+            ->field('id,title')
+            ->where('category','=',$category_id)
+            ->where('subject', '=', $subject_id)
+            ->where('status','=','1')
+            ->select();
+        if ($data){
+            $this->success('', '', $data);
+        } else {
+            $this->error();
+        }
+    }
 }

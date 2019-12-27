@@ -33,10 +33,12 @@ class Homework extends BasicAdmin
         if (empty($students)) {
             $this->error("该班级未分配学生！");
         }
+        $courseware = Db::name('saas_courseware')->column('title', 'id');
         $this->assign('class_id', $class_id);
         $this->assign('id', $id);
         $this->assign('class', $class_row['title']);
         $this->assign('students', $students);
+        $this->assign('courseware', $courseware);
         if ($id) {
             $va = Db::name("saas_course_homework")->where("id", "=", $id)->find();
             $checks = Db::name("saas_homework_log")->field("customer_id")->where("h_id", "=", $id)->select();
@@ -52,10 +54,11 @@ class Homework extends BasicAdmin
             $home_work = [
                 'class_id' => $class_id,
                 'title' => $post['title'],
-                'content' => $post['content'],
+                'content' => '',
                 'created_at' => time(),
                 'userid' => session('user.id'),
-                'homework_pic' => $post['homework_pic']
+                'homework_pic' => '',
+                'courseware_id' => $post['courseware_id']
             ];
             if (isset($post['id']) && !empty($post['id'])) {
                 $res = Db::name('saas_course_homework')->where('id', '=', $post['id'])->update($home_work);
@@ -75,10 +78,11 @@ class Homework extends BasicAdmin
                 $home_work = [
                     'class_id' => $data['class_id'],
                     'title' => $data['title'],
-                    'content' => $data['content'],
+                    'content' => '',
                     'created_at' => time(),
                     'userid' => session('user.id'),
-                    'homework_pic' => $data['homework_pic']
+                    'homework_pic' => '',
+                    'courseware_id' => $data['courseware_id']
                 ];
 
                 $res = Db::name('saas_course_homework')->where('id', '=', $h_id)->update($home_work);
@@ -109,10 +113,11 @@ class Homework extends BasicAdmin
                 $home_work = [
                     'class_id' => $data['class_id'],
                     'title' => $data['title'],
-                    'content' => $data['content'],
+                    'content' => '',
                     'created_at' => time(),
-                    'homework_pic' => $data['homework_pic'],
-                    'userid' => session('user.id')
+                    'homework_pic' => '',
+                    'userid' => session('user.id'),
+                    'courseware_id' => $data['courseware_id']
                 ];
                 $homework_id = Db::name('saas_course_homework')->insertGetId($home_work);
                 if ($homework_id) {
@@ -255,6 +260,27 @@ class Homework extends BasicAdmin
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * 获取科目
+     */
+    public function get_courseware()
+    {
+        $category_id = $this->request->post('category');
+        $subject_id = $this->request->post('subject');
+        $course_id = $this->request->post('course');
+        $data = Db::name('saas_courseware')
+            ->field('id,title')
+            ->where('course_id', '=', $course_id)
+            ->where('file_category','=',$category_id)
+            ->where('file_subject', '=', $subject_id)
+            ->select();
+        if ($data){
+            $this->success('', '', $data);
+        } else {
+            $this->error();
         }
     }
 

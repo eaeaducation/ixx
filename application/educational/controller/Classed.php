@@ -706,7 +706,7 @@ class Classed extends BasicAdmin
         $data = Db::name('saas_course_homework')
             ->where('class_id', '=', $id)
             ->order('created_at desc')
-            ->field('id, title, content')
+            ->field('id, title, content, created_at')
             ->select();
         if ($data) {
             foreach ($data as $k => $v) {

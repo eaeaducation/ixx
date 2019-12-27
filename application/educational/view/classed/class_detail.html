@@ -71,10 +71,10 @@
                         <th class="text-center">学员ID</th>
                         <th class="text-center">学生姓名</th>
                         <th class="text-center">性别</th>
-                        <th class="text-center">生日</th>
+                        <th class="text-center">剩余课时</th>
                         <th class="text-center">家长联系电话</th>
                         <th class="text-center">家长姓名</th>
-                        <th class="text-center">爱学学关注</th>
+                        <th class="text-center">关注EA国际教育</th>
                         <th class="text-center">操作</th>
                     </tr>
                     </thead>
@@ -87,13 +87,17 @@
                         <td class="text-center nowrap">{$item.id}</td>
                         <td class="text-center nowrap"><a  data-open="{:url('marketing/premarketing/customerview')}?id={$item.id}">{$item.name}</a></td>
                         <td class="text-center nowrap">{$item.gender|convert_category=3|raw}</td>
-                        <td class="text-center nowrap">{$item.birthday|format_date}</td>
+                        {if get_customer_lession_num($item.id, $detail.id) <= 10}
+                        <td class="text-center nowrap" style="color: red">{:get_customer_lession_num($item.id, $detail.id)}</td>
+                        {else}
+                        <td class="text-center nowrap">{:get_customer_lession_num($item.id, $detail.id)}</td>
+                        {/if}
                         <td class="text-center nowrap">{$item.parent_tel}</td>
                         <td class="text-center nowrap">{$item.parent_name}</td>
                         <th class="text-center nowrap">
                             <a class="layui-btn layui-btn-primary layui-btn-xs
                             {notempty name='$item.wxopenid'}layui-bg-green border-none" data-tips-text="已关注" {else /}" data-tips-text="未关注"{/notempty}
-                            data-area="['50%','50%']" data-title="爱学学二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
+                            data-area="['50%','50%']" data-title="EA国际教育" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
                                 <i class="fa fa-qrcode"></i>
                             </a>
                         </th>
@@ -179,7 +183,8 @@
                     <thead>
                     <tr style="background-color: #F2F2F2;">
                         <th class="text-center nowrap">作业标题</th>
-                        <th class="text-center nowrap">作业内容</th>
+<!--                        <th class="text-center nowrap">作业内容</th>-->
+                        <th class="text-center nowrap">创建时间</th>
                         <th class="text-center nowrap">操作</th>
                     </tr>
                     </thead>
@@ -187,7 +192,8 @@
                     {foreach $work as $item}
                     <tr>
                         <td class="text-center nowrap">{$item.title}</td>
-                        <td class="text-center nowrap">{$item.content}</td>
+<!--                        <td class="text-center nowrap">{$item.content}</td>-->
+                        <td class="text-center nowrap">{:date('Y-m-d', $item.created_at)}</td>
                         <td class="text-center nowrap">
                             <span class="text-explode">|</span>
                             <a data-title="作业布置"
@@ -220,7 +226,7 @@
                         <th class="text-center">生日</th>
                         <th class="text-center">家长联系电话</th>
                         <th class="text-center">家长姓名</th>
-                        <th class="text-center">爱学学关注</th>
+                        <th class="text-center">EA国际教育关注</th>
                         <th class="text-center">操作</th>
                     </tr>
                     </thead>
@@ -236,7 +242,7 @@
                         <th class="text-center nowrap">
                             <a class="layui-btn layui-btn-primary layui-btn-xs
                             {notempty name='$item.wxopenid'}layui-bg-green border-none" data-tips-text="已关注" {else /}" data-tips-text="未关注"{/notempty}
-                            data-area="['50%','50%']" data-title="爱学学二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
+                            data-area="['50%','50%']" data-title="EA国际教育二维码" data-modal='{:url("$classuri/qr_ewm")}?id={$item.id}'>
                             <i class="fa fa-qrcode"></i>
                             </a>
                         </th>

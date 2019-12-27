@@ -80,6 +80,7 @@
             <th class='text-center nowrap'>昵称</th>
             <th class='text-center nowrap'>联系电话</th>
             <th class='text-center nowrap'>生日</th>
+            <th class='text-center nowrap'>系统状态</th>
             <th class='text-center nowrap'>人事状态</th>
             <th class='text-center nowrap'>合同状态</th>
             <th class='text-center nowrap'>所属校区</th>
@@ -98,6 +99,7 @@
             <td class="text-center nowrap">{$vo.english_name}</td>
             <td class="text-center nowrap">{$vo.mobile}</td>
             <td class="text-center nowrap">{$vo.birthday|format_date}</td>
+            <td class="text-center nowrap">{if $vo.sys_status == 0}<p style="color: red">禁用</p>{else /}<p style="color: green">启用</p>{/if}</td>
             <td class="text-center nowrap">{$vo.personnel_status|convert_category=17|raw}</td>
             <td class="text-center nowrap">{$vo.contract_status|convert_category=21|raw}</td>
             <td class="text-center nowrap">{$vo.department|convert_branch}</td>
@@ -113,7 +115,16 @@
             <td class="text-nowrap text-center nowrap">
                 {if auth("$classuri/edit")}
                 <span class="text-explode">|</span>
-                <a data-title="编辑员工信息" data-open='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
+                <a data-title="编辑员工信息" data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-area="['70%', '80%']">编辑</a>
+                {/if}
+                {if $vo.sys_status eq 1}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.userid}" data-field='status' data-value='0' data-action='{:url("admin/user/forbid")}'
+                   href="javascript:void(0)">禁用</a>
+                {else if $vo.sys_status eq 0}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.userid}" data-field='status' data-value='1' data-action='{:url("admin/user/resume")}'
+                   href="javascript:void(0)">启用</a>
                 {/if}
                 {if auth("$classuri/del")}
                 <span class="text-explode">|</span>

@@ -211,7 +211,6 @@ class Order extends BasicXcx
         $sessionid = $this->request->header('sessionid');
         $sessioninfo = cache($sessionid);
         $post = $this->request->post();
-        Log::error($post);
         $coupon_id = '';
         if (isset($post['coupon_ids']) && !empty($post['coupon_ids'])) {
             $coupon_id = $post['coupon_ids'];

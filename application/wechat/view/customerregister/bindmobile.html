@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>关联账号</title>
+    <link rel="stylesheet" type="text/css" href="/static/extend_res/mobile/css/hui.css"/>
+</head>
+<body style="background:#F4F5F6;">
+<div class="hui-wrap">
+    <div class="hui-center-title" style="height:10rem;"><h1 style="margin-top: 5rem;border: 0;">请先绑定您的手机号</h1></div>
+    <div style="margin:20px 10px; margin-bottom:15px;" class="hui-form" id="form1">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">手机号</div>
+            <input name="parent_tel" type="text" class="hui-input hui-input-clear" placeholder="请输入手机号"
+                   checkType="string"
+                   checkData="11" checkMsg="手机号填写不正确"/>
+            <input type="hidden" name="openId" value="{$openid}">
+        </div>
+    </div>
+    <div style="padding:10px; padding-top:10px;">
+        <button type="button" class="hui-button hui-button-large" style="background: #1aad19;color: #fff" id="submit">下一步</button>
+    </div>
+</div>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/extend_res/mobile/js/hui-form.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/extend_res/jquery/jquery-3.3.1.js" charset="utf-8"></script>
+<script type="text/javascript">
+    hui('#submit').click(function () {
+        //验证
+        var res = huiFormCheck('#form1');
+        if (res) {
+            hui.loading('请稍后');
+            var parent_tel = $("input[name='parent_tel']").val();
+            var openid = $("input[name='openId']").val();
+            var url = "{:url('wechatBindMobile')}";
+            $.post(url, {parent_tel: parent_tel, openid: openid}, function (e) {
+                hui.closeLoading();
+                if (e.code == 1) {
+                    hui.iconToast(e.msg);
+                    setTimeout(window.location.href = "{$call_back}", 3000);
+                } else {
+                    hui.toast(e.msg);
+                }
+
+
+            })
+        }
+    });
+</script>
+</body>
+</html>

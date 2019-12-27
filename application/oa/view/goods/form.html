@@ -7,16 +7,16 @@
                    placeholder="请输入物品名称" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">课程类型</label>
-        <div class='col-sm-3'>
-            {if isset($vo.type)}
-            {:get_category_radio(10, 'type', $vo.type, '', ['required' => 'required'], false)}
-            {else}
-            {:get_category_radio(10, 'type', '1', '', ['required' => 'required'], false)}
-            {/if}
-        </div>
-    </div>
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">课程类型</label>-->
+<!--        <div class='col-sm-3'>-->
+<!--            {if isset($vo.type)}-->
+<!--            {:get_category_radio(10, 'type', $vo.type, '', ['required' => 'required'], false)}-->
+<!--            {else}-->
+<!--            {:get_category_radio(10, 'type', '1', '', ['required' => 'required'], false)}-->
+<!--            {/if}-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="layui-form-item">
         <label class="layui-form-label">费用类型</label>
         <div class='col-sm-3'>
@@ -26,30 +26,30 @@
             {:get_category_select(33, 'cost_type', '1', '', ['required' => 'required'], false)}
             {/if}
         </div>
-        <label class="layui-form-label">数量</label>
+        <label class="layui-form-label">总数量</label>
         <div class='col-sm-3'>
             <input type="text" name="num" value='{$vo.num|default=""}' required="required" title="请输物品入数量"
                    placeholder="请输入数量" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">进价</label>
+        <label class="layui-form-label">单件进价</label>
         <div class='col-sm-3'>
-            <input type="text" name="cast" value='{$vo.cast|default=""}' title="请输入进价"
+            <input type="text" name="cast" value='{$vo.cast|default=""}' title="请输入进价" required
                    placeholder="请输入进价" class="layui-input">
         </div>
-        <label class="layui-form-label">售价</label>
+        <label class="layui-form-label">单件售价</label>
         <div class='col-sm-3'>
             <input type="text" name="price" value='{$vo.price|default=""}' required="required" title="请输入售价"
                    placeholder="请输入售价" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">积分</label>
-        <div class='col-sm-3'>
-            <input type="text" name="integral" value='{$vo.integral|default=""}' title="请输入积分"
-                   placeholder="请输入积分" class="layui-input">
-        </div>
+<!--        <label class="layui-form-label">积分</label>-->
+<!--        <div class='col-sm-3'>-->
+<!--            <input type="text" name="integral" value='{$vo.integral|default=""}' title="请输入积分"-->
+<!--                   placeholder="请输入积分" class="layui-input">-->
+<!--        </div>-->
         <label class="layui-form-label">状态</label>
         <div class='col-sm-3'>
             {if isset($vo.status)}

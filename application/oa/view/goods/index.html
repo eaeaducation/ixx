@@ -22,12 +22,12 @@
             <input name="title" value="{$Think.get.title|default=''}" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item layui-inline">
-        <label class="layui-form-label">课程类型</label>
-        <div class="layui-input-inline">
-            {:get_category_select(10, 'type', $Think.get.type,'',[],false)}
-        </div>
-    </div>
+<!--    <div class="layui-form-item layui-inline">-->
+<!--        <label class="layui-form-label">课程类型</label>-->
+<!--        <div class="layui-input-inline">-->
+<!--            {:get_category_select(10, 'type', $Think.get.type,'',[],false)}-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="layui-form-item layui-inline">
         <label class="layui-form-label">物品类型</label>
         <div class="layui-input-inline">
@@ -54,12 +54,13 @@
                 <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
             </th>
             <th class='text-center'>名称</th>
-            <th class="text-center">课程类型</th>
+<!--            <th class="text-center">课程类型</th>-->
             <th class="text-center">物品类型</th>
             <th class="text-center">进价</th>
             <th class="text-center">售价</th>
-            <th class="text-center">积分</th>
+<!--            <th class="text-center">积分</th>-->
             <th class="text-center">数量</th>
+            <th class="text-center">剩余数量</th>
             <th class="text-center">状态</th>
             <th class="text-center">详细描述</th>
             <th class="text-center">创建时间</th>
@@ -73,12 +74,13 @@
                 <input class="list-check-box" value='{$vo.id}' type='checkbox'>
             </td>
             <td class="text-center">{$vo.title}</td>
-            <td class="text-center">{$vo.type|convert_category=10|raw }</td>
+<!--            <td class="text-center">{$vo.type|convert_category=10|raw }</td>-->
             <td class="text-center">{$vo.cost_type|convert_category=33|raw}</td>
             <td class="text-center">{$vo.cast|format_money}</td>
             <td class="text-center">{$vo.price|format_money}</td>
-            <td class="text-center">{$vo.integral}</td>
+<!--            <td class="text-center">{$vo.integral}</td>-->
             <td class="text-center">{$vo.num|default='0'}</td>
+            <td class="text-center">{$vo.residue|default='0'}</td>
             <td class="text-center">{$vo.status|convert_category=8|raw}</td>
             <td class="text-center">{$vo.content}</td>
             <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
@@ -91,7 +93,7 @@
 
                 <span class="text-explode">|</span>
                 <a data-title="出库记录"
-                   data-modal='{:url("$classuri/addRecord")}?id={$vo.id}&num={$vo.num|default=0}'>出库</a>
+                   data-modal='{:url("$classuri/addRecord")}?id={$vo.id}'>出库</a>
 
                 {if auth("$classuri/del")}
                 <span class="text-explode">|</span>
