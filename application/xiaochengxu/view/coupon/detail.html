@@ -1,0 +1,88 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+{/block}
+
+{block name="content"}
+
+<!-- 表单搜索 开始 -->
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">优惠券标题</label>
+        <div class="layui-input-inline">
+            <input name="title" value="{$Think.get.title}" placeholder="请输入优惠券标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+
+</form>
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{if empty($list)}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table notevent" lay-skin="line">
+        <thead>
+        <tr>
+            <!--<th class='list-table-check-td'>-->
+            <!--<input data-auto-none="none" data-check-target='.list-check-box' type='checkbox'>-->
+            <!--</th>-->
+            <th class="text-center nowrap">ID</th>
+            <th class="text-center nowrap">优惠券标题</th>
+            <th class="text-center nowrap">领取用户</th>
+            <th class="text-center nowrap">优惠券金额</th>
+            <th class="text-center nowrap">优惠券状态</th>
+            <th class="text-center nowrap">使用订单号</th>
+            <th class="text-center nowrap">领取时间</th>
+        </tr>
+        </thead>
+        {php}$time = time(){/php}
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <!--<td class='list-table-check-td text-top'>-->
+            <!--<input class="list-check-box" value='{$vo.id}' type='checkbox'>-->
+            <!--</td>-->
+            <td class="text-center nowrap">
+                {$vo.id}
+            </td>
+            <td class="text-center nowrap">{$vo.a_title|default=0}</td>
+            <td class="text-center nowrap">{:get_customer_tel($vo.cid)}</td>
+            <td class="text-center nowrap">{$vo.amount}</td>
+            <td class="text-center nowrap">
+                {if 0 == $vo.status}
+                <span class="color-green">未使用</span>
+                {else /}
+                <span class="color-red">已使用</span>
+                {/if}
+            </td>
+            <td class="text-center nowrap">{$vo.oid}</td>
+            <!--            <td class="text-center nowrap">-->
+            <!--                <a class="layui-btn layui-btn-primary layui-btn-xs" data-area="['50%','50%']" data-title="查看二维码"-->
+            <!--                   data-modal='{:url("$classuri/qrcode")}?id={$vo.id}'>-->
+            <!--                    <i class="fa fa-qrcode"></i>-->
+            <!--                </a>-->
+            <!--            </td>-->
+            <td class="text-center nowrap">
+                {$vo.created_at|format_date}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/if}-->
+</form>
+<script>
+    (function () {
+        window.form.render();
+        window.laydate.render({range: '~', elem: '#create_at'});
+    })();
+</script>
+{/block}

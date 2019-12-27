@@ -199,9 +199,9 @@ class Order extends BasicAdmin
         if ($request->isGet()) {
             $id = $request->get('id', false);
             $order_goods = Db::name('saas_order_log')->where('id', $id)->find();
-            $course_price = Db::name('saas_courses')->where('id', '=', $order_goods['goods_id'])->column('price');
+            $course_price = Db::name('saas_courses')->where('id', '=', $order_goods['goods_id'])->value('price');
             $teacher_id = Db::name('saas_class')->where('id', '=', $order_goods['class_id'])->value('teacher_id');
-            $order_goods['course_price'] = $course_price[0];
+            $order_goods['course_price'] = $course_price;
             $order_goods['teacher_id'] = isset($teacher_id) && !empty($teacher_id) ? $teacher_id : 0;
             return $this->fetch('', ['order_goods' => $order_goods]);
         }

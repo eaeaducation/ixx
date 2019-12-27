@@ -113,7 +113,23 @@ class Student extends BasicAdmin
                 }
                 $result = Db::name($this->table)->where('id', '=', $this->request->post('customer_id'))->insertGetId($vo['student']);
             }
-            $this->add_order($result, $vo);
+            if (!empty($vo['oid'])) {
+                if (count($vo['courses']) > 1) {
+                    $this->error('单个订单只能选择一门课程');
+                }
+                //对已支付的订单进行分班
+                $orderlog = Db::name('saas_order_log')->where('id', '=', $vo['oid'])->find();
+                Db::name('saas_order')->where('id', '=', $orderlog['order_id'])->update(['class_id' => $vo['class_id']]);
+                foreach ($vo['courses'] as $key => $value) {
+                    Db::name('saas_order_log')->where('id', '=', $vo['oid'])->update(['class_id' => $vo['class_id'], 'goods_id' => $value['id']]);
+                }
+                $this->class_student($vo);
+                LogService::write('学生报名', 'id为【' . $result . '】的【' . get_customer_name($result) . '】报名了【' . convert_class($vo['class_id']) . '】班', $result);
+                $this->success('添加学生成功！', '', $orderlog['order_id']);
+            } else {
+                //线下创建订单
+                $this->add_order($result, $vo);
+            }
         } elseif ($this->request->isGet()) {
             //咨询记录中快捷报名入口
             $id = $this->request->get('id');
@@ -121,6 +137,30 @@ class Student extends BasicAdmin
                 $customerinfo = Db::name($this->table)
                     ->where('id', '=', $id)
                     ->find();
+                $orderinfo = Db::name('saas_order_log l')
+                    ->join('saas_order o', 'o.id = l.order_id', 'left')
+                    ->where('o.student_id', '=', $id)
+                    ->where('o.status', '=', 5)
+                    ->where('l.class_id', '=', 0)
+                    ->field('l.id, o.orderno, l.price, l.goods_num, l.created_at, o.pay_type')
+                    ->select();
+                foreach ($orderinfo as $key => $item) {
+                    if ($item['pay_type'] == 1) {
+                        $orderinfo[$key]['pay_type'] = '线下支付';
+                    } elseif ($item['pay_type'] == 2) {
+                        $orderinfo[$key]['pay_type'] = '线上支付';
+                    } elseif ($item['pay_type'] == 3) {
+                        $orderinfo[$key]['pay_type'] = '现金支付';
+                    } elseif ($item['pay_type'] == 4) {
+                        $orderinfo[$key]['pay_type'] = '刷卡支付';
+                    } elseif ($item['pay_type'] == 5) {
+                        $orderinfo[$key]['pay_type'] = '其他支付';
+                    }
+                    $orderinfo[$key]['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
+                    $orderinfo[$key]['price'] = round($item['price'], 2);
+
+                }
+                $this->assign('orderinfo', $orderinfo);
                 $this->assign('customer_id',$id);
                 return $this->fetch('form', ['vo' => $customerinfo]);
             }
@@ -394,6 +434,35 @@ class Student extends BasicAdmin
             }
         }
         return view('', ['vo' => $row]);
+    }
+
+    public function query_orderinfo()
+    {
+        $id = $this->request->post('id');
+        $orderinfo = Db::name('saas_order_log l')
+            ->join('saas_order o', 'o.id = l.order_id', 'left')
+            ->where('o.student_id', '=', $id)
+            ->where('o.status', '=', 5)
+            ->where('l.class_id', '=', 0)
+            ->field('l.id, o.orderno, l.price, l.goods_num, l.created_at, o.pay_type')
+            ->select();
+        foreach ($orderinfo as $key => $item) {
+            if ($item['pay_type'] == 1) {
+                $orderinfo[$key]['pay_type'] = '线下支付';
+            } elseif ($item['pay_type'] == 2) {
+                $orderinfo[$key]['pay_type'] = '线上支付';
+            } elseif ($item['pay_type'] == 3) {
+                $orderinfo[$key]['pay_type'] = '现金支付';
+            } elseif ($item['pay_type'] == 4) {
+                $orderinfo[$key]['pay_type'] = '刷卡支付';
+            } elseif ($item['pay_type'] == 5) {
+                $orderinfo[$key]['pay_type'] = '其他支付';
+            }
+            $orderinfo[$key]['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
+            $orderinfo[$key]['price'] = round($item['price'], 2);
+
+        }
+        return $orderinfo;
     }
 
     public function export()
