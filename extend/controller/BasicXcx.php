@@ -177,6 +177,7 @@ class BasicXcx
         \think\facade\Log::error($sessionid);
         if ($sessionid) {
             $sessioninfo = cache($sessionid);
+            \think\facade\Log::error($sessioninfo);
             if ($sessioninfo) $user = Customer::get(['xcxopenid' => $sessioninfo['open_id']]);
         }
         if ($user !== null) {
