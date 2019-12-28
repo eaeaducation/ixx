@@ -174,6 +174,7 @@ class BasicXcx
     {
         $user = null;
         $sessionid = $this->request->header('sessionid');
+        \think\facade\Log::error($sessionid);
         if ($sessionid) {
             $sessioninfo = cache($sessionid);
             if ($sessioninfo) $user = Customer::get(['xcxopenid' => $sessioninfo['open_id']]);
