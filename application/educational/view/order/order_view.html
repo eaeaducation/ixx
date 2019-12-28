@@ -98,11 +98,9 @@
                         <th>{$vo.goods_num-$vo.consume_num}</th>
                         <td  class="text-nowrap text-center">
                             {if auth("$classuri/editOrderInfo")}
-                            {neq name="order.status" value="5"}
                             <span class="text-explode">|</span>
                             <a data-title="编辑"
                                data-modal='{:url("$classuri/editOrderInfo")}?id={$vo.id}'>编辑</a>
-                            {/neq}
                             {/if}
                             {if auth("$classuri/editOrderInfo")}
                             {eq name="order.status" value="5"}
