@@ -154,7 +154,6 @@ class BasicXcx
         $aesCipher = base64_decode($encryptedData);
         $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
         $dataObj = json_decode($result);
-        \think\facade\Log::error($dataObj);
         if($dataObj == NULL) {
             \think\facade\Log::error('aes 解密失败');
             return $this->error('数据异常');
@@ -174,10 +173,8 @@ class BasicXcx
     {
         $user = null;
         $sessionid = $this->request->header('sessionid');
-        \think\facade\Log::error($sessionid);
         if ($sessionid) {
             $sessioninfo = cache($sessionid);
-            \think\facade\Log::error($sessioninfo);
             if ($sessioninfo) $user = Customer::get(['xcxopenid' => $sessioninfo['open_id']]);
         }
         if ($user !== null) {
