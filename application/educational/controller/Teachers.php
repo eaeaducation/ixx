@@ -30,7 +30,7 @@ class Teachers extends BasicAdmin
     public function index()
     {
         $this->title = '教师列表';
-        $branch = $this->request->get('branch', $this->user['employee']['department']);
+        $branch = $this->request->get('branch', '');
         $keyword = $this->request->get('keyword', '');
         $time_range = $this->request->get('time_range', '');
 
@@ -44,32 +44,26 @@ class Teachers extends BasicAdmin
         }
         $this->assign('start', $month_start);
         $this->assign('end', $month_end);
-        $this->assign('branch', $branch);
-//        $db = Db::name($this->table)->alias('e')
-//            ->join('(select sum(course_hour)as total_hour ,teacher_id, course_id, created_at from saas_course_teacher_log where is_deleted = 0 and is_ok = 1 and created_at between ' . $month_start . ' and ' . $month_end . '  GROUP BY teacher_id) c', 'e.id=c.teacher_id', 'left')
-//            ->join('saas_courses s', 'c.course_id = s.id', 'left')
-//            ->where('e.status', '=', 1)
-//            ->where('e.is_teacher', '=', 1)
-////            ->whereOr('s.branch', '=', $this->user['employee']['department'])
-//            ->order('e.created_at desc')
-//            ->field('e.name, e.english_name, e.id, e.mobile, c.total_hour, e.department');
+        $db = Db::name($this->table)->alias('e')
+            ->join('(select sum(course_hour)as total_hour ,teacher_id, course_id, created_at from saas_course_teacher_log where is_deleted = 0 and is_ok = 1 and created_at between ' . $month_start . ' and ' . $month_end . '  GROUP BY teacher_id) c', 'e.id=c.teacher_id', 'left')
+            ->join('saas_courses s', 'c.course_id = s.id', 'left')
+            ->where('e.status', '=', 1)
+            ->where('e.is_teacher', '=', 1)
+//            ->whereOr('s.branch', '=', $this->user['employee']['department'])
+            ->order('e.created_at desc')
+            ->field('e.name, e.english_name, e.id, e.mobile, c.total_hour, e.department');
 //        empty($source) || $db->where('e.source', '=', $source);
 //        empty($branch) || $db->where('e.department', '=', $branch);
-        $db = Db::name('saas_course_teacher_log')->alias('tl')
-            ->join('saas_courses s', 's.id = tl.course_id', 'left')
-            ->join('saas_employee e', 'e.id = tl.teacher_id', 'left')
-            ->where("tl.is_deleted = 0 and tl.is_ok = 1 and tl.created_at between $month_start and $month_end")
-            ->field('sum(tl.course_hour)as total_hour, s.branch, tl.teacher_id, e.name, e.english_name,e.id, e.mobile,e.department')
-            ->where('e.status', '=', 1)
-            ->where('e.is_teacher', '=', 1);
+        if (isset($branch) && !empty($branch)) {
+            $db->where('s.branch', '=', $branch);
+        }
         if (isset($keyword) && !empty($keyword)) {
             $db->where(['e.name|e.english_name' => $keyword]);
         }
         if (!in_array($this->user['authorize'], [1, 3, 4, 22])) {
 //            $db->where('e.department', '=', $this->user['employee']['department']);
-            $db->where('s.branch', '=', $branch);
+            $db->where('s.branch', '=', $this->user['employee']['department']);
         }
-        $db->group('tl.teacher_id');
         return parent::_list($db, true);
     }
 
@@ -98,9 +92,6 @@ class Teachers extends BasicAdmin
             if (isset($get['type']) && !empty($get['type'])) {
                 $db->where('c.status', '=', $get['type']);
                 $course_num->where('c.status', '=', $get['type']);
-            }
-            if (isset($get['branch']) && !empty($get['branch'])) {
-                $db->where('s.branch', '=', $get['branch']);
             }
             $db->field('c.*,n.begin_time_each,n.end_time_each,n.title,n.ctitle')
                 ->order('c.created_at desc');
