@@ -39,7 +39,7 @@ class Product extends BasicXcx
         if (isset($get['keyword']) && !empty($get['keyword'])) {
             $res->where('g.goods_title', 'like', '%' . $get['keyword'] . '%');
         }
-        $res->order('sort');
+        $res->order('g.sort asc');
         $product = $res->select();
         if (!$product) {
             return $this->error('数据获取失败');
