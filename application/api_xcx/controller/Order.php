@@ -228,7 +228,7 @@ class Order extends BasicXcx
             'total_fee' => 1,//intval($post['price'] * 100),
             'trade_type' => "JSAPI",
         ];
-        Log::error($param);die;
+//        Log::error($param);die;
         ksort($param);
         $params = post_str($param, false);
         $sign = strtoupper(md5($params . "&key=" . $this->app_mch_key));
@@ -282,7 +282,8 @@ class Order extends BasicXcx
                 'status' => 4,
                 'created_at' => time(),
                 'pay_type' => 2,
-                'orderno' => $orderno
+                'orderno' => $orderno,
+                'audit_status' => 99
             ];
             $order_id = Db::name('saas_order')->insertGetId($order);
             //更新优惠券状态

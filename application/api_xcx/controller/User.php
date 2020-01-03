@@ -68,12 +68,12 @@ class User extends BasicXcx
                     $data['created_at'] = time();
                     $data['source'] = 22;
                     $customer = Db::name('saas_customer')->insert($data);
-                    $wallet = Db::name('saas_wallet')
-                        ->where('customer_id', '=', $customer['id'])
-                        ->find();
-                    if (!$wallet) {
-                        Db::name('saas_wallet')->insert(['customer_id' => $customer['id'], 'integration' => 0, 'amount' => 0, 'created_at' => time()]);
-                    }
+                }
+                $wallet = Db::name('saas_wallet')
+                    ->where('customer_id', '=', $customer['id'])
+                    ->find();
+                if (!$wallet) {
+                    Db::name('saas_wallet')->insert(['customer_id' => $customer['id'], 'integration' => 0, 'amount' => 0, 'created_at' => time()]);
                 }
                 return $this->success('用户信息保存成功', $customer);
             }
