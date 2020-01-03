@@ -1,0 +1,153 @@
+{extend name='admin@public/content'}
+
+{block name="button"}
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+{if $Think.get.hidden_filter != 1}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="row">
+        {if in_array(session('user.authorize'),[1,3,4,19])}
+        <div class="layui-form-item layui-inline" style="margin-left:1%;margin-right:5%;float: left">
+            <label class="layui-form-label">校区</label>
+            <div class="layui-input-inline">
+                {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">订单编号</label>
+            <div class="layui-input-inline">
+                <input name="orderno" value="{$Think.get.orderno|default=''}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">学生姓名</label>
+            <div class="layui-input-inline">
+                <input name="name" value="{$Think.get.name|default=''}" class="layui-input">
+            </div>
+        </div>
+
+<!--        <div class="layui-form-item layui-inline">-->
+<!--            <label class="layui-form-label">选择时间</label>-->
+<!--            <div class="layui-input-inline">-->
+<!--                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"-->
+<!--                       placeholder="选择时间" class="input-sm form-control">-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>'
+        })
+    })
+</script>
+{/if}
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='list'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table id="test" class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+            </th>
+            <th class='text-center'>订单编号</th>
+            <th class='text-center'>姓名</th>
+            <th class="text-center">班级</th>
+            <th class="text-center">校区</th>
+            <th class="text-center">订单原价/元</th>
+            <th class="text-center">订单实价/元</th>
+            <th class="text-center">审批状态</th>
+            <th class="text-center">订单状态</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $list as $key=>$vo}-->
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'>
+            </td>
+            <td class="text-center">
+                <a data-open='{:url("educational/Order/orderView")}?id={$vo.id}'>{$vo.orderno}</a></td>
+            <td class="text-center">{$vo.student_id|get_customer_name|raw}</td>
+            <td class="text-center">{$vo.class_id|convert_class|raw|default='<font style="color:red">未分班</font>'}</td>
+            <td class="text-center">{$vo.branch|convert_branch|raw}</td>
+            <td class="text-center">￥{:round($vo.oldprice,2)}元</td>
+            <td class="text-center">￥{$vo.price}元</td>
+            <td class="text-nowrap text-center">
+                {if $vo.audit_status==-99}
+                待校区校长审批
+                {elseif $vo.audit_status==-95}
+                待总经理审批
+                {elseif $vo.audit_status==-97}
+                待财务确认
+                {/if}
+            </td>
+            <td class="text-center">{$vo.status|convert_category=35|raw}</td>
+            <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
+
+            <td class="text-nowrap text-center">
+                {if in_array(session('user.authorize'),[9])}
+                {if ($vo.oldprice-$vo.price) > 1000 && ($vo.oldprice-$vo.price) <= 2000}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-97"
+                   data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                   data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
+                {elseif ($vo.oldprice-$vo.price) > 2000}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-95"
+                   data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                   data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
+                {/if}
+<!--                总经理审核-->
+                {elseif in_array(session('user.authorize'),[4])}
+                {if ($vo.oldprice-$vo.price) > 2000}
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-97"
+                       data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                       data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
+<!--                财务确认支付-->
+                {/if}
+                {elseif in_array(session('user.authorize'),[21])}
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="99"
+                       data-action='{:url("$classuri/orderConfirm")}?oid={$vo.id}'>确认支付</a>
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                       data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page|raw}</p>{/if}
+    <!--{/empty}-->
+</form>
+{/block}

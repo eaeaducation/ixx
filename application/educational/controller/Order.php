@@ -27,7 +27,8 @@ class Order extends BasicAdmin
         $db = Db::name($this->table)->where('o.status', '<>', 3)->alias('o')
             ->join('saas_class c', 'o.class_id=c.id', 'left')
             ->join('saas_customer s', 'o.student_id=s.id', 'left')
-            ->field('o.*,s.branch,c.title');
+            ->field('o.*,s.branch,c.title')
+            ->where('o.audit_status', '=', 99);
         if ($this->user['id'] != 10000 && !in_array($this->user['authorize'], [1, 3, 4])) {
             $branch = $this->user['employee']['department'];
             $db->where('s.branch', '=', $branch);

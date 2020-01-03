@@ -46,6 +46,7 @@ class Classed extends BasicAdmin
         $this->title = '班级管理';
         $db = Db::name($this->table)
             ->where('status', '<>', 3)
+            ->where('audit_status', 'in', [99,-99])
             ->order('id desc');
         //  校区
         if ($this->user['id'] != 10000 && !in_array($this->user['authorize'], [1, 3, 4, 22])) {
@@ -82,7 +83,7 @@ class Classed extends BasicAdmin
      */
     public function add()
     {
-        $this->title = '新建班级';
+        $this->title = '新建班级（提交开班申请）';
         return $this->_form($this->table, 'form');
     }
 
@@ -744,6 +745,10 @@ class Classed extends BasicAdmin
     public function vacate_truancy()
     {
         $get = $this->request->get();
+        $class = Db::name('saas_class')->where('id', $get['class_id'])->find();
+        if ($class['audit_status'] != 99) {
+            $this->error('班级审核暂未通过不能打卡');
+        }
         $courses = Db::name('saas_class_course')
             ->field('course_id')
             ->where('class_id', '=', $get['class_id'])
@@ -841,6 +846,9 @@ class Classed extends BasicAdmin
         $student_ids = explode(',', $get['id']);
         //查询该班级所有课程
         $class = Db::name('saas_class')->where('id', $get['class_id'])->find();
+        if ($class['audit_status'] != 99) {
+            $this->error('班级审核暂未通过不能打卡');
+        }
         $courses = Db::name('saas_class_course')
             ->field('course_id')
             ->where('class_id', '=', $get['class_id'])

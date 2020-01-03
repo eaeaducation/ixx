@@ -351,6 +351,7 @@
                     $base_data.branch = $rootScope.branch;
                     $base_data.teacher_id = $("select[name=teacher_id]").val();
                     $base_data.class_course_no = $("input[name=class_course_no]").val();
+                    $base_data.status = $("input[name=status]:checked").val();
                     $base_data.created_at = '{:time()}';
                     $base_data.params = JSON.stringify(spect_param);
                     var id = '{$vo.id|default=0}';

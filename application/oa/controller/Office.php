@@ -11,6 +11,7 @@ namespace app\oa\controller;
 use app\common\model\SystemUser;
 use controller\BasicAdmin;
 use service\DataService;
+use service\LogService;
 use think\Db;
 use think\facade\Log;
 
@@ -294,5 +295,191 @@ class Office extends BasicAdmin
             $this->success("审批删除成功!", '');
         }
         $this->error("审批删除失败, 请稍候再试!");
+    }
+
+
+    /**
+     * 班级审批
+     */
+    public function classApproval()
+    {
+        $this->title = '班级审批';
+        $db = Db::name('saas_class c')
+            ->where('c.status', '<>', 3)
+            ->where('c.audit_status', 'in', [-95,-97,-1])
+            ->order('c.id desc');
+        //  校区
+        if ($this->user['id'] != 10000 || $this->user['authorize'] != 3) {
+            if (in_array($this->user['authorize'], [9])) {
+                $branch = $this->user['employee']['department'];
+                $db->where('c.branch', '=', $branch);
+                $db->where('c.audit_status', 'in', [-95,-97]);
+            } elseif (in_array($this->user['authorize'], [4])) {
+                $db->where('c.audit_status', 'in', [-95,-97]);
+            }
+        }
+        $get = $this->request->get();
+        (isset($get['branch']) && $get['branch'] !== '') && $db->where('c.branch', '=', "{$get['branch']}");
+        return parent::_list($db, true);
+    }
+
+
+    public function adopt()
+    {
+        $table = 'saas_class';
+        if (DataService::update($table)) {
+            $get = $this->request->get();
+            LogService::write('班级管理', '操作者：'.get_employee_name($this->user['id']).'审核通过了班级id：'.$get['class_id'].'的开班申请');
+            $this->success("审批通过成功!", '');
+        }
+        $this->error("班级审核通过失败");
+    }
+
+    public function refuse()
+    {
+        $table = 'saas_class';
+        if (DataService::update($table)) {
+            $get = $this->request->get();
+            LogService::write('班级管理', '操作者：'.get_employee_name($this->user['id']).'拒绝了班级id：'.$get['class_id'].'的开班申请');
+            $this->success("拒绝开班申请成功!", '');
+        }
+        $this->error("拒绝开班申请失败");
+    }
+
+    public function renew()
+    {
+        $table = 'saas_class';
+        if (DataService::update($table)) {
+            $get = $this->request->get();
+            LogService::write('班级管理', '操作者：'.get_employee_name($this->user['id']).'还原班级id：'.$get['class_id']);
+            $this->success("还原班级申请成功!", '');
+        }
+        $this->error("班级审核通过失败");
+    }
+
+    /**
+     * 班级审批
+     */
+    public function orderApproval()
+    {
+        $this->title = '订单课时审批';
+        $db = Db::name('saas_order')->where('o.status', '<>', 3)->alias('o')
+            ->join('saas_order_log l', 'l.order_id=o.id', 'left')
+            ->join('saas_class c', 'o.class_id=c.id', 'left')
+            ->join('saas_customer s', 'o.student_id=s.id', 'left')
+            ->field('o.*,s.branch,c.title,sum(l.old_price) as oldprice')
+            ->where('o.audit_status', 'in', [-99,-95,-97]);
+        //  校区
+        if ($this->user['id'] != 10000 || $this->user['authorize'] != 3) {
+//            if (in_array($this->user['authorize'], [9])) {
+//                $branch = $this->user['employee']['department'];
+//                $db->where('s.branch', '=', $branch);
+//                $db->where('o.audit_status', 'in', [-99,-95,-97]);
+//            } elseif (in_array($this->user['authorize'], [4])) {
+//                $db->where('o.audit_status', 'in', [-95,-97]);
+//            } elseif (in_array($this->user['authorize'], [19])) {
+//                $db->where('o.audit_status', 'in', [-95,-97]);
+//            }
+
+            if (in_array($this->user['authorize'], [9])) {
+                $branch = $this->user['employee']['department'];
+                $db->where('s.branch', '=', $branch);
+                $db->where('o.audit_status', 'in', [-99]);
+            } elseif (in_array($this->user['authorize'], [4])) {
+                $db->where('o.audit_status', 'in', [-95]);
+            } elseif (in_array($this->user['authorize'], [21])) {
+                $db->where('o.audit_status', 'in', [-99,-95,-97]);
+            }
+        }
+        $get = $this->request->get();
+        if (isset($get['name']) && $get['name'] != '') {
+            $name = $get['name'];
+            $db->where('s.name', '=', $name);
+        }
+        if (isset($get['branch']) && $get['branch'] != '') {
+            $branch = $get['branch'];
+            $db->where('c.branch', '=', $branch);
+        }
+        if (isset($get['orderno']) && $get['orderno'] != '') {
+            $orderno = $get['orderno'];
+            $db->where('o.orderno', '=', $orderno);
+        }
+        if (isset($get['name']) && $get['name'] != '') {
+            $name = $get['name'];
+            $id = Db::name('saas_customer')->where('name', '=', $name)->field('id')->select();
+            $id_array = [];
+            foreach ($id as $v) {
+                $id_array[] = $v['id'];
+            }
+            $db->where('o.student_id', 'in', $id_array);
+        }
+//        if (isset($get['time_range']) && $get['time_range'] != '') {
+//            $get['time_range'] = str_replace('+~+', ' ~ ', $get['time_range']);
+//            list($start, $end) = explode(' ~ ', $get['time_range']);
+//            $_start = strtotime($start);
+//            $_end = strtotime($end) + 86400;
+//            $db->whereBetween('o.created_at', [$_start, $_end]);
+//        }
+        $db->group('l.order_id');
+        $db->order('o.id desc');
+        return parent::_list($db, true);
+    }
+
+    protected function _orderapproval_data_filter(&$data)
+    {
+        foreach ($data as $key => &$value) {
+            if (in_array($this->user['authorize'], [9])) {
+                if (($value['oldprice'] - $value['price']) > 1000 && ($value['oldprice'] - $value['price']) <= 2000) {
+                    $data[$key] = $value;
+                } else {
+                    unset($data[$key]);
+                }
+            } elseif (in_array($this->user['authorize'], [4])) {
+                if (($value['oldprice'] - $value['price']) > 2000) {
+                    $data[$key] = $value;
+                } else {
+                    unset($data[$key]);
+                }
+            }
+        }
+    }
+
+
+    public function orderConfirm()
+    {
+        $table = 'saas_order';
+        $oid = $this->request->get('oid');
+        if (DataService::update($table)) {
+            $res = Db::name('saas_order')
+                ->where('id', $oid)
+                ->update(['status'=>5]);
+            if ($res) {
+                LogService::write('订单状态', '操作者：'.get_employee_name($this->user['id']).'确认支付了订单id：'.$oid);
+                $this->success("订单确认支付成功", '');
+            }
+            $this->error("订单确认支付失败");
+        }
+    }
+
+    public function orderRefuse()
+    {
+        $table = 'saas_order';
+        $oid = $this->request->get('oid');
+        if (DataService::update($table)) {
+            LogService::write('订单状态', '操作者：'.get_employee_name($this->user['id']).'拒绝了订单id：'.$oid.'的审批');
+            $this->success("订单审批成功", '');
+        }
+        $this->error("订单审批失败");
+    }
+
+    public function orderAdopt()
+    {
+        $table = 'saas_order';
+        $oid = $this->request->get('oid');
+        if (DataService::update($table)) {
+            LogService::write('订单状态', '操作者：'.get_employee_name($this->user['id']).'通过了订单id：'.$oid.'的审批');
+            $this->success("订单审批成功", '');
+        }
+        $this->error("订单审批失败");
     }
 }

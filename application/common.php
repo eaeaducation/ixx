@@ -1434,7 +1434,7 @@ function get_class_title()
         if (Cache::has('class')) {
             $class = Cache::get('class');
         } else {
-            $class = Db::name('saas_class')->where('status', '<>', 3)->column('title', 'id');
+            $class = Db::name('saas_class')->where('status', '<>', 3)->where('audit_status', '=', 99)->column('title', 'id');
             Cache::set('class', $class, 2592000);
         }
     } else {
@@ -1442,7 +1442,7 @@ function get_class_title()
         if (Cache::has('class_' . $branch)) {
             $class = Cache::get('class_' . $branch);
         } else {
-            $class = Db::name('saas_class')->where('branch', '=', $branch)->where('status', '<>', 3)->column('title', 'id');
+            $class = Db::name('saas_class')->where('branch', '=', $branch)->where('status', '<>', 3)->where('audit_status', '=', 99)->column('title', 'id');
             Cache::set('class_' . $branch, $class, 2592000);
         }
     }
@@ -2346,4 +2346,13 @@ function get_customer_lession_num($cid, $class_id)
         ->field('l.goods_num, l.consume_num')
         ->find();
     return $data['goods_num'] - $data['consume_num'];
+}
+
+
+function get_class_students($class_id)
+{
+    $student = Db::name('saas_class_student')
+        ->where('class_id', $class_id)
+        ->column('customer_id');
+    return $student;
 }

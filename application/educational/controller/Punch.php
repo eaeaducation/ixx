@@ -575,6 +575,7 @@ class Punch extends BasicAdmin
                 ->field('title,id')
                 ->where('branch', '=', $branch)
                 ->where('status', '<>', 3)
+                ->where('audit_status', '=', 99)
                 ->select();
             return json($data);
         }
