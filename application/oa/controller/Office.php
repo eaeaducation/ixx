@@ -313,7 +313,7 @@ class Office extends BasicAdmin
             if (in_array($this->user['authorize'], [9])) {
                 $branch = $this->user['employee']['department'];
                 $db->where('c.branch', '=', $branch);
-                $db->where('c.audit_status', 'in', [-95,-97]);
+                $db->where('c.audit_status', 'in', [-95]);
             } elseif (in_array($this->user['authorize'], [4])) {
                 $db->where('c.audit_status', 'in', [-95,-97]);
             }
@@ -321,6 +321,25 @@ class Office extends BasicAdmin
         $get = $this->request->get();
         (isset($get['branch']) && $get['branch'] !== '') && $db->where('c.branch', '=', "{$get['branch']}");
         return parent::_list($db, true);
+    }
+
+    protected function _classapproval_data_filter(&$data)
+    {
+        foreach ($data as $key => &$value) {
+            if (in_array($this->user['authorize'], [9])) {
+                if (count(get_class_students($value['id'])) >= 6) {
+                    $data[$key] = $value;
+                } else {
+                    unset($data[$key]);
+                }
+            } elseif (in_array($this->user['authorize'], [4])) {
+                if (count(get_class_students($value['id'])) < 6) {
+                    $data[$key] = $value;
+                } else {
+                    unset($data[$key]);
+                }
+            }
+        }
     }
 
 
@@ -458,6 +477,47 @@ class Office extends BasicAdmin
                 $this->success("订单确认支付成功", '');
             }
             $this->error("订单确认支付失败");
+        }
+    }
+
+    public function priceEdit()
+    {
+        $request = $this->request;
+        if ($request->isGet()) {
+            $id = $request->get('oid');
+            $status = Db::name('saas_order')->where('id', $id)->field('status')->find();
+            return $this->fetch('', ['id' => $id, 'status' => $status]);
+        }
+        if ($request->isPost()) {
+            $data = $request->post();
+            $data['audit_status'] = 99;
+            // 插入跟进状态
+            if ($data['status'] == 5) {
+                $order_info = Db::name('saas_order')->field('student_id,class_id,orderno,price,status')->where('id', '=', $data['id'])->find();
+                if ($order_info['status'] == 5) {
+                    $this->error('订单已支付，请勿重复支付');
+                }
+                $userinfo = Db::name('saas_customer')->field('id,sales_id,collect_id')->where('id', '=', $order_info['student_id'])->find();
+                $follow = array();
+                $follow['customer_id'] = $userinfo['id'];
+                $follow['type'] = 2;
+                $follow['follow_status'] = 7;
+                $follow['keyword'] = '订单付款';
+                $follow['content'] = '订单付款添加跟进状态';
+                $follow['user_id'] = empty($userinfo['sales_id']) ? (empty($userinfo['collect_id']) ? '10000' : $userinfo['collect_id']) : $userinfo['sales_id'];
+                $follow['created_at'] = time();
+                Db::name('saas_customer_follow')->insert($follow);
+                if ($data['pay_type'] == 1) {
+                    cash_flow($order_info['orderno'], $order_info['student_id'], $order_info['price'], 1, $order_info['class_id'], "报名");//给资金流动表加一条数据
+                }
+            }
+            $res = Db::name('saas_order')->update($data);
+            if ($res) {
+                LogService::write('订单状态', '操作者：'.get_employee_name($this->user['id']).'变更订单id为【' . $data['id'] . '】的支付状态为【' . strip_tags(convert_category($data['status'], 35)) . '】支付方式为【' . convert_category($data['pay_type'], 36) . '】');
+                $this->success('确认状态成功', '');
+            } else {
+                $this->error('确认状态失败');
+            }
         }
     }
 

@@ -136,8 +136,7 @@
                 {/if}
                 {elseif in_array(session('user.authorize'),[21])}
                     <span class="text-explode">|</span>
-                    <a data-update="{$vo.id}" data-field='audit_status' data-value="99"
-                       data-action='{:url("$classuri/orderConfirm")}?oid={$vo.id}'>确认支付</a>
+                    <a data-modal='{:url("$classuri/priceEdit")}?oid={$vo.id}'>确认支付</a>
                     <span class="text-explode">|</span>
                     <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
                        data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>

@@ -94,7 +94,8 @@
             <th class="text-center">开课校区</th>
             <th class="text-center">开班时间</th>
             <th class="text-center">预招人数</th>
-            <th class="text-center">状态</th>
+            <th class="text-center">审核状态</th>
+            <th class="text-center">招生状态</th>
             <th class="text-center">备注</th>
             <th class="text-center">创建时间</th>
             <th class="text-center">操作</th>
@@ -116,6 +117,7 @@
             <td class="text-center">{$vo.branch|convert_branch|raw}</td>
             <td class="text-center">{$vo.begin_time|format_date}</td>
             <td class="text-center">{$vo.student_count}</td>
+            <td class="text-center">{if $vo.audit_status == 99}通过{else/}审核中{/if}</td>
             <td class="text-center">{$vo.status| convert_category=31|raw}</td>
             <td class="text-center">{$vo.remark}</td>
             <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>

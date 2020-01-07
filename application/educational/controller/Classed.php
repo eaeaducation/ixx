@@ -94,6 +94,9 @@ class Classed extends BasicAdmin
             if (isset($post['begin_time'])) {
                 $vo['begin_time'] = strtotime($post['begin_time'] . " 00:00:00");
             }
+            if ($vo['status'] == 2) {
+                $vo['audit_status'] = -95;
+            }
             if (isset($vo['id'])) {
                 $this->saveDetail($vo['id'], $this->request->post('params'));
             }
@@ -893,8 +896,12 @@ class Classed extends BasicAdmin
                         $order = Db::name('saas_order')
                             ->where('student_id', '=', $item)
                             ->where('class_id', '=', $get['class_id'])
-                            ->field('id')
+                            ->field('id,audit_status')
                             ->find();
+                        if ($order['audit_status'] != 99) {
+                            Log::error('异常订单信息:客户id-'.$item.';订单id-'.$order['id'].'订单审核未通过，不能打卡');
+                            throw new Exception('订单id-'.$order['id']." 订单审核未通过，不能打卡");
+                        }
                         $row = Db::name('saas_order_log')
                             ->where('order_id', '=', $order['id'])
                             ->where('goods_id', '=', $course_id)
@@ -916,6 +923,8 @@ class Classed extends BasicAdmin
                     $class_course_no = Db::name('saas_courses_detail')
                         ->where('courses_id', '=', $course_id)
                         ->where('class_id', '=', $get['class_id'])
+                        ->where('begin_time_each', '=', $begin)
+                        ->where('end_time_each', '=', $end)
                         ->where('status', '<>', 3)
                         ->find();
                     //同步course_teacher_log表给老师添加课时记录
@@ -950,6 +959,8 @@ class Classed extends BasicAdmin
             $class_course_no = Db::name('saas_courses_detail')
                 ->where('courses_id', '=', $course_id)
                 ->where('class_id', '=', $get['class_id'])
+                ->where('begin_time_each', '=', $begin)
+                ->where('end_time_each', '=', $end)
                 ->where('status', '<>', 3)
                 ->find();
             $data = [];

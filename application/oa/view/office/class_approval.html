@@ -68,6 +68,7 @@
             <td class="text-center">
                 {if $vo.audit_status == -95} 等待校长审核
                 {elseif $vo.audit_status == -97} 等待总经理审核
+                {elseif $vo.audit_status == -1} 拒绝
                 {/if}
             </td>
             <td class="text-center">{$vo.student_count}</td>
@@ -100,7 +101,7 @@
                     {if auth("$classuri/renew")}
                     <span class="text-explode">|</span>
                     <a data-update="{$vo.id}" data-field='audit_status' data-value="-95"
-                       data-action='{:url("$classuri/renew")}?id={$vo.id}'>还原</a>
+                       data-action='{:url("$classuri/renew")}?class_id={$vo.id}'>还原</a>
                     {/if}
                 {else/}
                     {if auth("$classuri/refuse")}

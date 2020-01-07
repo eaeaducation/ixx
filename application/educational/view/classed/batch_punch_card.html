@@ -6,6 +6,17 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">当前课程</label>
+        <div class="layui-input-block">
+            <select name="course" lay-filter="course" lay-verify="course" required>
+                <option value="">-请选择课程-</option>
+                <!--{foreach $courses as $k=>$v}-->
+                <option value="{$v['course_id']}">{$v.course_id|get_courses_title=$v.course_id}</option>
+                <!--{/foreach}-->
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">授课教师</label>
         <div class="layui-input-inline" style="width: 15%">
             <input type="text" name="" required value='{$class["teacher_id"]|get_employee_name|raw|default="未知"}' required="required" readonly  class="layui-input">
@@ -34,17 +45,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">当前课程</label>
-        <div class="layui-input-block">
-            <select name="course" lay-filter="course" lay-verify="course" required>
-                <option value="">-请选择课程-</option>
-                <!--{foreach $courses as $k=>$v}-->
-                <option value="{$v['course_id']}">{$v.course_id|get_courses_title=$v.course_id}</option>
-                <!--{/foreach}-->
-            </select>
-        </div>
-    </div>
+
     <div class="layui-form-item select-time2">
         <label class="layui-form-label" id="label1">请假日期</label>
         <div class="layui-input-block">
@@ -54,12 +55,12 @@
     </div>
     <div class="layui-form-item select-time2">
         <label class="layui-form-label" id="label2">请假时间</label>
-        <div class="layui-input-block time_range">
-            <input type="text" id="time_range" name="time" value="" style="display: inline-block"
-                   placeholder="选择补课时间（00:00:00 - 02:00:00）" class="input-sm form-control layui-input">
-        </div>
-        <div class="layui-input-block hour" style="display: none">
-            <select name="time1" lay-filter="hour" id="hour" name="time">
+<!--        <div class="layui-input-block time_range">-->
+<!--            <input type="text" id="time_range" name="time" value="" style="display: inline-block"-->
+<!--                   placeholder="选择补课时间（00:00:00 - 02:00:00）" class="input-sm form-control layui-input">-->
+<!--        </div>-->
+        <div class="layui-input-block hour" style="display: block">
+            <select lay-filter="hour" id="hour" name="time">
                 <option value="">-请选择上课时间段-</option>
             </select>
         </div>
@@ -117,8 +118,8 @@
                 $('input[name="student_hour"]').val(0);
                 $('#label1').html('请假日期');
                 $('#label2').html('请假时间');
-                $('.hour').hide();
-                $('.time_range').show();
+                // $('.hour').hide();
+                // $('.time_range').show();
             } else if (data.value == 2) {
                 var teacher_hour = $('input[name="teacher_hour"]').val();
                 var student_hour = $('input[name="student_hour"]').val();
@@ -127,13 +128,16 @@
                 // }
                 $('#label1').html('补课日期');
                 $('#label2').html('补课时间');
-                $('.hour').hide();
-                $('.time_range').show();
+                // $('.hour').hide();
+                // $('.time_range').show();
             } else if (data.value == 1) {
                 $('#label1').html('上课日期');
                 $('#label2').html('上课时间');
-                $('.hour').show();
-                $('.time_range').hide();
+                // $('.hour').show();
+                // $('.time_range').hide();
+            } else if (data.value == 5) {
+                $('#label1').html('补卡日期');
+                $('#label2').html('补卡时间');
             }
             window.form.render();
         })
