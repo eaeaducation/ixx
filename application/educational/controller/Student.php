@@ -105,6 +105,13 @@ class Student extends BasicAdmin
                 // update
                 Db::name($this->table)->where('id', '=', $this->request->post('customer_id'))->update($vo['student']);
                 $result = $this->request->post('customer_id');
+                $customer = Db::name('saas_customer')->where('id', '=', $result)->find();
+                if (!$customer['trial_class_id']) {
+                    $experience_lession = Db::name('saas_trial_class')->where(['top_id'=>$customer['trial_class_id'], 'student_id'=>$result])->find();
+                    if ($experience_lession && $experience_lession['is_deal'] != 1) {
+                        Db::name('saas_trial_class')->where(['top_id'=>$customer['trial_class_id'], 'student_id'=>$result])->update(['is_deal'=>1]);
+                    }
+                }
             } else {
                 // add  同一手机号只能有一个用户
                 $parent_info = Customer::get(['parent_tel' => $vo['student']['parent_tel'], 'status' => [0,1,99]]);

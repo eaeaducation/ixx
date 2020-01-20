@@ -1,0 +1,172 @@
+{extend name='admin@public/content'}
+{block name="button"}
+{/block}
+{block name="content"}
+<style>
+    .new-table td {
+        border:1px solid #e2e2e2;
+    }
+</style>
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" style="height: 60px;">
+    <div class="row" style="margin-left:0.4%;float: left">
+        {if in_array(session('user.authorize'),[1,3,4,22])}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">体验课校区</label>
+            <div class="layui-input-inline">
+                {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">结课时间</label>
+            <div class="layui-input-inline">
+                <input type="text" id="time_range" name="time_range" value='{$Think.get.time_range|default=$default_date}'
+                       placeholder="选择体验课结课时间" class="input-sm form-control">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>外教体验课转化</legend>
+</fieldset>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='foreign_teacher_data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center">外教名称</th>
+            <th class="text-center">体验课数目</th>
+            <th class="text-center">试听人数</th>
+            <th class="text-center">成交人数</th>
+            <th class="text-center">转化率</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $foreign_teacher_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.teacher|get_employee_name|raw}</td>
+            <td class="text-center">{$vo.lession_num}</td>
+            <td class="text-center">{$vo.student_num}</td>
+            <td class="text-center">{$vo.volume_num}</td>
+            <td class="text-center">
+                {if $vo.student_num != 0}
+                {:round($vo.volume_num/$vo.student_num*100,2)}%
+                {else/}
+                0%
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>中教体验课转化</legend>
+</fieldset>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='chinese_teacher_data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center">中教名称</th>
+            <th class="text-center">体验课数目</th>
+            <th class="text-center">试听人数</th>
+            <th class="text-center">成交人数</th>
+            <th class="text-center">转化率</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $chinese_teacher_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.teacher|get_employee_name|raw}</td>
+            <td class="text-center">{$vo.lession_num}</td>
+            <td class="text-center">{$vo.student_num}</td>
+            <td class="text-center">{$vo.volume_num}</td>
+            <td class="text-center">
+                {if $vo.student_num != 0}
+                {:round($vo.volume_num/$vo.student_num*100,2)}%
+                {else/}
+                0%
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>校区体验课转化</legend>
+</fieldset>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='school_data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center">校区名称</th>
+            <th class="text-center">体验课数目</th>
+            <th class="text-center">试听人数</th>
+            <th class="text-center">成交人数</th>
+            <th class="text-center">转化率</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $school_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{$vo.school|convert_branch|raw}</td>
+            <td class="text-center">{$vo.lession_num}</td>
+            <td class="text-center">{$vo.student_num}</td>
+            <td class="text-center">{$vo.volume_num}</td>
+            <td class="text-center">
+                {if $vo.student_num != 0}
+                {:round($vo.volume_num/$vo.student_num*100,2)}%
+                {else/}
+                0%
+                {/if}
+            </td>
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '~',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            max: '<?= date("Y-m-d")?>',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                // if ((endDate - date) / 1000 / 86400 > 31) {
+                //     $.msg.alert('最大时间范围为31天', function () {
+                //         $('#time_range').val('')
+                //     })
+                // }
+            }
+        })
+    })
+</script>
+{/block}

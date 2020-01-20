@@ -1,0 +1,39 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">跟进记录:</label>
+        <div class="layui-input-block">
+            <!--{empty name='f_data'}-->
+            <p class="help-block text-center well">没 有 记 录 哦！</p>
+            <!--{else}-->
+            <ul class="layui-timeline">
+                {foreach $f_data as $vo}
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">{$vo.created_at|format_time}</h3>
+                        <p>{$vo.content}</p>
+                    </div>
+                </li>
+                {/foreach}
+            </ul>
+            <!--{/empty}-->
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">沟通内容</label>
+        <div class='layui-input-block'>
+            <input type="text" name="content" value="" required="required" title="请输入最新的沟通内容"
+                   placeholder="请输入最新的沟通内容" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>添加一条跟进记录</button>
+    </div>
+    <script>
+        window.form.render();
+    </script>
+
+</form>

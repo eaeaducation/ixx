@@ -54,6 +54,17 @@ class Customerpool extends BasicAdmin
         if (isset($get['source']) && !empty($get['source'])) {
             $db->where('c.source', '=', $get['source']);
         }
+        if (isset($get['whzt']) && !empty($get['whzt'])) {
+            if ($get['whzt'] == 1) {
+                $time = strtotime('30 day');
+                $db->where("c.created_at < c.created_at + $time");
+                $db->where('f.follow_status is null');
+            } elseif ($get['whzt'] == 2) {
+                $time = strtotime('-90 day');
+                $db->where("c.created_at < $time");
+                $db->where('f.follow_status', 'not in', [7,10]);
+            }
+        }
         $dxy = isset($get['dxy']) ? $get['dxy'] : 0;
         $cc = isset($get['cc']) ? $get['cc'] : 0;
         if (isset($get['time_range']) && $get['time_range'] != '') {
@@ -126,6 +137,20 @@ class Customerpool extends BasicAdmin
     {
         if ($this->request->isPost()) {
             $ids = $this->request->get('id');
+            $id = explode(',', $ids);
+            $db = Db::name($this->table)->alias('c')->field('c.created_at, c.status ,f.follow_status,f.created_at as follow_time');
+            $db->join('(select * from saas_customer_follow where id in ((select max(id) from saas_customer_follow  group by customer_id))) f', 'c.id=f.customer_id', 'left');
+            //  $db->where('is_student', '<>', '1');
+            $db->where("c.status", "<>", "3");
+            $db->where('c.id', 'in', $id);
+            $cus_data = $db->select();
+            foreach ($cus_data as $item) {
+                Log::error($item['created_at'] + strtotime('90 day'));
+                if ($item['status'] == 99 && (strtotime('90 day', $item['created_at'])) > time() && !in_array($item['follow_status'], [7,10])) {
+                    $this->error('有客户暂不能分配，请检查后重试');
+                    break;
+                }
+            }
             $row = Db::name($this->table)
                 ->whereIn('id', $ids);
             if (empty(input('post.tel_user'))) {
@@ -142,7 +167,6 @@ class Customerpool extends BasicAdmin
                 $idcount = count(explode(',', $ids));
                 $fail = $idcount - $row;
                 if ($row) {
-                    $id = explode(',', $ids);
                     foreach ($id as $value) {
                         LogService::write('分配客户', '将客户分配给' . (empty(get_user_realname($tel_user)) ? $tel_user : get_user_realname($tel_user)), $value);
                     }

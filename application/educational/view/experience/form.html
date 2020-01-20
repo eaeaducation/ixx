@@ -1,0 +1,220 @@
+<style>
+    .layui-layer-page .layui-layer-content {
+        overflow: visible;
+    }
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20 te' id="class-form" lay-filter="class">
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区</label>
+        <div class="col-sm-4">
+                {if in_array(session('user.authorize'),[1,3,4,22]) }
+                {:get_branches_select('branch', isset($vo.branch)?$vo.branch:'', '', ["lay-filter"=>"branch",'required' => 'required'], false)}
+                {else}
+                <input type="hidden" name="branch" value="{:session('user.employee.department')}" />
+                {:get_branches_select('branch', session('user.employee.department'), '', ["lay-filter"=>"branch",'disabled'=>'disabled'],false)}
+                {/if}
+        </div>
+        <label class="layui-form-label">班级</label>
+        <div class="col-sm-4">
+            {if in_array(session('user.authorize'),[1,3,4]) }
+            <select name="class_id" lay-filter="class_id" id="class_id" required>
+                {if isset($vo.class_id) && !empty($vo.class_id)}
+                <option value="{$vo.class_id}">{$vo.class_id|convert_class|raw}</option>
+                {else}
+                <option value="">-请选择-</option>
+                {/if}
+            </select>
+            {else}
+            {:get_class_select('class_id', isset($vo.class_id)?$vo.class_id:'', '', ["lay-filter" => "class_id"], false)}
+            {/if}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            课程
+        </label>
+        <div class='col-sm-4' id="subject_add">
+            {if in_array(session('user.authorize'),[1,3,4]) }
+            <select name="course_id" lay-filter="course_id" id="course_id" required>
+                {if isset($vo.course_id) && !empty($vo.course_id)}
+                <option value="{$vo.course_id}">{$vo.course_id|get_courses_title|raw}</option>
+                {else}
+                <option value="">-请选择-</option>
+                {/if}
+            </select>
+            {else}
+            {:get_courses_select('course_id', isset($vo.course_id)?$vo.course_id:'', '', ["lay-filter"=>"course_id"],false)}
+            {/if}
+        </div>
+        <label class="layui-form-label">
+            课程类型
+        </label>
+        <div class='col-sm-4'>
+            <input type='radio' name='type' value='1' checked style="display: none !important;" title="体验"/>
+            <input type='radio' name='type' value='2' style="display: none !important;" title="公开"/>
+            <input type='radio' name='type' value='3' style="display: none !important;" title="辅导"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+           外教教师
+        </label>
+        <div class='col-sm-4'>
+            {if in_array(session('user.authorize'),[1,3,4]) }
+            <select name="bishop" id="bishop" lay-filter="bishop">
+                <option value="">-请选择-</option>
+            </select>
+            {else}
+            {:get_teacher_select('bishop', isset($vo.bishop)?$vo.bishop:'', '', ["lay-filter"=>"bishop", 'required' => 'required'],false)}
+            {/if}
+        </div>
+        <label class="layui-form-label">
+            获得课时
+        </label>
+        <div class='col-sm-4'>
+            <input type="text" name="bishop_course_hour"
+                   value="{$vo.bishop_course_hour|default='0'}"
+                   title="请输入获得课时" placeholder="请输入获得课时" class="layui-input" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            中教教师
+        </label>
+        <div class='col-sm-4'>
+            {if in_array(session('user.authorize'),[1,3,4]) }
+            <select name="assistant" id="assistant" lay-filter="assistant">
+                <option value="">-请选择-</option>
+            </select>
+            {else}
+            {:get_teacher_select('assistant', isset($vo.assistant)?$vo.assistant:'', '', ["lay-filter"=>"assistant", 'required' => 'required'],false)}
+            {/if}
+        </div>
+        <label class="layui-form-label">
+            获得课时
+        </label>
+        <div class='col-sm-4'>
+            <input type="text" name="assistant_course_hour"
+                   value="{$vo.assistant_course_hour|default='0'}"
+                   title="请输入获得课时" placeholder="请输入获得课时" class="layui-input" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">开课日期</label>
+            <div class="col-sm-4">
+                <input type="text" class="layui-input" title="请选择开课日期" id="test5" placeholder="请选择日期" name="date" required>
+            </div>
+        <label class="layui-form-label">上课时间</label>
+        <div class="col-sm-4">
+            <input type="text" class="layui-input" title="请选择上课时间" id="test6" placeholder="请选择时间" name="time" required>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type='submit'>保存数据</button>
+            <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+        </div>
+    </div>
+
+</form>
+
+{block name="script"}
+<script>
+    window.form.render();
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        //日期时间选择器
+        laydate.render({
+            elem: '#test5'
+            , type: 'date'
+        });
+        laydate.render({
+            elem: '#test6'
+            , type: 'time'
+            , range: ' ~ '
+        });
+    });
+
+    var branch = $('input[name="student_id"]').val();
+    var course = '';
+    var teacher = '';
+    var classid = '';
+    form.on('select(branch)', function (data) {
+        branch = data.value;
+        tool();
+    });
+    form.on('select(class_id)', function (data) {
+        if (branch == '') {
+            layer.msg('请先选择校区!', {icon: 5});
+            return false;
+        }
+        classid = data.value;
+        get_class_course();
+    });
+    form.on('select(course_id)', function (data) {
+//        branch = $('select[name="branch"] option:selected').val();
+        if (classid == '') {
+            layer.msg('请先选择班级!', {icon: 5});
+            return false;
+        }
+        course = data.value;
+        get_teacher();
+    });
+    course = $('[name="course_id"] option:selected').val();
+    form.on('select(teacher)', function (data) {
+        if (course == '') {
+            layer.msg('请先选择课程!', {icon: 5});
+            return false;
+        }
+        teacher = data.value;
+    });
+
+    function tool() {
+        $.post('{:url("educational/experience/get_class")}', {branch: branch}, function (res) {
+            var class_html = '<option value="">-请选择班级-</option>';
+            if (res.class != '') {
+                for (var i = 0; i < res.class.length; i++) {
+                    class_html += '<option value="' + res.class[i].id + '">' + res.class[i].title + '</option>'
+                }
+                $("#class_id").html(class_html);
+            } else {
+                $("#class_id").html(class_html);
+            }
+            window.form.render();
+        })
+    };
+    function get_class_course() {
+        $.post('{:url("educational/experience/get_class_course")}', {branch: branch, class: classid}, function (res) {
+            var courses_html = '<option value="">-请选择课程-</option>';
+            if (res.course != '') {
+                for (var i = 0; i < res.course.length; i++) {
+                    courses_html += '<option value="' + res.course[i].id + '">' + res.course[i].title + '</option>'
+                }
+                $("#course_id").html(courses_html);
+            } else {
+                $("#course_id").html(courses_html);
+            }
+            window.form.render();
+        })
+    };
+
+    function get_teacher () {
+        $.post('{:url("Courses/getBranchData")}', {branch: branch}, function (info) {
+            var techer_html = "<option value=''>-请选择老师-</option>";
+            if (info.teacher != '') {
+                for (var i = 0; i < info.teacher.length; i++) {
+                    techer_html += '<option value="' + info.teacher[i].id+'">' + info.teacher[i].name +  '</option>'
+                }
+                $("#bishop").html(techer_html);
+                $("#assistant").html(techer_html);
+            } else {
+                $("#bishop").html(techer_html);
+                $("#assistant").html(techer_html);
+            }
+            window.form.render();
+        });
+    };
+</script>
+{/block}

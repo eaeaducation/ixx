@@ -1,0 +1,85 @@
+<style>
+    .layui-layer-page .layui-layer-content {
+        overflow: visible;
+    }
+</style>
+<form onsubmit="return false;" action="{:request()->url()}" data-auto="true" method="post"
+      class='form-horizontal layui-form padding-top-20' id="class-form" lay-filter="class">
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            外教教师
+        </label>
+        <div class='col-sm-4'>
+            {:get_teacher_select('bishop',isset($vo.bishop)?$vo.bishop:'', '', ["lay-filter"=>"bishop","required"=>"required"],false)}
+        </div>
+        <label class="layui-form-label">
+            获得课时
+        </label>
+        <div class='col-sm-4'>
+            <input type="text" name="bishop_course_hour"
+                   value="{$vo.bishop_course_hour|default=''}"
+                   title="请输入获得课时" placeholder="请输入获得课时" class="layui-input" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            中教教师
+        </label>
+        <div class='col-sm-4'>
+            {:get_teacher_select('assistant',isset($vo.assistant)?$vo.assistant:'', '', ["lay-filter"=>"assistant","required"=>"required"],false)}
+        </div>
+        <label class="layui-form-label">
+            获得课时
+        </label>
+        <div class='col-sm-4'>
+            <input type="text" name="assistant_course_hour"
+                   value="{$vo.assistant_course_hour|default=''}"
+                   title="请输入获得课时" placeholder="请输入获得课时" class="layui-input" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上课日期</label>
+        <div class="col-sm-4">
+            <input type="text" class="layui-input" id="test5" value='{$vo.begin_time|date="Y-m-d"}' placeholder="请选择时间" name="date">
+        </div>
+        <label class="layui-form-label">上课时间</label>
+        <div class="col-sm-4">
+            <input type="text" class="layui-input" id="test6" placeholder="请选择时间" name="time" value='{$vo.begin_time|date="H:i:s"} ~ {$vo.end_time|date="H:i:s"}'>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">体验课状态</label>
+        <div class='col-sm-8'>
+            <input type="radio" name="status" {in name="$vo.status" value="2" } checked {/in} value="2" title="准备中" checked style="display: none !important;" required>
+            <input type="radio" name="status" {in name="$vo.status" value="3" } checked {/in} value="3" title="已取消" style="display: none !important;" required>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type='submit'>保存数据</button>
+            <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+        </div>
+    </div>
+
+</form>
+
+{block name="script"}
+<script>
+    window.form.render();
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        //日期时间选择器
+        laydate.render({
+            elem: '#test5'
+            , type: 'date'
+        });
+        laydate.render({
+            elem: '#test6',
+            range: false,
+            type: 'time',
+            range: '~'
+        });
+    });
+</script>
+{/block}

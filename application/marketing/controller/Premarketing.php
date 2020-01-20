@@ -163,6 +163,17 @@ class Premarketing extends BasicAdmin
             $end = strtotime($_end . " 23:59:59");
             $db->whereBetween('f.created_at', [$start, $end]);
         }
+        if (isset($get['interest']) && $get['interest'] == 1) {
+            $db->where('f.interest > 0 and f.interest <= 1');
+        } elseif (isset($get['interest']) && $get['interest'] == 2) {
+            $db->where('f.interest > 1 and f.interest <= 2');
+        } elseif (isset($get['interest']) && $get['interest'] == 3) {
+            $db->where('f.interest > 2 and f.interest <= 3');
+        } elseif (isset($get['interest']) && $get['interest'] == 4) {
+            $db->where('f.interest > 3 and f.interest <= 4');
+        } elseif (isset($get['interest']) && $get['interest'] == 5) {
+            $db->where('f.interest > 4 and f.interest <= 5');
+        }
         $this->assign(['authorize' => $user['authorize']]);
         if (isset($get['action']) && $get['action'] == 'down') {
             $this->dataDown($db, $user['authorize']);//调用导出数据方法
@@ -171,12 +182,57 @@ class Premarketing extends BasicAdmin
         return $this->_list($db);
     }
 
+    public function _consultation_data_filter(&$data)
+    {
+        foreach ($data as &$item) {
+            if ($item['content']) {
+                $arr = json_decode($item['content'], 1);
+                if (!is_array($arr)) $arr =[];
+                $arr = end($arr);
+                $item['content'] = isset($arr['content'])?$arr['content']:'';
+                $item['follow_time'] = isset($arr['created_at'])?$arr['created_at']:'';
+            }
+
+        }
+    }
+
     /**
      * 新增咨询记录
      */
     public function consultingRecord()
     {
-        return $this->_form('saas_customer_follow', 'con_record');
+//        return $this->_form('saas_customer_follow', 'con_record');
+        if ($this->request->isPost()) {
+            $post = $this->request->post();
+            $get = $this->request->get();
+            if ($get['follow_status'] == $post['follow_status']) {
+                $this->error('一个跟进状态只能添加一次记录');
+            }
+            $content = [
+                [
+                    'content' => $post['content'],
+                    'created_at' => $post['created_at']
+                ]
+            ];
+            $data = [
+                'customer_id' => $post['customer_id'],
+                'type' => $post['type'],
+                'interest' => $post['interest'],
+                'follow_status' => $post['follow_status'],
+                'remind_time' => strtotime($post['remind_time']),
+                'keyword' => $post['keyword'],
+                'user_id' => $post['user_id'],
+                'content' => json_encode($content, JSON_UNESCAPED_UNICODE),
+                'created_at' => $post['created_at'],
+                'interest_course_1' => $post['interest_course_1'],
+                'interest_course_2' => $post['interest_course_2'],
+                'interest_course_3' => $post['interest_course_3'],
+            ];
+            Db::name('saas_customer_follow')->insert($data);
+            LogService::write('新建咨询', '给【' . get_customer_tel($post['customer_id']) . '】客户新建了一条咨询记录', $post['customer_id']);
+            $this->success('新建咨询记录成功','');
+        }
+        return $this->fetch('con_record');
     }
 
     /**
@@ -798,5 +854,31 @@ class Premarketing extends BasicAdmin
             }
         }
         return $last;
+    }
+
+
+    public function insert_follow()
+    {
+        $get = $this->request->get();
+        $f_record = Db::name('saas_customer_follow')
+            ->where('id', '=', $get['fid'])
+            ->find();
+        if ($f_record['content']) {
+            $f_data = json_decode($f_record['content'], true);
+        } else {
+            $f_data = [];
+        }
+        if ($this->request->isPost()) {
+            $data = [
+                'content' => $this->request->post('content'),
+                'created_at' => time()
+            ];
+            $f_data[] = $data;
+            Db::name('saas_customer_follow')
+                ->where('id', '=', $get['fid'])
+                ->update(['content' => json_encode($f_data, JSON_UNESCAPED_UNICODE)]);
+            $this->success('跟进状态记录添加成功', '');
+        }
+        return $this->fetch('insert_follow', ['f_data' => $f_data]);
     }
 }

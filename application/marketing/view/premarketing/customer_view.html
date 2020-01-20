@@ -119,6 +119,7 @@
                         <th>关键词</th>
                         <th>创建时间</th>
                         <th>跟进人</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -143,10 +144,25 @@
                         <td>{$item.type|convert_category=4|raw}</td>
                         <td>{$item.follow_status|convert_category=7|raw}</td>
                         <td>{$item.remind_time|format_date}</td>
-                        <td>{$item.content}</td>
+                        <td>
+                            {php}
+                            $f_content = json_decode($item['content'], 1);
+                            if (!is_array($f_content)) $f_content = [];
+                            $new_f_content = end($f_content);
+                            echo $new_f_content['content'];
+                            {/php}
+                        </td>
                         <td>{$item.keyword}</td>
-                        <td>{$item.created_at|format_time}</td>
+                        <td>
+                            {php}
+                            $f_content = json_decode($item['content'], 1);
+                            if (!is_array($f_content)) $f_content = [];
+                            $new_f_content = end($f_content);
+                            echo format_time($new_f_content['created_at']);
+                            {/php}
+                        </td>
                         <td>{$item.user_id|get_user_realname}</td>
+                        <td> <a data-title="新增跟进记录" data-modal='{:url("$classuri/insert_follow")}?fid={$item.id}'>新增记录</a></td>
                     </tr>
                     {/foreach}
                     </tbody>

@@ -132,6 +132,16 @@
                     </select>
                 </div>
             </div>
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label">维护状态</label>
+                <div class="layui-input-inline">
+                    <select name="whzt">
+                        <option value="">请选择维护状态</option>
+                        <option value="1" {if $Think.get.whzt == '1'}selected{/if}>30天内未跟进</option>
+                        <option value="2" {if $Think.get.whzt == '2'}selected{/if}>90天内未成交</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="layui-form-item layui-inline">
                 <button class="layui-btn layui-btn-primary"><i class="layui-icon"></i> 搜 索</button>

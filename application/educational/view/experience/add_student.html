@@ -1,0 +1,69 @@
+<div class="padding-15">
+    <form class="layui-form layui-form-pane form-search" action='{:request()->url()}' onsubmit="return false"
+          method="get">
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">关键字查询</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="keyword" value="">
+            </div>
+        </div>
+        {if in_array(session('user.authorize'),[1,3,4])}
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">校区</label>
+            <div class="layui-input-inline">
+                {:get_branches_select('branch', $Think.get.branch, '', [],false)}
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </form>
+    <script>
+        window.form.render();
+    </script>
+
+    <form onsubmit="return false;" data-auto="true" method="post" action="{:request()->url()}">
+        <!--{empty name='list'}-->
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+        <!--{else}-->
+        <input type="hidden" value="resort" name="action">
+        <table class="layui-table" lay-skin="line" id="testReload">
+            <thead>
+            <tr>
+                <th class='list-table-check-td'>
+                    <input data-auto-none="" data-check-target='.list-check-box' type='checkbox'>
+                </th>
+                <th class="text-center">姓名</th>
+                <th class="text-center">昵称</th>
+                <th class="text-center">监护人电话</th>
+                <th class="text-center">所在校区</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--{foreach $list as $key=>$v}-->
+            <tr>
+                <td class='list-table-check-td'>
+                    <input name="id" class="list-check-box" value='{$v.id}' type='checkbox'>
+                </td>
+                <td class="text-center text-nowrap">
+                    {$v.name}【{$v.gender|convert_category=3|raw}】
+                </td>
+                <td class="text-center">{$v.nickname}</td>
+                <td class="text-center">{$v.parent_tel}</td>
+                <td class="text-center nowrap">{$v.branch|convert_branch}</td>
+            </tr>
+            <!--{/foreach}-->
+            </tbody>
+        </table>
+        {if isset($page)}<p>{$page|raw}</p>{/if}
+        <div class="hr-line-dashed"></div>
+        <div class="layui-form-item text-center margin-top-20">
+            <button class="layui-btn" data-callback="index"
+                    data-action='{:url("educational/trialclass/add_student")}?top_id={$top_id}' data-update=""
+                    type='button'>添加学员
+            </button>
+        </div>
+        <!--{/empty}-->
+    </form>
+</div>

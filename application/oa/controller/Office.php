@@ -326,13 +326,7 @@ class Office extends BasicAdmin
     protected function _classapproval_data_filter(&$data)
     {
         foreach ($data as $key => &$value) {
-            if (in_array($this->user['authorize'], [9])) {
-                if (count(get_class_students($value['id'])) >= 6) {
-                    $data[$key] = $value;
-                } else {
-                    unset($data[$key]);
-                }
-            } elseif (in_array($this->user['authorize'], [4])) {
+            if (in_array($this->user['authorize'], [4])) {
                 if (count(get_class_students($value['id'])) < 6) {
                     $data[$key] = $value;
                 } else {
@@ -448,7 +442,7 @@ class Office extends BasicAdmin
     {
         foreach ($data as $key => &$value) {
             if (in_array($this->user['authorize'], [9])) {
-                if (($value['oldprice'] - $value['price']) > 1000 && ($value['oldprice'] - $value['price']) <= 2000) {
+                if (($value['oldprice'] - $value['price']) > 1000) {
                     $data[$key] = $value;
                 } else {
                     unset($data[$key]);

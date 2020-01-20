@@ -91,5 +91,26 @@
             window.form.render();// 再次渲染select
             return;
         }
+        if (parseInt(follow_status) < 2) {
+            if (parseInt(data.value) > parseInt(follow_status) + 1) {
+                layer.msg('跟进状态只能逐级选择', {icon: 2});
+                var select = 'dd[lay-value=' + follow_status + ']';// 设置value
+                $('.layui-form .follow_status').find('dl').find(select).click();// 查找点击
+                window.form.render();// 再次渲染select
+                return;
+            }
+        }
+        if (parseInt(data.value) == 9) {
+            return;
+        }
+        if (parseInt(follow_status) == 2) {
+            if ((data.value != 4) && data.value !=2) {
+                layer.msg('跟进后的订单状态只能选择已到访或无效单', {icon: 2});
+                var select = 'dd[lay-value=' + follow_status + ']';// 设置value
+                $('.layui-form .follow_status').find('dl').find(select).click();// 查找点击
+                window.form.render();// 再次渲染select
+                return;
+            }
+        }
     })
 </script>

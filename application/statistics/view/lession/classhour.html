@@ -1,0 +1,110 @@
+{extend name='admin@public/content'}
+{block name="button"}
+{/block}
+{block name="content"}
+<style>
+    .new-table td {
+        border:1px solid #e2e2e2;
+    }
+</style>
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" style="height: 60px;">
+    <div class="row" style="margin-left:0.4%;float: left">
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">时间</label>
+            <div class="layui-input-inline">
+                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=date('Y-m')}"
+                       placeholder="选择时间" class="input-sm form-control">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>当月新增课时统计</legend>
+</fieldset>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='courses_data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center"></th>
+            {foreach $branch as $k => $v}
+            <th class="text-center">{$v}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $courses_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{:convert_category($key, 6)}</td>
+            {foreach $vo as $vol}
+            <td class="text-center">{$vol}</td>
+            {/foreach}
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>当月课时消耗统计</legend>
+</fieldset>
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='consume_data'}-->
+    <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <!--{else}-->
+    <input type="hidden" value="resort" name="action">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center"></th>
+            {foreach $branch as $k => $v}
+            <th class="text-center">{$v}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach $consume_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center text-nowrap">{:convert_category($key, 6)}</td>
+            {foreach $vo as $vol}
+            <td class="text-center">{$vol}</td>
+            {/foreach}
+        </tr>
+        <!--{/foreach}-->
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+
+
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            theme: '#0099CC',
+            format: 'yyyy-MM',
+            type: 'month',
+            done: function (value, date, endDate) {
+                var date = new Date(date.year + '-' + date.month + '-' + date.date)
+                var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
+                // if ((endDate - date) / 1000 / 86400 > 31) {
+                //     $.msg.alert('最大时间范围为31天', function () {
+                //         $('#time_range').val('')
+                //     })
+                // }
+            }
+        })
+    })
+</script>
+{/block}

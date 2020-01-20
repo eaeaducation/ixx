@@ -40,31 +40,25 @@
     </div>
     {/if}
 
-    <!--<div class="layui-form-item layui-inline">-->
-        <!--<label class="layui-form-label">意向度</label>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<select name="interest" id="interest" class="text-center">-->
-                <!--<option value="">&#45;&#45; 请选择 &#45;&#45;</option>-->
-                <!--<option value="5">10</option>-->
-                <!--<option value="4.5">9</option>-->
-                <!--<option value="4">8</option>-->
-                <!--<option value="3.5">7</option>-->
-                <!--<option value="3">6</option>-->
-                <!--<option value="2.5">5</option>-->
-                <!--<option value="2">4</option>-->
-                <!--<option value="1.5">3</option>-->
-                <!--<option value="1">2</option>-->
-                <!--<option value="0.5">1</option>-->
-                <!--<option value="0">0</option>-->
-            <!--</select>-->
-            <!--<script>-->
-                <!--$(function () {-->
-                    <!--var interest = '{$Think.get.interest}';-->
-                    <!--$("select#interest option[value='" + interest + '\']').attr('selected', true)-->
-                <!--})-->
-            <!--</script>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">意向度</label>
+        <div class="layui-input-inline">
+            <select name="interest" id="interest" class="text-center">
+                <option value="">-- 请选择 --</option>
+                <option value="5">4-5</option>
+                <option value="4">3-4</option>
+                <option value="3">2-3</option>
+                <option value="2">1-2</option>
+                <option value="1">0-1</option>
+            </select>
+            <script>
+                $(function () {
+                    var interest = '{$Think.get.interest}';
+                    $("select#interest option[value='" + interest + '\']').attr('selected', true)
+                })
+            </script>
+        </div>
+    </div>
     <div class="layui-form-item layui-inline">
         <label class="layui-form-label">创建时间</label>
         <div class="layui-input-inline">
@@ -117,18 +111,18 @@
             </th>
             <th class="text-center nowrap">姓名</th>
             <th class="text-center">监护人电话</th>
-            <th class="text-center">家长姓名</th>
-            <th class="text-center ">标签</th>
+<!--            <th class="text-center">家长姓名</th>-->
+<!--            <th class="text-center ">标签</th>-->
             <th class="text-center ">采单员</th>
             <th class="text-center ">销售员(CC)</th>
             <th class="text-center ">意向度</th>
-            <th class="text-center ">意向课程</th>
-            <th class="text-center ">沟通记录</th>
+<!--            <th class="text-center " style="width: 10%">意向课程</th>-->
+            <th class="text-center " style="width: 10%">沟通记录</th>
             <th class="text-center ">跟进状态</th>
             <th class="text-center ">校区</th>
             <th class="text-center ">渠道</th>
             <th class="text-center ">跟进时间</th>
-            <th class="text-center ">下次跟进时间</th>
+<!--            <th class="text-center ">下次跟进时间</th>-->
             <th class="text-center ">创建时间</th>
             <th class="text-center ">操作</th>
         </tr>
@@ -149,8 +143,8 @@
             {else}
             <td class="text-center">{:mobile_mask($vo.parent_tel)}{$vo.parent_tel|make_call|raw}</td>
             {/if}
-            <td class="text-center">{$vo.parent_name}</td>
-            <td class="text-center ">{$vo.tags|default="--"|cn_substr}</td>
+<!--            <td class="text-center">{$vo.parent_name}</td>-->
+<!--            <td class="text-center ">{$vo.tags|default="&#45;&#45;"|cn_substr}</td>-->
             {if isset($vo.sales_id) && !empty($vo.sales_id)}
             <td class="text-center">{:get_user_realname($vo.sales_id)}</td>
             {else}
@@ -177,25 +171,25 @@
                     })
                 </script>
             </td>
-            <td class="text-center">
-                {if ($vo.interest_course_1 != '') }
-                {$vo.interest_course_1|convert_category=6|raw|cn_substr}
-                {else}
-                --
-                {/if}
-                {if ($vo.interest_course_2 != '') }
-                ,{$vo.interest_course_2|convert_category=6|raw|cn_substr}
-                {/if}
-                {if ($vo.interest_course_3 != '') }
-                ,{$vo.interest_course_3|convert_category=6|raw|cn_substr}
-                {/if}
-            </td>
+<!--            <td class="text-center">-->
+<!--                {if ($vo.interest_course_1 != '') }-->
+<!--                {$vo.interest_course_1|convert_category=6|raw|cn_substr}-->
+<!--                {else}-->
+<!--                &#45;&#45;-->
+<!--                {/if}-->
+<!--                {if ($vo.interest_course_2 != '') }-->
+<!--                ,{$vo.interest_course_2|convert_category=6|raw|cn_substr}-->
+<!--                {/if}-->
+<!--                {if ($vo.interest_course_3 != '') }-->
+<!--                ,{$vo.interest_course_3|convert_category=6|raw|cn_substr}-->
+<!--                {/if}-->
+<!--            </td>-->
             <td class="text-center" title="{$vo.content}">{$vo.content|cn_substr}</td>
             <td class="text-center">{$vo.follow_status|convert_category=7|raw}</td>
             <td class="text-center">{$vo.branch|convert_branch}</td>
             <td class="text-center">{$vo.source|convert_channel}</td>
             <td class="text-center">{$vo.follow_time|format_time}</td>
-            <td class="text-center">{$vo.remind_time|format_date}</td>
+<!--            <td class="text-center">{$vo.remind_time|format_date}</td>-->
             <td class="text-center">{$vo.created_at|format_time}</td>
             <td class="text-nowrap text-right">
                 {if auth("$classuri/consultingRecord")}
@@ -209,7 +203,7 @@
                 {if auth("educational/trialclass/fast_add")}
                 {if !isset($vo.trial_class_id)}
                 <span class="text-explode">|</span>
-                <a data-modal='{:url("educational/trialclass/fast_add")}?id={$vo.id}&spm=m-58-71-92' data-title="体验课报名">体验课报名</a>
+                <a data-modal='{:url("educational/experience/fast_add")}?id={$vo.id}&spm=m-58-71-92' data-title="体验课报名">体验课报名</a>
                 {/if}
                 {/if}
             </td>
