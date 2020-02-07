@@ -876,7 +876,7 @@ class Premarketing extends BasicAdmin
             $f_data[] = $data;
             Db::name('saas_customer_follow')
                 ->where('id', '=', $get['fid'])
-                ->update(['content' => json_encode($f_data, JSON_UNESCAPED_UNICODE)]);
+                ->update(['content' => json_encode($f_data, JSON_UNESCAPED_UNICODE), 'created_at' => time()]);
             $this->success('跟进状态记录添加成功', '');
         }
         return $this->fetch('insert_follow', ['f_data' => $f_data]);
