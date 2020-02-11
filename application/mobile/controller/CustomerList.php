@@ -98,9 +98,16 @@ class CustomerList extends MobileBase
         }
         if ($this->request->isPost()) {
             $post = $this->request->post('data');
+            $content = [
+                [
+                    'content' => $post['content'],
+                    'created_at' => $post['created_at']
+                ]
+            ];
             $post['user_id'] = session('user.id');
             $post['created_at'] = time();
             $post['remind_time'] = strtotime($post['remind_time']);
+            $post['content'] = json_encode($content, JSON_UNESCAPED_UNICODE);
             $res = Db::name('saas_customer_follow')->insert($post);
             if ($res) {
                 return json(['code' => 1, 'msg' => '新增咨询成功', 'data' => $post['customer_id']]);

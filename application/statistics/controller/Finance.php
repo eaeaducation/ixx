@@ -55,12 +55,74 @@ class Finance extends BasicAdmin
             }
         }
         $this->assign('deal_data', json_encode($deal_data));
-        dump($deal_data);die;
+//        dump($deal_data);die;
         return $this->fetch('');
     }
 
-    public function orderDate()
+    /**
+     * 财务数据金额统计
+     */
+    public function financeDate()
     {
+        return $this->fetch('finance');
+    }
 
+    public function finance_year_data()
+    {
+        $post = $this->request->post();
+        $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
+        $db = Db::name('saas_cash_flow')->alias('cf')
+            ->join('saas_customer c', 'c.id = cf.cid', 'left')
+            ->field('FROM_UNIXTIME(cf.created_at,"%Y%m") as time, sum(If(type=1,cf.price,0)) as sign_price, sum(IF(type=2,cf.price,0)) as renew_price');
+        $db->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date");
+        $year_data = $db->group('time')->select();
+        $month = [];
+        $sign_price = [];
+        $renew_price = [];
+        $total_price = [];
+        if ($year_data) {
+            foreach ($year_data as $item) {
+                $month[] = $item['time'];
+                $sign_price[] = $item['sign_price'];
+                $renew_price[] = $item['renew_price'];
+                $total_price[] = $item['sign_price'] + $item['renew_price'];
+            }
+        }
+        $db1 = Db::name('saas_cash_flow')->alias('cf')
+            ->join('saas_customer c', 'c.id = cf.cid', 'left')
+            ->field('c.branch, FROM_UNIXTIME(cf.created_at,"%Y%m") as time, sum(price) as total_price');
+        $db1->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date");
+        $year_branch_data = $db1->group('time,c.branch')->select();
+        $branchs = get_branches();
+        $month1 = [];
+        $branch_data = [];
+        foreach ($year_branch_data as $key => $value) {
+            foreach ($branchs as $k => $item) {
+                if (!in_array($value['time'], $month1)) {
+                    $month1[] = $value['time'];
+                }
+                if ($value['branch'] == $k) {
+                    $branch_data[$k][$value['time']] = $value['total_price'];
+                }
+                if (!isset($branch_data[$k][$value['time']])) {
+                    $branch_data[$k][$value['time']] = 0;
+                }
+            }
+        }
+        foreach ($branch_data as $key => &$value) {
+            $branch_data[$key] = array_values($value);
+        }
+        $result = [
+            'year' => $date,
+            'month' => $month,
+            'sign_price' => $sign_price,
+            'renew_price' => $renew_price,
+            'total_price' => $total_price,
+            'school' => $branchs,
+            'branchs' => array_values($branchs),
+            'month1' => $month1,
+            'branch_data' => $branch_data
+        ];
+        return $result;
     }
 }
