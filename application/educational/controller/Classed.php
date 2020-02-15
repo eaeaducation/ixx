@@ -869,9 +869,9 @@ class Classed extends BasicAdmin
             $date = $this->request->post('date');
             $time = $this->request->post('time');
             $remark = $this->request->post('remark');
-            $teacher_hour = intval(trim($this->request->post('teacher_hour')));
-            $student_hour = intval(trim($this->request->post('student_hour')));
-            $ta_teacher_hour = intval(trim($this->request->post('ta_teacher_hour')));
+            $teacher_hour = trim($this->request->post('teacher_hour'));
+            $student_hour = trim($this->request->post('student_hour'));
+            $ta_teacher_hour = trim($this->request->post('ta_teacher_hour'));
             if (in_array($status , [3,4])) {
                 if (!$date || !$time) {
                     $this->error('请选择时间');

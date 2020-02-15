@@ -236,6 +236,28 @@ class User extends BasicXcx
         }
     }
 
+    public function getIntegral()
+    {
+        $post = $this->request->port();
+        $user = $this->getUser();
+        $res = Db::name('saas_wallet')
+            ->where('customer_id', '=', $user->id)
+            ->setInc('integration', $post['integration']);
+        if (!$res) {
+            $this->error('领取失败');
+        }
+        $log = [
+            'customer_id' => $user->id,
+            'integration' => $post['integration'],
+            'amount' => 0,
+            'remark' => $post['remark'],
+            'created_at' => time(),
+            'period_date' => 0
+        ];
+        Db::name('saas_wallet_log')->insert($log);
+        $this->success('积分领取成功');
+    }
+
 
 
 }
