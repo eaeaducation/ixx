@@ -1,5 +1,10 @@
 {extend name='admin@public/content'}
-
+{block name="button"}
+<button data-modal='{:url("$classuri/addTeacherHours")}'
+        data-title="补录老师课时" data-area="['60%', '60%']"
+        class='layui-btn layui-btn-sm layui-btn-primary'>补录老师课时
+</button>
+{/block}
 {block name="content"}
 <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
     <div class="layui-form-item layui-inline">

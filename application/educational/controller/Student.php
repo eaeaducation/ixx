@@ -531,4 +531,70 @@ class Student extends BasicAdmin
         $title = "学生课时";
         down_excel($export_data, $key, $title);
     }
+
+    public function reduceHours()
+    {
+        $cid = $this->request->get('id');
+        if ($this->request->isPost()) {
+            $post = $this->request->post();
+            if (empty($post['ids'])) {
+                $this->error('请选择需要划消的课程');
+            }
+            if ($post['student_hour'] == 0) {
+                $this->error('划消课时数不能为0');
+            }
+            list($oid, $lid, $course_id) = explode('-', $post['ids']);
+            $order = Db::name('saas_order')
+                ->where('student_id', '=', $cid)
+                ->where('id', '=', $oid)
+                ->field('id,audit_status')
+                ->find();
+            if ($order['audit_status'] != 99) {
+                $this->error(' 订单审核未通过，不能划消课时');
+            }
+            $row = Db::name('saas_order_log')
+                ->where('order_id', '=', $oid)
+                ->where('id' , '=', $lid)
+                ->find();
+            if (($row['consume_num'] + $post['student_hour']) > $row['goods_num']) {
+                $this->error(' 课时不足');
+            }
+            Db::name('saas_order_log')
+                ->where('order_id', '=', $order['id'])
+                ->where('goods_id', '=', $course_id)
+                ->setInc('consume_num', $post['student_hour']);
+            $data = [
+                'student_id' => $cid,
+                'status' => $post['type'],
+                'course_id' => $course_id,
+                'created_at' => strtotime($post['date'] . date('H:i:s')),
+                'course_hour' => trim($post['student_hour']),
+                'remark' => $post['remark'],
+                'begin_time' => '',
+                'end_time' => '',
+                'class_course_no' => '',
+                'batch_code' => ''
+            ];
+            $res = Db::name('saas_course_log')
+                ->insert($data);
+            LogService::write('打卡记录', '学生【' . $cid . '】课程【' . get_courses_title($course_id) . '】手动划消' . $post['student_hour'] . '课时');
+            if ($res) {
+                $this->success(' 数据更新成功', '');
+            } else {
+                $this->error(' 数据更新失败', '');
+            }
+        }
+        $courses = Db::name('saas_order o')
+            ->field('l.goods_num, l.consume_num, c.title, l.class_id, cl.teacher_id, l.id lid, l.goods_id course_id, o.id oid')
+            ->join('saas_order_log l', 'o.id = l.order_id', 'left')
+            ->join('saas_courses c', 'c.id = l.goods_id', 'left')
+            ->join('saas_class cl', 'cl.id = l.class_id', 'left')
+            ->where('o.student_id', '=', $cid)
+            ->where('o.status', '<>', 3)
+            ->select();
+        $this->assign('cid', $cid);
+        $this->assign('courses', $courses);
+//        dump($courses);die;
+        return $this->fetch('reduce_hours');
+    }
 }

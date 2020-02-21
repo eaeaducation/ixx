@@ -1,0 +1,172 @@
+<form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">校区</label>
+        <div class='layui-input-inline' style="width: 20%">
+            {if in_array(session('user.authorize'),[1,3,4,22]) }
+            {:get_branches_select('branch', '', '', ["lay-filter"=>"branch",'required' => 'required'], false)}
+            {else}
+            <input type="hidden" name="branch" value="{:session('user.employee.department')}" />
+            {:get_branches_select('branch', session('user.employee.department'), '', ["lay-filter"=>"branch",'disabled'=>'disabled'],false)}
+            {/if}
+            <div class="help-block">
+                <p class="text-danger">* 请先选择校区, 后选择老师</p>
+            </div>
+        </div>
+        <label class="layui-form-label" style="width: 5%">老师</label>
+        <div class="layui-input-inline" style="width: 20%">
+            <select name="teacher_id" id="teacher" lay-filter="teacher" lay-search required>
+                <option value="">-请选择老师-</option>
+            </select>
+        </div>
+        <label class="layui-form-label" style="width: 5%">课时</label>
+        <div class="layui-input-inline" style="width: 20%">
+            <input type="number" required name="teacher_hour" value="0" title="补录课时" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            课程类别
+        </label>
+        <div class='layui-input-inline' id="category" style="width: 20%">
+            {:get_category_select(6, 'category', '', '', ['lay-filter'=>'category','required' => 'required'])}
+        </div>
+        <label class="layui-form-label" style="width: 5%">
+            科目
+        </label>
+        <div class='layui-input-inline' id="subject_add" style="width: 20%">
+            <select name="subject" lay-filter="subject" id="subject" required>
+                <option value="">-请选择-</option>
+            </select>
+        </div>
+        <label class="layui-form-label" style="width: 5%">
+            课程
+        </label>
+        <div class='layui-input-inline' style="width: 20%">
+            <select name="course" lay-filter="course" id="course" required>
+                <option value="">-请选择-</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">补录类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="type" value="1" title="上课" checked="" style="display: none !important;" required lay-filter="type">
+            <input type="radio" name="type" value="2" title="补课" style="display: none !important;" required lay-filter="type">
+            <input type="radio" name="type" value="3" title="体验课" style="display: none !important;" required lay-filter="type">
+            <input type="radio" name="type" value="4" title="公开课" style="display: none !important;" required lay-filter="type">
+            <input type="radio" name="type" value="5" title="辅导课" style="display: none !important;" required lay-filter="type">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item select-time2">
+        <label class="layui-form-label" id="label1">补录时间</label>
+        <div class="layui-input-block" style="width: 80%">
+            <input type="text" id="date_range" name="date" value="" style="display: inline-block"
+                   placeholder="选择补课日期（1970-01-01）" class="input-sm form-control layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">补录备注</label>
+        <div class="layui-input-block" style="width: 80%">
+            <input type="text" name="remark" value="" title="请说明补录课时原因，以便查阅" class="layui-input" required/>
+        </div>
+    </div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate
+        laydate.render({
+            elem: '#time_range',
+            range: '-',
+            type: 'time',
+            theme: '#0099CC',
+            format: 'HH:mm:ss',
+            value: "09:00:00 - 11:00:00"
+        })
+        var laydate1 = layui.laydate
+        laydate1.render({
+            elem: '#date_range',
+            theme: '#0099CC',
+            format: 'yyyy-MM-dd',
+            value: "{:date('Y-m-d')}"
+        })
+    })
+</script>
+
+<script>
+    window.form.render();
+    layui.use(['form'], function () {
+        var form = layui.form;
+        var branch = '';
+        form.on('select(branch)', function (data) {
+            branch = data.value;
+            get_teacher();
+        });
+        var category = '';
+        var subject = '';
+        form.on('select(category)', function (data) {
+            category = $('select[name="category"] option:selected').val();
+            tool();
+        });
+        form.on('select(subject)', function (data) {
+            category = $('select[name="category"] option:selected').val();
+            if (category == '') {
+                layer.msg('请先选择课程类别!', {icon: 5});
+                return false;
+            }
+            subject = data.value;
+            get_courses();
+        });
+
+        function tool() {
+            $.post('{:url("educational/subject/get_subject")}', {category: category}, function (res) {
+                var subject_html = '<option value="">-请选择科目-</option>';
+                if (res.code == 1) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        subject_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                    }
+                    $("#subject").html(subject_html);
+                } else {
+                    $("#subject").html(subject_html);
+                }
+                window.form.render();
+            })
+        }
+        function get_teacher () {
+            $.post('{:url("Courses/getBranchData")}', {branch: branch}, function (info) {
+                var techer_html = "<option value=''>-请选择老师-</option>";
+                if (info.teacher != '') {
+                    for (var i = 0; i < info.teacher.length; i++) {
+                        techer_html += '<option value="' + info.teacher[i].id+'">' + info.teacher[i].name +  '</option>'
+                    }
+                    $("#teacher").html(techer_html);
+                } else {
+                    $("#teacher").html(techer_html);
+                }
+                window.form.render();
+            });
+        };
+        function get_courses () {
+            $.post('{:url("educational/Teachers/get_course")}', {branch: branch, category: category, subject: subject}, function (res) {
+                var course_html = '<option value="">-请选择课程-</option>';
+                if (res.code == 1) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        course_html += '<option value="' + res.data[i].id+'">' + res.data[i].title +  '</option>'
+                    }
+                    $("#course").html(course_html);
+                } else {
+                    $("#course").html(course_html);
+                }
+                window.form.render();
+            });
+        };
+
+    });
+</script>

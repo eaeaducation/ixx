@@ -170,4 +170,60 @@ class Teachers extends BasicAdmin
         return $this->fetch('', ['courseStudent' => $courseStudent]);
 
     }
+
+    /**
+     * 老师课时添加
+     * @return mixed
+     */
+    public function addTeacherHours()
+    {
+        $this->title = '老师补录课时';
+        if ($this->request->isPost()) {
+            $post = $this->request->post();
+            if (empty($post['course']) || empty($post['teacher_id']) || empty($post['teacher_hour'])) {
+                $this->error('数据不正确');
+            }
+            $data = [
+                'course_sub_id' => '',
+                'course_id' => $post['course'],
+                'teacher_id' => $post['teacher_id'],
+                'status' => $post['type'],
+                'created_at' => strtotime($post['date'] . date('H:i:s')),
+                'class_course_no' => '',
+                'batch_code' => '',
+                'course_hour' => trim($post['teacher_hour']),
+                'remark' => $post['remark']
+            ];
+            $res = Db::name('saas_course_teacher_log')->insert($data);
+            LogService::write('教师课时', '老师【' . get_employee_name($post['teacher_id']) . '】课程【' . get_courses_title($post['course']) . '】新增' . $post['teacher_hour'] . '课时');
+            if ($res) {
+                $this->success('课时补录成功！', '');
+            } else {
+                $this->error('课时补录失败', '');
+            }
+        }
+        return $this->fetch('addteacherhours');
+    }
+
+    /**
+     * 获取科目
+     */
+    public function get_course()
+    {
+        $category_id = $this->request->post('category');
+        $subject_id = $this->request->post('subject');
+        $branch_id = $this->request->post('branch');
+        $data = Db::name('saas_courses')
+            ->field('id,title')
+            ->where('category','=',$category_id)
+            ->where('subject', '=', $subject_id)
+            ->where('branch', '=', $branch_id)
+            ->where('status','=','1')
+            ->select();
+        if ($data){
+            $this->success('', '', $data);
+        } else {
+            $this->error();
+        }
+    }
 }
