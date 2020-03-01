@@ -104,7 +104,7 @@
     window.form.render();
     layui.use(['form'], function () {
         var form = layui.form;
-        var branch = '';
+        var branch = $('input[name="branch"]').val();
         form.on('select(branch)', function (data) {
             branch = data.value;
             get_teacher();
