@@ -55,7 +55,8 @@
                 {if $vo.status == 3}
                 <td class="text-center text-nowrap">{$vo.course_id|get_courses_title}</td>
                 {else}
-                <td class="text-center text-nowrap">{$vo.ctitle}</td>
+                <td class="text-center text-nowrap">{$vo.course_id|get_courses_title}</td>
+<!--                <td class="text-center text-nowrap">{$vo.ctitle}</td>-->
                 {/if}
 
                 <td class="text-center text-nowrap">{$vo.created_at|format_time}</td>
