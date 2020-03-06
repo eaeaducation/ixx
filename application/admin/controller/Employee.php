@@ -125,7 +125,7 @@ class Employee extends BasicAdmin
             if (!isset($user['authorize']) || $user['authorize'] == '') {
                 $this->error('请选择用户角色');
             }
-            if (Db::name('system_user')->where('phone', '=', $vo['mobile'])->field('id')->find()) {
+            if (Db::name('system_user')->where('phone', '=', $vo['mobile'])->where('status', '=', 1)->field('id')->find()) {
                 $this->error('用户手机号码已存在, 请重新输入或联系管理员解封!');
             }
             // 检测邮箱重复

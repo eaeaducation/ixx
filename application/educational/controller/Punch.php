@@ -9,13 +9,16 @@
 namespace app\educational\controller;
 
 use app\common\model\CourseLog;
+use app\common\model\Customer;
 use controller\BasicAdmin;
+use think\Exception;
 use think\Facade;
 use think\facade\Cache;
 use app\common\model\OrderLog;
 use think\Db;
 use app\common;
 use Naixiaoxin\ThinkWechat\Facade as wechat;
+use think\facade\Log;
 
 class Punch extends BasicAdmin
 {
@@ -190,8 +193,8 @@ class Punch extends BasicAdmin
     public function more()
     {
         //加载页面
+        $get = $this->request->get();
         if ($this->request->isGet()) {
-            $get = $this->request->get();
             $class_id = $get['class_id'];
             $goods_id = $get['course'];
             $status = $get['status'];
@@ -211,18 +214,35 @@ class Punch extends BasicAdmin
                     'hour' => $hour,
                     'course_id' => $goods_id,
                     'course_detail_id' => $course_detail_id,
-                    'status' => $status
+                    'status' => $status,
+                    'class_id' => $class_id
                 ]);
         }
         //处理数据
         if ($this->request->isPost()) {
             $post = $this->request->post();
+            $class = Db::name('saas_class')->where('id', $post['class_id'])->find();
+            if ($class['audit_status'] != 99) {
+                return json(['code' => -1, 'msg' => '班级审核暂未通过不能打卡']);
+            }
             $ids = [];
             $students = [];
             $consume_num = [];
             $goods_num = [];
             foreach ($post['id'] as $k => $v) {
                 list($ids[$k], $students[$k], $consume_num[$k], $goods_num[$k]) = explode('-', $v);
+            }
+            foreach ($students as $item) {
+                $order = Db::name('saas_order')
+                    ->where('student_id', '=', $item)
+                    ->where('class_id', '=', $post['class_id'])
+                    ->field('id,audit_status,orderno')
+                    ->find();
+                if ($order['audit_status'] != 99) {
+                    Log::error('异常订单信息:客户id-'.$item.';订单id-'.$order['id'].'订单审核未通过，不能打卡');
+                    $user = Customer::get(['id'=>$item]);
+                    return json(['code' => -1, 'msg' => $user->name.' 订单'.$order['orderno']." 订单审核未通过，不能打卡"]);
+                }
             }
             //防止重复打卡
             $batch_code = trim($post['course_detail_id']) . '~' . strtotime(date('Y-m-d', time())) . "~" . $post['status'];
