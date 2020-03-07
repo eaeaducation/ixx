@@ -69,7 +69,7 @@
                 <td class="text-center text-nowrap color-green">体验课</td>
                 {/if}
                 <td class="text-center nowrap">{$vo.course_hour|default=''}</td>
-                <td class="text-center nowrap" title="{$vo.remark}">{$vo.remark|default=''|cn_substr}</td>
+                <td class="text-center" title="{$vo.remark}">{$vo.remark|default=''}</td>
                 <td class="text-center nowrap">
                     <span class="text-explode">|</span>
                     <a data-title="上课学员" data-modal='{:url("$classuri/courseStudent")}?id={$vo.id}'>上课学员</a>
