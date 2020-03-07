@@ -9,20 +9,20 @@
     }
 </style>
 
-<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" style="height: 60px;">
+<div class="layui-form layui-form-pane form-search" style="height: 60px;">
     <div class="row" style="margin-left:0.4%;float: left">
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">时间</label>
             <div class="layui-input-inline">
-                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=date('Y-m')}"
+                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=date('Y')}"
                        placeholder="选择时间" class="input-sm form-control">
             </div>
         </div>
         <div class="layui-form-item layui-inline">
-            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+            <button class="layui-btn layui-btn-primary" id="search"><i class="layui-icon">&#xe615;</i> 搜 索</button>
         </div>
     </div>
-</form>
+</div>
 <script>
     window.form.render();
 </script>
@@ -38,8 +38,8 @@
             laydate.render({
                 elem: '#time_range',
                 theme: '#0099CC',
-                format: 'yyyy-MM',
-                type: 'month',
+                format: 'yyyy',
+                type: 'year',
                 done: function (value, date, endDate) {
                     var date = new Date(date.year + '-' + date.month + '-' + date.date)
                     var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
@@ -51,144 +51,141 @@
                 }
             })
         })
-        require(['echarts'], function () {
-            var deal_data = "{$deal_data}";
-            var deal_data_arr = JSON.parse(deal_data.replace(new RegExp('&quot;',"gm"),'"'));
-            var jsonArr = [];
-            for(var i =0 ;i < deal_data_arr.deal_num.length;i++){
-                jsonArr[i] = (deal_data_arr.deal_num)[i];
-            }
-            console.log(jsonArr)
-            var echarts = require('echarts');
-            var myChart1 = echarts.init(document.getElementById('container1'));
-            var myChart2 = echarts.init(document.getElementById('container2'));
-            option1 = {
-                title: {
-                    text: '校区当月订单成交量',
-                    left: 'center'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        // type: 'cross',
-                        // crossStyle: {
-                        //     color: '#999'
-                        // }
-                    }
-                },
-                toolbox: {
-                    feature: {
-                        dataView: {show: true, readOnly: false},
-                        magicType: {show: true, type: ['bar']},
-                        restore: {show: true},
-                        saveAsImage: {show: true}
-                    }
-                },
-                legend: {
-                    data: ['销售量', '销售额'],
-                    left: 'left'
-                },
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        axisPointer: {
-                            type: 'shadow'
-                        }
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name: '销售量',
-                        min: 0,
-                        max: 250,
-                        interval: 50,
-                        axisLabel: {
-                            formatter: '{value} '
-                        }
-                    }
-                ],
-                series: [
-                    {
-                        name: '销售量',
-                        type: 'bar',
-                        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-                        color: ['#7289ab']
-                    },
-                    {
-                        name: '销售额',
-                        type: 'bar',
-                        data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-                        color: ['#f49f42']
-                    },
-                ]
-            };
-            option2 = {
-                title: {
-                    text: '校区全年订单成交量',
-                    left: 'center'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        // type: 'cross',
-                        // crossStyle: {
-                        //     color: '#999'
-                        // }
-                    }
-                },
-                toolbox: {
-                    feature: {
-                        dataView: {show: true, readOnly: false},
-                        magicType: {show: true, type: ['bar']},
-                        restore: {show: true},
-                        saveAsImage: {show: true}
-                    }
-                },
-                legend: {
-                    data: ['销售量', '销售额'],
-                    left: 'left'
-                },
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        axisPointer: {
-                            type: 'shadow'
-                        }
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name: '水量',
-                        min: 0,
-                        max: 250,
-                        interval: 50,
-                        axisLabel: {
-                            formatter: '{value} ml'
-                        }
-                    }
-                ],
-                series: [
-                    {
-                        name: '销售量',
-                        type: 'bar',
-                        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-                        color: ['#f49f42']
-                    },
-                    {
-                        name: '销售额',
-                        type: 'bar',
-                        data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-                        color: ['#759aa0'],
-                    },
-                ]
-            };
-            myChart1.setOption(option1);
-            myChart2.setOption(option2);
+        data_onload()
+        $('#search').click(function () {
+            var date = $('#time_range').val();
+            data_onload(date);
         })
+        function data_onload(date = '') {
+            $.post('/statistics/finance/orders_data', {date: date}, function (res) {
+                console.log(res)
+                require(['echarts'], function () {
+                    var echarts = require('echarts');
+                    var myChart1 = echarts.init(document.getElementById('container1'));
+                    var myChart2 = echarts.init(document.getElementById('container2'));
+                    option1 = {
+                        title: {
+                            text: res.year+'校区年度订单成交量',
+                            left: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                crossStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                magicType: {show: true, type: ['line']},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        legend: {
+                            data: ['销售量'],
+                            left: 'left'
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: res.branchs,
+                                axisPointer: {
+                                    type: 'shadow'
+                                },
+                                axisLabel: {
+                                    interval:0,
+                                    rotate:40
+                                },
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                name: '销售量',
+                                min: 0,
+                                // max: 250,
+                                axisLabel: {
+                                    formatter: '{value} '
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '销售量',
+                                type: 'bar',
+                                data: res.deal_num,
+                                color: ['#5793f3']
+                            },
+                        ]
+                    };
+                    option2 = {
+                        title: {
+                            text: res.year+'校区年度订单销售额',
+                            left: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                crossStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                magicType: {show: true, type: ['bar']},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        legend: {
+                            data: ['销售额'],
+                            left: 'left'
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: res.branchs,
+                                axisPointer: {
+                                    type: 'shadow'
+                                },
+                                axisLabel: {
+                                    interval:0,
+                                    rotate:40
+                                },
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                name: '销售额',
+                                min: 0,
+                                axisLabel: {
+                                    formatter: '{value} '
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '销售额',
+                                type: 'bar',
+                                data: res.deal_price,
+                                color: ['#d14a61'],
+                            },
+                        ]
+                    };
+                    myChart1.setOption(option1);
+                    myChart2.setOption(option2);
+                })
+            })
+        }
+
     })
 
 </script>

@@ -10,16 +10,23 @@ use think\facade\Log;
 
 class Finance extends BasicAdmin
 {
-
     public function orders()
     {
-        $this->assign('title',  '校区当月订单成交量');
-        $get = $this->request->get();
+        $this->assign('title',  '校区年度数据统计');
+        return $this->fetch('');
+    }
+
+    public function orders_data()
+    {
+        $post = $this->request->post();
         $branchs = get_branches();
+        $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
+        Log::error($date);
         $order_data = Db::name('saas_order_log')->alias('ol')
             ->field('count(ol.id) as deal_num, sum(ol.old_price) deal_old_price, sum(ol.price) deal_price, c.branch')
             ->join('saas_order o', 'o.id = ol.order_id', 'left')
             ->join('saas_courses c', 'c.id = ol.goods_id', 'left')
+            ->where("FROM_UNIXTIME(o.created_at,'%Y') = $date")
             ->where('o.status', 'in', [5, 6]);
         $order_data = $order_data->group('c.branch')->select();
         $cate_data = [];
@@ -54,9 +61,12 @@ class Finance extends BasicAdmin
                 }
             }
         }
-        $this->assign('deal_data', json_encode($deal_data));
-//        dump($deal_data);die;
-        return $this->fetch('');
+        return [
+            'branchs' => array_values($branchs),
+            'deal_num' => array_values($deal_data['deal_num']),
+            'deal_price' => array_values($deal_data['deal_price']),
+            'year' => $date,
+        ];
     }
 
     /**
@@ -64,6 +74,7 @@ class Finance extends BasicAdmin
      */
     public function financeDate()
     {
+        $this->assign('title',  '财务数据金额统计');
         return $this->fetch('finance');
     }
 
