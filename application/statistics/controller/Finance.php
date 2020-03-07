@@ -59,14 +59,18 @@ class Finance extends BasicAdmin
                 if ($key == $k) {
                     $deal_data['sign_num'][$k] = $item['sign_num'];
                     $deal_data['renew_num'][$k] = $item['renew_num'];
+                    $deal_data['total_num'][$k] = $item['renew_num'] + $item['sign_num'];
                     $deal_data['sign_price'][$k] = round($item['sign_price'], 2);
                     $deal_data['renew_price'][$k] = round($item['renew_price'], 2);
+                    $deal_data['total_price'][$k] = round($item['sign_price']+$item['renew_price'], 2);
                 }
                 if (!isset($deal_data['sign_num'][intval($k)])) {
                     $deal_data['sign_num'][$k] = 0;
                     $deal_data['renew_num'][$k] = 0;
+                    $deal_data['total_num'][$k] = 0;
                     $deal_data['sign_price'][$k] = 0;
                     $deal_data['renew_price'][$k] = 0;
+                    $deal_data['total_price'][$k] = 0;
                 }
             }
         }
@@ -74,8 +78,10 @@ class Finance extends BasicAdmin
             'branchs' => array_values($branchs),
             'sign_num' => array_values($deal_data['sign_num']),
             'renew_num' => array_values($deal_data['renew_num']),
+            'total_num' => array_values($deal_data['total_num']),
             'sign_price' => array_values($deal_data['sign_price']),
             'renew_price' => array_values($deal_data['renew_price']),
+            'total_price' => array_values($deal_data['total_price']),
             'year' => $date,
         ];
     }

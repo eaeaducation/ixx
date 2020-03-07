@@ -90,7 +90,7 @@
                         toolbox: {
                             feature: {
                                 dataView: {show: true, readOnly: false},
-                                magicType: {show: true, type: ['line']},
+                                magicType: {show: true, type: ['line','bar']},
                                 restore: {show: true},
                                 saveAsImage: {show: true}
                             }
@@ -138,6 +138,11 @@
                                 color: ['#99ff99'],
                                 barWidth : 30,//柱图宽度
                             },
+                            {
+                                name: '总数量',
+                                type: 'line',
+                                data: res.total_num
+                            },
                         ]
                     };
                     option2 = {
@@ -157,7 +162,7 @@
                         toolbox: {
                             feature: {
                                 dataView: {show: true, readOnly: false},
-                                magicType: {show: true, type: ['bar']},
+                                magicType: {show: true, type: ['bar', 'line']},
                                 restore: {show: true},
                                 saveAsImage: {show: true}
                             }
@@ -203,6 +208,11 @@
                                 data: res.renew_price,
                                 color: ['#FF7F00'],
                                 barWidth : 30,//柱图宽度
+                            },
+                            {
+                                name: '总金额',
+                                type: 'line',
+                                data: res.total_price,
                             },
                         ]
                     };
