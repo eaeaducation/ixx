@@ -52,7 +52,9 @@ class Finance extends BasicAdmin
             'sign_num' => [],
             'renew_num' => [],
             'sign_price' => [],
-            'renew_price' => []
+            'renew_price' => [],
+            'total_num' => [],
+            'total_price' => []
         ];
         foreach ($cate_data as $key => $item) {
             foreach ($branchs as $k => $v) {
