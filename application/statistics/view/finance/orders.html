@@ -9,8 +9,17 @@
     }
 </style>
 
-<div class="layui-form layui-form-pane form-search" style="height: 60px;">
+<form class="layui-form layui-box modal-form-box form-search" style="height: 60px;">
     <div class="row" style="margin-left:0.4%;float: left">
+<!--        <div class="layui-form-item layui-inline">-->
+<!--            <label class="layui-form-label">显示类型</label>-->
+<!--            <div class="layui-input-inline">-->
+<!--                <select name='show_type' class='layui-select full-width' lay-filter="show_type">-->
+<!--                    <option value='1'>年份</option>-->
+<!--                    <option value='2'>月份</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">时间</label>
             <div class="layui-input-inline">
@@ -19,10 +28,10 @@
             </div>
         </div>
         <div class="layui-form-item layui-inline">
-            <button class="layui-btn layui-btn-primary" id="search"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+            <a class="layui-btn layui-btn-primary" id="search"><i class="layui-icon">&#xe615;</i> 搜 索</a>
         </div>
     </div>
-</div>
+</form>
 <script>
     window.form.render();
 </script>
@@ -33,6 +42,7 @@
 <script>
 
     $(function () {
+        window.form.render();
         layui.use('laydate', function () {
             var laydate = layui.laydate
             laydate.render({
@@ -40,6 +50,7 @@
                 theme: '#0099CC',
                 format: 'yyyy',
                 type: 'year',
+                value: "{:date('Y')}",
                 done: function (value, date, endDate) {
                     var date = new Date(date.year + '-' + date.month + '-' + date.date)
                     var endDate = new Date(endDate.year + '-' + endDate.month + '-' + endDate.date)
@@ -58,7 +69,6 @@
         })
         function data_onload(date = '') {
             $.post('/statistics/finance/orders_data', {date: date}, function (res) {
-                console.log(res)
                 require(['echarts'], function () {
                     var echarts = require('echarts');
                     var myChart1 = echarts.init(document.getElementById('container1'));
@@ -86,7 +96,7 @@
                             }
                         },
                         legend: {
-                            data: ['销售量'],
+                            data: ['报名', '续费'],
                             left: 'left'
                         },
                         xAxis: [
@@ -105,7 +115,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                name: '销售量',
+                                name: '数量',
                                 min: 0,
                                 // max: 250,
                                 axisLabel: {
@@ -115,10 +125,17 @@
                         ],
                         series: [
                             {
-                                name: '销售量',
+                                name: '报名',
                                 type: 'bar',
-                                data: res.deal_num,
-                                color: ['#5793f3'],
+                                data: res.sign_num,
+                                color: ['#ffcc33'],
+                                barWidth : 30,//柱图宽度
+                            },
+                            {
+                                name: '续费',
+                                type: 'bar',
+                                data: res.renew_num,
+                                color: ['#99ff99'],
                                 barWidth : 30,//柱图宽度
                             },
                         ]
@@ -146,7 +163,7 @@
                             }
                         },
                         legend: {
-                            data: ['销售额'],
+                            data: ['报名金额','续费金额'],
                             left: 'left'
                         },
                         xAxis: [
@@ -165,7 +182,7 @@
                         yAxis: [
                             {
                                 type: 'value',
-                                name: '销售额',
+                                name: '金额',
                                 min: 0,
                                 axisLabel: {
                                     formatter: '{value} '
@@ -174,10 +191,17 @@
                         ],
                         series: [
                             {
-                                name: '销售额',
+                                name: '报名金额',
                                 type: 'bar',
-                                data: res.deal_price,
-                                color: ['#d14a61'],
+                                data: res.sign_price,
+                                color: ['#FF83FA'],
+                                barWidth : 30,//柱图宽度
+                            },
+                            {
+                                name: '续费金额',
+                                type: 'bar',
+                                data: res.renew_price,
+                                color: ['#FF7F00'],
                                 barWidth : 30,//柱图宽度
                             },
                         ]

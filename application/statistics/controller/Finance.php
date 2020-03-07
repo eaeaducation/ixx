@@ -21,14 +21,18 @@ class Finance extends BasicAdmin
         $post = $this->request->post();
         $branchs = get_branches();
         $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
-        $order_data = Db::name('saas_order_log')->alias('ol')
-            ->field('count(ol.id) as deal_num, sum(ol.old_price) deal_old_price, sum(ol.price) deal_price, c.branch')
-            ->join('saas_order o', 'o.id = ol.order_id', 'left')
-            ->join('saas_courses c', 'c.id = ol.goods_id', 'left')
-            ->join('saas_cash_flow cf', 'cf.orderno = o.orderno', 'left')
-            ->where('cf.type', '=', 1)
-            ->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date")
-            ->where('o.status', 'in', [5, 6]);
+//        $order_data = Db::name('saas_order_log')->alias('ol')
+//            ->field('count(ol.id) as deal_num, sum(ol.old_price) deal_old_price, sum(ol.price) deal_price, c.branch')
+//            ->join('saas_order o', 'o.id = ol.order_id', 'left')
+//            ->join('saas_courses c', 'c.id = ol.goods_id', 'left')
+//            ->join('saas_cash_flow cf', 'cf.orderno = o.orderno', 'left')
+//            ->where('cf.type', '=', 1)
+//            ->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date")
+//            ->where('o.status', 'in', [5, 6]);
+        $order_data = Db::name('saas_cash_flow')->alias('cf')
+            ->join('saas_customer c', 'c.id = cf.cid', 'left')
+            ->field('sum(IF(cf.type=1, 1, 0)) as sign_num, sum(IF(cf.type=2, 1, 0)) as renew_num, sum(IF(cf.type=1, price, 0)) as sign_price, sum(IF(cf.type=2, price, 0)) as renew_price,c.branch')
+            ->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date");
         $order_data = $order_data->group('c.branch')->select();
         $cate_data = [];
         foreach ($order_data as $item) {
@@ -37,35 +41,41 @@ class Finance extends BasicAdmin
                 continue;
             }
             $cate_data[$item['branch']] = [
-                'deal_num' => $item['deal_num'],
-                'deal_old_price' => $item['deal_old_price'],
-                'deal_price' => $item['deal_price']
+                'sign_num' => $item['sign_num'],
+                'renew_num' => $item['renew_num'],
+                'sign_price' => $item['sign_price'],
+                'renew_price' => $item['renew_price']
             ];
         }
         $deal_data =
             [
-            'deal_num' => [],
-            'deal_old_price' => [],
-            'deal_price' => []
+            'sign_num' => [],
+            'renew_num' => [],
+            'sign_price' => [],
+            'renew_price' => []
         ];
         foreach ($cate_data as $key => $item) {
             foreach ($branchs as $k => $v) {
                 if ($key == $k) {
-                    $deal_data['deal_num'][$k] = $item['deal_num'];
-                    $deal_data['deal_old_price'][$k] = round($item['deal_old_price'], 2);
-                    $deal_data['deal_price'][$k] = round($item['deal_price'], 2);
+                    $deal_data['sign_num'][$k] = $item['sign_num'];
+                    $deal_data['renew_num'][$k] = $item['renew_num'];
+                    $deal_data['sign_price'][$k] = round($item['sign_price'], 2);
+                    $deal_data['renew_price'][$k] = round($item['renew_price'], 2);
                 }
-                if (!isset($deal_data['deal_num'][intval($k)])) {
-                    $deal_data['deal_num'][$k] = 0;
-                    $deal_data['deal_old_price'][$k] = 0;
-                    $deal_data['deal_price'][$k] = 0;
+                if (!isset($deal_data['sign_num'][intval($k)])) {
+                    $deal_data['sign_num'][$k] = 0;
+                    $deal_data['renew_num'][$k] = 0;
+                    $deal_data['sign_price'][$k] = 0;
+                    $deal_data['renew_price'][$k] = 0;
                 }
             }
         }
         return [
             'branchs' => array_values($branchs),
-            'deal_num' => array_values($deal_data['deal_num']),
-            'deal_price' => array_values($deal_data['deal_price']),
+            'sign_num' => array_values($deal_data['sign_num']),
+            'renew_num' => array_values($deal_data['renew_num']),
+            'sign_price' => array_values($deal_data['sign_price']),
+            'renew_price' => array_values($deal_data['renew_price']),
             'year' => $date,
         ];
     }
