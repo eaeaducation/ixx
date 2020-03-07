@@ -95,6 +95,9 @@ class Classed extends BasicAdmin
                 $vo['begin_time'] = strtotime($post['begin_time'] . " 00:00:00");
             }
             if ($vo['status'] == 2) {
+                if ($vo['student_count'] == 1) {
+                    $vo['audit_status'] = 99;
+                }
                 $vo['audit_status'] = -95;
             }
             if (isset($vo['id'])) {
