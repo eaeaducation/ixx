@@ -21,12 +21,13 @@ class Finance extends BasicAdmin
         $post = $this->request->post();
         $branchs = get_branches();
         $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
-        Log::error($date);
         $order_data = Db::name('saas_order_log')->alias('ol')
             ->field('count(ol.id) as deal_num, sum(ol.old_price) deal_old_price, sum(ol.price) deal_price, c.branch')
             ->join('saas_order o', 'o.id = ol.order_id', 'left')
             ->join('saas_courses c', 'c.id = ol.goods_id', 'left')
-            ->where("FROM_UNIXTIME(o.created_at,'%Y') = $date")
+            ->join('saas_cash_flow cf', 'cf.orderno = o.orderno', 'left')
+            ->where('cf.type', '=', 1)
+            ->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date")
             ->where('o.status', 'in', [5, 6]);
         $order_data = $order_data->group('c.branch')->select();
         $cate_data = [];
