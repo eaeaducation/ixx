@@ -20,7 +20,6 @@ class Finance extends BasicAdmin
     {
         $post = $this->request->post();
         $branchs = get_branches();
-        $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
 //        $order_data = Db::name('saas_order_log')->alias('ol')
 //            ->field('count(ol.id) as deal_num, sum(ol.old_price) deal_old_price, sum(ol.price) deal_price, c.branch')
 //            ->join('saas_order o', 'o.id = ol.order_id', 'left')
@@ -31,8 +30,14 @@ class Finance extends BasicAdmin
 //            ->where('o.status', 'in', [5, 6]);
         $order_data = Db::name('saas_cash_flow')->alias('cf')
             ->join('saas_customer c', 'c.id = cf.cid', 'left')
-            ->field('sum(IF(cf.type=1, 1, 0)) as sign_num, sum(IF(cf.type=2, 1, 0)) as renew_num, sum(IF(cf.type=1, price, 0)) as sign_price, sum(IF(cf.type=2, price, 0)) as renew_price,c.branch')
-            ->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date");
+            ->field('sum(IF(cf.type=1, 1, 0)) as sign_num, sum(IF(cf.type=2, 1, 0)) as renew_num, sum(IF(cf.type=1, price, 0)) as sign_price, sum(IF(cf.type=2, price, 0)) as renew_price,c.branch');
+        if ($post['type'] == 2) {
+            $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Ym');
+            $order_data->where("FROM_UNIXTIME(cf.created_at,'%Y%m') = $date");
+        } else {
+            $date = isset($post['date']) && !empty($post['date']) ? $post['date'] :  date('Y');
+            $order_data->where("FROM_UNIXTIME(cf.created_at,'%Y') = $date");
+        }
         $order_data = $order_data->group('c.branch')->select();
         $cate_data = [];
         foreach ($order_data as $item) {

@@ -11,20 +11,22 @@
 
 <form class="layui-form layui-box modal-form-box form-search" style="height: 60px;">
     <div class="row" style="margin-left:0.4%;float: left">
-<!--        <div class="layui-form-item layui-inline">-->
-<!--            <label class="layui-form-label">显示类型</label>-->
-<!--            <div class="layui-input-inline">-->
-<!--                <select name='show_type' class='layui-select full-width' lay-filter="show_type">-->
-<!--                    <option value='1'>年份</option>-->
-<!--                    <option value='2'>月份</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">显示类型</label>
+            <div class="layui-input-inline">
+                <select name='show_type' class='layui-select full-width' lay-filter="show_type">
+                    <option value='1'>年份</option>
+                    <option value='2'>月份</option>
+                </select>
+            </div>
+        </div>
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">时间</label>
             <div class="layui-input-inline">
-                <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=date('Y')}"
-                       placeholder="选择时间" class="input-sm form-control">
+                <input type="text" id="time_range1" name="time_range" value="{$Think.get.time_range|default=date('Y')}"
+                       placeholder="选择年份" class="input-sm form-control">
+                <input type="text" id="time_range2" name="time_range" value="{$Think.get.time_range|default=date('Ym')}"
+                       placeholder="选择月份" class="input-sm form-control" style="display: none">
             </div>
         </div>
         <div class="layui-form-item layui-inline">
@@ -46,7 +48,7 @@
         layui.use('laydate', function () {
             var laydate = layui.laydate
             laydate.render({
-                elem: '#time_range',
+                elem: '#time_range1',
                 theme: '#0099CC',
                 format: 'yyyy',
                 type: 'year',
@@ -61,14 +63,39 @@
                     // }
                 }
             })
+            laydate.render({
+                elem: '#time_range2',
+                theme: '#0099CC',
+                format: 'yyyyMM',
+                type: 'month',
+                value: "{:date('Ym')}",
+            })
         })
+        form.on('select(show_type)', function (data) {
+            type = data.value;
+            if (type == 2) {
+                $('#time_range2').show();
+                $('#time_range1').hide();
+            } else if(type == 1) {
+                $('#time_range1').show();
+                $('#time_range2').hide();
+            }
+            window.form.render();
+        });
+        var type = $('select[name="show_type"] option:selected').val();
         data_onload()
         $('#search').click(function () {
-            var date = $('#time_range').val();
+            if (type == 2) {
+                var date = $('#time_range2').val();
+            } else if(type == 1) {
+                var date = $('#time_range1').val();
+            }
+            type = $('select[name="show_type"] option:selected').val();
             data_onload(date);
         })
         function data_onload(date = '') {
-            $.post('/statistics/finance/orders_data', {date: date}, function (res) {
+            $.post('/statistics/finance/orders_data', {date: date, type: type}, function (res) {
+                console.log(res)
                 require(['echarts'], function () {
                     var echarts = require('echarts');
                     var myChart1 = echarts.init(document.getElementById('container1'));
