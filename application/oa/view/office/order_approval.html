@@ -108,6 +108,8 @@
 
             <td class="text-nowrap text-center">
                 {if in_array(session('user.authorize'),[9])}
+                <span class="text-explode">|</span>
+                <a data-open='{:url("educational/order/orderview")}?id={$vo.id}'>编辑</a>
                 {if ($vo.oldprice-$vo.price) > 1000 && ($vo.oldprice-$vo.price) <= 2000}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='audit_status' data-value="-97"
@@ -140,6 +142,9 @@
                     <span class="text-explode">|</span>
                     <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
                        data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
+                    <span class="text-explode">|</span>
+                    <a data-update="{$vo.id}" data-field='status' data-value="3"
+                       data-action='{:url("$classuri/orderDelete")}?oid={$vo.id}'>删除</a>
                 {/if}
             </td>
         </tr>

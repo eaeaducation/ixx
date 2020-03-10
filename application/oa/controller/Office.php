@@ -536,4 +536,15 @@ class Office extends BasicAdmin
         }
         $this->error("订单审批失败");
     }
+
+    public function orderDelete()
+    {
+        $table = 'saas_order';
+        $oid = $this->request->get('oid');
+        if (DataService::update($table)) {
+            LogService::write('订单状态', '操作者：'.get_employee_name($this->user['id']).'删除了订单id：'.$oid.'的审批');
+            $this->success("订单删除成功", '');
+        }
+        $this->error("订单删除失败");
+    }
 }
