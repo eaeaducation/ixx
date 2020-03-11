@@ -38,6 +38,7 @@ class Employee extends BasicAdmin
             ->join('system_auth a', 'u.authorize=a.id')
             ->order('e.id desc')
             ->where('e.status', '<>', 3)
+            ->where('u.is_deleted', '=', 0)
             ->where('u.status', '<>', 3);
         (isset($get['branch']) && $get['branch'] !== '') && $db->where('department', '=', $get['branch']);
         if (isset($get['keyword']) && $get['keyword'] != '') {
