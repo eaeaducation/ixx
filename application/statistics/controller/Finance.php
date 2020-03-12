@@ -42,7 +42,7 @@ class Finance extends BasicAdmin
         $cate_data = [];
         foreach ($order_data as $item) {
             if (!$item['branch']) {
-                isset($item);
+                unset($item);
                 continue;
             }
             $cate_data[$item['branch']] = [

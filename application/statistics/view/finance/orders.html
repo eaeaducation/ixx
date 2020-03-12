@@ -95,7 +95,6 @@
         })
         function data_onload(date = '') {
             $.post('/statistics/finance/orders_data', {date: date, type: type}, function (res) {
-                console.log(res)
                 require(['echarts'], function () {
                     var echarts = require('echarts');
                     var myChart1 = echarts.init(document.getElementById('container1'));

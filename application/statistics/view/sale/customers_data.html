@@ -1,0 +1,95 @@
+{extend name='admin@public/content'}
+
+{block name="content"}
+<form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get">
+    <div class="layui-form-item layui-inline">
+        <label class="layui-form-label">选择时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="time_range" name="time_range" value="{$Think.get.time_range|default=''}"
+                   placeholder="选择时间" class="input-sm form-control">
+        </div>
+    </div>
+    <div class="layui-form-item layui-inline">
+        <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+    </div>
+</form>
+<script>
+    window.form.render();
+</script>
+
+<form onsubmit="return false;" data-auto="true" method="post">
+    <!--{empty name='deal_data'}-->
+    <p class="help-block text-center well">没 有 数 据 哦！</p>
+    <!--{else}-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="text-center">校区</th>
+            {foreach $branchs as $value}
+            <th class="text-center" colspan="3">{$value}</th>
+            {/foreach}
+        </tr>
+        <tr>
+            <th class="text-center">时间</th>
+            {php}
+            $branch_num = count($branchs);
+            {/php}
+            {for start='0' end="$branch_num"}
+            <th class="text-center">获客数</th>
+            <th class="text-center">成交数</th>
+            <th class="text-center">成交率</th>
+            {/for}
+
+        </tr>
+        </thead>
+        <tbody>
+        <!--{foreach deal_data as $key=>$vo}-->
+        <tr>
+            <td class="text-center">{$key}</td>
+            {foreach $vo as $k => $v}
+            <td class="text-center">{$v.customer_num}</td>
+            <td class="text-center">{$v.student_num}</td>
+            <td class="text-center">
+                {if $v.customer_num != 0}
+                {:round($v.student_num/$v.customer_num, 4)*100}%
+                {else}
+                0%
+                {/if}
+            </td>
+            {/foreach}
+        </tr>
+        <!--{/foreach}-->
+        <tr>
+            <td class="text-center">总计</td>
+            {foreach branch_data as $k => $v}
+            <td class="text-center">{$v.branch_customer_num}</td>
+            <td class="text-center">{$v.branch_student_num}</td>
+            <td class="text-center">
+                {if $v.branch_customer_num != 0}
+                {:round($v.branch_student_num/$v.branch_customer_num, 4)*100}%
+                {else}
+                0%
+                {/if}
+            </td>
+            {/foreach}
+        </tr>
+        </tbody>
+    </table>
+    <!--{/empty}-->
+</form>
+<script>
+    $(function () {
+        window.form.render();
+        layui.use('laydate', function () {
+            var laydate = layui.laydate
+            laydate.render({
+                elem: '#time_range',
+                theme: '#0099CC',
+                type: 'year',
+                max: '<?= date("Y")?>'
+            })
+        })
+    })
+
+</script>
+{/block}
