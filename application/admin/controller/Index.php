@@ -369,6 +369,10 @@ class Index extends BasicAdmin
                 $count_info3[0]['count'] += $no_set;
             }
             foreach ($count_info3 as &$v) {
+                if (!in_array($v['follow_status'], array_keys(get_category(7)))) {
+                    unset($v);
+                    continue;
+                }
                 if (empty($v['follow_status'])) {
                     $v['name'] = "未分配";
                 } else {
