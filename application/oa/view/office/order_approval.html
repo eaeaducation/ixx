@@ -123,6 +123,9 @@
                 <span class="text-explode">|</span>
                 <a data-open='{:url("educational/order/orderview")}?id={$vo.id}'>编辑</a>
                 {/if}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status' data-value="3"
+                   data-action='{:url("$classuri/orderDelete")}?oid={$vo.id}'>删除</a>
                 <!--                校区校长-->
                 {elseif in_array(session('user.authorize'),[9])}
                 {if ($vo.oldprice-$vo.price) > 1000 && ($vo.oldprice-$vo.price) <= 2000}
