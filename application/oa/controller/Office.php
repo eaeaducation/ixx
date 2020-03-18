@@ -381,7 +381,7 @@ class Office extends BasicAdmin
             ->join('saas_class c', 'o.class_id=c.id', 'left')
             ->join('saas_customer s', 'o.student_id=s.id', 'left')
             ->field('o.*,s.branch,c.title,sum(l.old_price) as oldprice')
-            ->where('o.audit_status', 'in', [-99,-95,-97]);
+            ->where('o.audit_status', 'in', [-1,-99,-95,-97]);
         //  校区
         if ($this->user['id'] != 10000 || $this->user['authorize'] != 3) {
 //            if (in_array($this->user['authorize'], [9])) {
@@ -449,6 +449,12 @@ class Office extends BasicAdmin
                 }
             } elseif (in_array($this->user['authorize'], [4])) {
                 if (($value['oldprice'] - $value['price']) > 2000) {
+                    $data[$key] = $value;
+                } else {
+                    unset($data[$key]);
+                }
+            } elseif (in_array($this->user['authorize'], [21])) {
+                if ((($value['oldprice'] - $value['price']) < 1000 && $value['audit_status'] == -99) || ($value['audit_status'] == -97 && ($value['oldprice'] - $value['price']) > 1000 && ($value['oldprice'] - $value['price']) < 2000) || $value['audit_status'] == -97) {
                     $data[$key] = $value;
                 } else {
                     unset($data[$key]);

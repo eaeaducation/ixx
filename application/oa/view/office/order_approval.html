@@ -96,33 +96,48 @@
             <td class="text-center">￥{$vo.price}元</td>
             <td class="text-nowrap text-center">
                 {if $vo.audit_status==-99}
-                待校区校长审批
+                    {if ($vo.oldprice-$vo.price) < 1000}
+                        <span style="color: green">待财务确认</span>
+                    {else}
+                        <span style="color: greenyellow">待校区校长审批</span>
+                    {/if}
                 {elseif $vo.audit_status==-95}
-                待总经理审批
+                    {if ($vo.oldprice-$vo.price) > 2000}
+                        <span style="color: lawngreen">待总经理审批</span>
+                    {else}
+                        <span style="color: green">待财务确认</span>
+                    {/if}
                 {elseif $vo.audit_status==-97}
-                待财务确认
+                <span style="color: green">待财务确认</span>
+                {elseif $vo.audit_status==-1}
+                <span style="color: red">拒绝，教务重新编辑</span>
                 {/if}
             </td>
             <td class="text-center">{$vo.status|convert_category=35|raw}</td>
             <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
 
             <td class="text-nowrap text-center">
-                {if in_array(session('user.authorize'),[9])}
+                <!--                教务-->
+                {if in_array(session('user.authorize'),[19])}
+                {if $vo.audit_status==-1}
                 <span class="text-explode">|</span>
                 <a data-open='{:url("educational/order/orderview")}?id={$vo.id}'>编辑</a>
+                {/if}
+                <!--                校区校长-->
+                {elseif in_array(session('user.authorize'),[9])}
                 {if ($vo.oldprice-$vo.price) > 1000 && ($vo.oldprice-$vo.price) <= 2000}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='audit_status' data-value="-97"
                    data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
                 <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-1"
                    data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
                 {elseif ($vo.oldprice-$vo.price) > 2000}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='audit_status' data-value="-95"
                    data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
                 <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                <a data-update="{$vo.id}" data-field='audit_status' data-value="-1"
                    data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
                 {/if}
 <!--                总经理审核-->
@@ -132,7 +147,7 @@
                     <a data-update="{$vo.id}" data-field='audit_status' data-value="-97"
                        data-action='{:url("$classuri/orderAdopt")}?oid={$vo.id}'>通过</a>
                     <span class="text-explode">|</span>
-                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-1"
                        data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
 <!--                财务确认支付-->
                 {/if}
@@ -140,7 +155,7 @@
                     <span class="text-explode">|</span>
                     <a data-modal='{:url("$classuri/priceEdit")}?oid={$vo.id}'>确认支付</a>
                     <span class="text-explode">|</span>
-                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-99"
+                    <a data-update="{$vo.id}" data-field='audit_status' data-value="-1"
                        data-action='{:url("$classuri/orderRefuse")}?oid={$vo.id}'>拒绝</a>
                     <span class="text-explode">|</span>
                     <a data-update="{$vo.id}" data-field='status' data-value="3"

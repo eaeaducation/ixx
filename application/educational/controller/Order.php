@@ -174,7 +174,7 @@ class Order extends BasicAdmin
                 $order_id = $data['order_id'];
                 $orderno = Db::name('saas_order')->where('id', '=', $order_id)->field('orderno')->find();
                 $price = Db::name('saas_order_log')->where('order_id', $order_id)->sum('price');
-                Db::name('saas_order')->where('id', $order_id)->update(['price' => $price]);
+                Db::name('saas_order')->where('id', $order_id)->update(['price' => $price, 'audit_status' => -99]);
                 Db::name('saas_cash_flow')->where('orderno', '=', $orderno['orderno'])->update(['price' => $price]);
                 $cid = Db::name('saas_order')->field('student_id')->where('id', '=', $order_id)->find();
                 LogService::write('订单详情', '修改了订单id为【' . $data['order_id'] . '】中的商品序号(id)为【' . $data['id'] . '】的商品信息', $cid['student_id']);
