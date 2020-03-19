@@ -67,6 +67,10 @@
                 <td class="text-center text-nowrap color-blue">补课</td>
                 {elseif $vo.status==3}
                 <td class="text-center text-nowrap color-green">体验课</td>
+                {elseif $vo.status==4}
+                <td class="text-center text-nowrap color-green">公开课</td>
+                {elseif $vo.status==5}
+                <td class="text-center text-nowrap color-green">辅导课</td>
                 {/if}
                 <td class="text-center nowrap">{$vo.course_hour|default=''}</td>
                 <td class="text-center" title="{$vo.remark}">{$vo.remark|default=''}</td>
