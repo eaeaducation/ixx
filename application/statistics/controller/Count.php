@@ -32,8 +32,10 @@ class Count extends BasicAdmin
     {
         $sql = "select source,count(*)as num FROM saas_customer group by source ORDER BY count(*) desc LIMIT 0,7";
         $res = Db::query($sql);
-        // dump($data);die;
+//         dump($res);die;
         //找出是0或者空的 记录起来
+        $null = 0;
+        $kong = 0;
         foreach ($res as $v) {
             //   $key=$v['']
             if ($v['source'] === null) {
