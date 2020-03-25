@@ -12,6 +12,7 @@ use controller\BasicAdmin;
 use think\DB;
 use service\DataService;
 use service\LogService;
+use think\facade\Log;
 
 class Goods extends BasicAdmin
 {
@@ -112,7 +113,7 @@ class Goods extends BasicAdmin
 
             $post = $this->request->post();
 
-            if ($post['number'] > $office_goods['num']) {
+            if ($post['number'] > $office_goods['residue']) {
                 $this->error('物品库存不够！');
             }
 
@@ -122,8 +123,7 @@ class Goods extends BasicAdmin
 
             Db::name('saas_goods_record')->insert($post);
 
-            $lastNum = $office_goods['num'] - $post['number'];//剩余库存
-
+            $lastNum = intval($office_goods['residue']) - intval($post['number']);//剩余库存
             $res = Db::name('saas_textbook')->where('id', '=', $id)->update(['residue' => $lastNum]);
 
             if ($res) {

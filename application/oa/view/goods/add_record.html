@@ -1,16 +1,21 @@
 <form class="layui-form layui-box modal-form-box" action="{:request()->url()}" data-auto="true" method="post">
-
     <div class="layui-form-item">
-        <label class="layui-form-label">数量</label>
+        <label class="layui-form-label">校区</label>
         <div class='col-sm-9'>
-            <input type="text" name="number" value='{$vo.num|default=""}' required="required" title="请输物品入数量"
-                   placeholder="请输入数量" class="layui-input">
+            {:get_branches_select('branch', '', 'layui-input', ['lay-filter' => '', 'required' => 'required'], false)}
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">收货人</label>
         <div class='col-sm-9'>
-            {:get_employee_select('', 'user_id', session('user.employee.department'), '', '', ['required' => 'required'], false)}
+            {:get_employee_select('', 'user_id', session('user.employee.department'), '', '', ['required' => 'required', 'lay-search' => ''], false)}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">数量</label>
+        <div class='col-sm-9'>
+            <input type="text" name="number" value='{$vo.num|default=""}' required="required" title="请输物品入数量"
+                   placeholder="请输入数量" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">

@@ -85,7 +85,7 @@
             <td class="text-center">{$vo.content}</td>
             <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
             <td class="text-nowrap text-center">
-                {if auth("$classuri/edit")}
+                {if (auth("$classuri/edit") && $vo.status != 1)}
                 <span class="text-explode">|</span>
                 <a data-title="编辑"
                    data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>
@@ -95,7 +95,7 @@
                 <a data-title="出库记录"
                    data-modal='{:url("$classuri/addRecord")}?id={$vo.id}'>出库</a>
 
-                {if auth("$classuri/del")}
+                {if (auth("$classuri/del") && $vo.status != 1)}
                 <span class="text-explode">|</span>
                 <a data-update="{$vo.id}" data-field='delete'
                    data-action='{:url("$classuri/del")}?id={$Think.get.id}'>删除</a>
