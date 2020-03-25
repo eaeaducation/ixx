@@ -134,7 +134,7 @@ GROUP BY c.branch";
             $count[$k] = $v['count'];
         }
 // 取最多的 +2是为了留点空余
-        $max = max($count) + 2;
+        $max = !empty($count) ? max($count) + 2 : 2;
         $branch_arr = [];
         foreach ($branch as $k => $v) {
             if ($v == 0) {
