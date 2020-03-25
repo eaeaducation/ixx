@@ -303,12 +303,16 @@ class Order extends BasicXcx
                 $order_log[$key]['goods_num'] = (intval($v['p_num']) * intval($v['b_num']));
                 $order_log[$key]['created_at'] = time();
                 $order_log[$key]['class_id'] = 0;
+                Log::error($v);
                 //更新购物车物品状态
-                $res = Db::name('store_cart')
-                    ->where('cid', '=', $user->id)
-                    ->where('gid', '=', $v['gid'])
-                    ->update(['status' => 2]);
-                Log::error($res);
+                $cart_goods = Db::name('store_cart')->where('cid', '=', $user->id)->where('gid', '=', $v['gid'])->where('status', '=', 1)->find();
+                if ($cart_goods) {
+                    $res = Db::name('store_cart')
+                        ->where('cid', '=', $user->id)
+                        ->where('gid', '=', $v['gid'])
+                        ->update(['status' => 2]);
+                    Log::error($res);
+                }
             }
             $result = Db::name('saas_order_log')->insertAll($order_log);
             Db::commit();
