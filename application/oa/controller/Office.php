@@ -501,7 +501,7 @@ class Office extends BasicAdmin
                 $follow = array();
                 $follow['customer_id'] = $userinfo['id'];
                 $follow['type'] = 2;
-                $follow['follow_status'] = 7;
+                $follow['follow_status'] = 10;
                 $follow['keyword'] = '订单付款';
                 $follow['content'] = '订单付款添加跟进状态';
                 $follow['user_id'] = empty($userinfo['sales_id']) ? (empty($userinfo['collect_id']) ? '10000' : $userinfo['collect_id']) : $userinfo['sales_id'];
