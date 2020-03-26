@@ -198,10 +198,10 @@
                         <td class="text-center">{$vo.pay_type|convert_category=36|raw}</td>
                         <td class="text-center">{$vo.created_at|date='Y-m-d H:m:s'}</td>
                         <td class="text-nowrap text-center">
-                            {if auth("$classuri/priceEdit")}
-                            <span class="text-explode">|</span>
-                            <a data-title="费用操作" data-modal='{:url("educational/order/priceEdit")}?id={$vo.id}'>支付操作</a>
-                            {/if}
+<!--                            {if auth("$classuri/priceEdit")}-->
+<!--                            <span class="text-explode">|</span>-->
+<!--                            <a data-title="费用操作" data-modal='{:url("educational/order/priceEdit")}?id={$vo.id}'>支付操作</a>-->
+<!--                            {/if}-->
                             {if auth("$classuri/orderView")}
                             <span class="text-explode">|</span>
                             <a data-title="查看详情" data-open='{:url("educational/order/orderView")}?id={$vo.id}'>查看详情</a>
