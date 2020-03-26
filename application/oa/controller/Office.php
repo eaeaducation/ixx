@@ -499,13 +499,20 @@ class Office extends BasicAdmin
                 }
                 $userinfo = Db::name('saas_customer')->field('id,sales_id,collect_id')->where('id', '=', $order_info['student_id'])->find();
                 $follow = array();
+                $content = [
+                    [
+                        'content' => '订单付款添加跟进状态',
+                        'created_at' => time()
+                    ]
+                ];
                 $follow['customer_id'] = $userinfo['id'];
                 $follow['type'] = 2;
                 $follow['follow_status'] = 10;
                 $follow['keyword'] = '订单付款';
-                $follow['content'] = '订单付款添加跟进状态';
+                $follow['content'] = json_encode($content, JSON_UNESCAPED_UNICODE);
                 $follow['user_id'] = empty($userinfo['sales_id']) ? (empty($userinfo['collect_id']) ? '10000' : $userinfo['collect_id']) : $userinfo['sales_id'];
                 $follow['created_at'] = time();
+
                 Db::name('saas_customer_follow')->insert($follow);
                 if ($data['pay_type'] == 1) {
                     cash_flow($order_info['orderno'], $order_info['student_id'], $order_info['price'], 1, $order_info['class_id'], "报名");//给资金流动表加一条数据
